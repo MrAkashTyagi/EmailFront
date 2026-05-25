@@ -1,0 +1,9 @@
+
+mat-toolbar {
+  background-color: var(--mat-sys-primary); /* New M3 token variable */
+  color: var(--mat-sys-on-primary);
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+

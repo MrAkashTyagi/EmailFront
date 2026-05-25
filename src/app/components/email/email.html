@@ -1,0 +1,44 @@
+<div class="container">
+
+    <div class="card">
+        <!-- <mat-card appearance="outlined"> -->
+        <form>
+            <h1>Compose Email...</h1>
+            <!-- To field -->
+            <mat-form-field class="field" appearance="outline">
+                <mat-label>To</mat-label>
+                <input name="to" [(ngModel)]="data.to" matInput placeholder="Enter Email">
+                <mat-icon matSuffix></mat-icon>
+            </mat-form-field>
+
+            <!-- from field -->
+            <mat-form-field class="field" appearance="outline">
+                <mat-label>Subject</mat-label>
+                <input name="subject" [(ngModel)]="data.subject" matInput placeholder="Enter Subject">
+                <mat-icon matSuffix></mat-icon>
+            </mat-form-field>
+
+            <mat-form-field class="field">
+                <mat-label>Enter your message</mat-label>
+                <textarea name="message" [(ngModel)]="data.message" rows="15" matInput
+                    placeholder="Please write your email here"></textarea>
+            </mat-form-field>
+            
+
+
+            <div class="text-center">
+                <mat-spinner *ngIf="flag" style="margin:auto;"></mat-spinner>
+                <button type="button" (click)="doSubmitForm()" matButton="outlined">Send</button>
+                <button type="reset" matButton="outlined">Reset</button>
+            </div>
+
+
+        </form>
+        <!-- </mat-card> -->
+
+        <!-- <pre>{{ data | json }}</pre> -->
+
+    </div>
+
+
+</div>
