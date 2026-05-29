@@ -1,6 +1,10 @@
 import { Routes } from '@angular/router';
 import { Email } from './components/email/email';
 import { Home } from './components/home/home';
+import { GuestComponent } from './components/guest/guest';
+import { AddGuestComponent } from './components/add-guest/add-guest';
+
+
 
 export const routes: Routes = [
 
@@ -13,6 +17,16 @@ export const routes: Routes = [
     {
         path:"",
         component:Home,
+        pathMatch:"full"
+    },
+    {
+        path:"guests",
+        component:GuestComponent,
+        pathMatch:"full"
+    },
+     {
+        path:"addguest",
+        component:AddGuestComponent,
         pathMatch:"full"
     }
 

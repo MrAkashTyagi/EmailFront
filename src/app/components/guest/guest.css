@@ -1,0 +1,10 @@
+table {
+  width: 100%;
+}
+th, td {
+  padding: 16px !important;
+  color: black !important; /* Taaki white background par text dikhe */
+}
+tr.mat-mdc-row {
+  height: 48px !important;
+}

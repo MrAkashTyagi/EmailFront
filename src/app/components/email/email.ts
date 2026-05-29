@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +9,8 @@ import { EmailService } from '../../service/emailService';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs/operators';
+import { response } from 'express';
+import { error } from 'console';
 
 
 @Component({
@@ -31,6 +33,19 @@ import { finalize } from 'rxjs/operators';
 export class Email {
 
   constructor(private email: EmailService, private snack: MatSnackBar, private cdr: ChangeDetectorRef, private zone: NgZone) { }
+
+  //   ngOnInit(): void {
+  //   // App ke load hote hi yeh automatic trigger ho jayega
+  //   this.email.getData().subscribe({
+  //     next: (response: any) => {
+  //       console.log('Data loaded successfully:', response);
+  //     },
+  //     error: (error: any) => {
+  //       console.error('Error loading data:', error);
+  //     }
+  //   });
+  // }
+
 
   flag:boolean= false;
 
@@ -73,5 +88,14 @@ export class Email {
       }
 
     )
+
+    // this.email.getData().subscribe(
+    //   response =>{
+    //     console.log(response)
+    //   },error => {
+    //     console.log(error)
+    //   } 
+    // )
+
   }
 }

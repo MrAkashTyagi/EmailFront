@@ -1,0 +1,101 @@
+<div class="card-wrapper">
+  <mat-card class="guest-card">
+    
+    <mat-card-header>
+      <mat-card-title class="form-title">Add New Guest</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="form-body">
+        
+        <!-- Full Name -->
+        <mat-form-field appearance="outline">
+          <mat-label>Full Name</mat-label>
+          <input 
+            matInput [(ngModel)]="guest.name"
+            name="guestName" 
+            placeholder="Enter full name"
+            required>
+        </mat-form-field>
+
+        <!-- Email Address -->
+        <mat-form-field appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <input 
+            matInput 
+            type="email" 
+            [(ngModel)]="guest.email" 
+            name="guestEmail" 
+            placeholder="example@mail.com">
+        </mat-form-field>
+
+        <!-- Gender & Type Row -->
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select 
+                [(ngModel)]="guest.gender" 
+                name="guestGender" 
+                required>
+              <mat-option value="Male">Male</mat-option>
+              <mat-option value="Female">Female</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Type</mat-label>
+            <mat-select [(ngModel)]="guest.adultOrchild" name="guestType" required>
+              <mat-option value="Adult">Adult</mat-option>
+              <mat-option value="Child">Child</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Phone Number -->
+        <mat-form-field appearance="outline">
+          <mat-label>Phone Number</mat-label>
+          <input matInput [(ngModel)]="guest.phoneNumber" name="guestPhone" placeholder="+91..." required>
+        </mat-form-field>
+
+        <!-- Whatsapp Number -->
+        <mat-form-field appearance="outline">
+          <mat-label>Whatsapp Number</mat-label>
+          <input matInput [(ngModel)]="guest.whatsapp_Number" name="guestWhatsapp" placeholder="+91...">
+        </mat-form-field>
+
+        <!-- Category -->
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <mat-select [(ngModel)]="guest.guestCategory" name="guestCat" required>
+            <mat-option value="Family Member">Family Member</mat-option>
+            <mat-option value="Friend">Friend</mat-option>
+            <mat-option value="Relative">Relative</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Family Name -->
+        <mat-form-field appearance="outline">
+          <mat-label>Family Name</mat-label>
+          <input matInput [(ngModel)]="guest.family.familyName" name="guestFamilyName" placeholder="">
+        </mat-form-field>
+
+        <!-- LIVE DATA BINDING VIEW USING JSON PIPE -->
+        <div class="json-viewer">
+          <strong>Live JSON Data Binding:</strong>
+          <pre>{{ guest | json }}</pre>
+        </div>
+
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end" class="form-actions">
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-raised-button color="primary" 
+              [disabled]="!guest.name || !guest.gender || !guest.phoneNumber || !guest.guestCategory" 
+              (click)="save()">
+        Save Guest
+      </button>
+    </mat-card-actions>
+
+  </mat-card>
+</div>
