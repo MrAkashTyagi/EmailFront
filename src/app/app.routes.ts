@@ -3,6 +3,7 @@ import { Email } from './components/email/email';
 import { Home } from './components/home/home';
 import { GuestComponent } from './components/guest/guest';
 import { AddGuestComponent } from './components/add-guest/add-guest';
+import { Family } from './components/family/family';
 
 
 
@@ -27,6 +28,11 @@ export const routes: Routes = [
      {
         path:"addguest",
         component:AddGuestComponent,
+        pathMatch:"full"
+    },
+    {
+        path:"family",
+        component:Family,
         pathMatch:"full"
     }
 

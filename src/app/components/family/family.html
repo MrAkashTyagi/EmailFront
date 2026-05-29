@@ -1,0 +1,63 @@
+
+<div style="display: flex; justify-content: flex-end; margin-bottom: 20px; padding: 10px 5px 0 0;">
+  <!-- Modern Angular Material Button -->
+  <button mat-raised-button color="primary" (click)="openAddFamilyDialog()"
+    style="font-weight: 500; padding: 22px 24px; border-radius: 8px;">
+    <span style="margin-right: 8px; font-size: 18px; font-weight: bold;">+</span> Add New Family
+  </button>
+</div>
+
+
+<!-- @if (rawGuests() && rawGuests().length > 0) { -->
+
+<div class="mat-elevation-z8">
+  <!-- 1. [dataSource] me pagedGuests() pass kiya -->
+  <table mat-table [dataSource]="rawFamilies">
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> Id </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.familyName}} </td>
+    </ng-container>
+
+        <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Actions </th>
+      <td mat-cell *matCellDef="let element" style="text-align: center;">
+
+         <!-- Blue Edit Button -->
+      <!-- <button mat-flat-button color="primary" (click)="openEditGuestDialog(element)"
+        style="border-radius: 6px; padding: 0 12px; min-width: unset; height: 36px; background-color: #3f51b5; margin-right: 15px;">
+        <span style="font-size: 16px; margin-right: 4px;">✏️</span> Edit
+      </button> -->
+
+        <!-- Red Delete Button -->
+        <button mat-flat-button color="warn" (click)="deleteFamilyRecord(element.id)"
+          style="border-radius: 6px; padding: 0 12px; min-width: unset; height: 36px;">
+          <span style="font-size: 16px; margin-right: 4px;">🗑️</span> Delete
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <!-- 2. Paginator controls yahan add kiye -->
+  <!-- <mat-paginator [length]="rawGuests().length" [pageSize]="pageSize()" [pageSizeOptions]="[5, 10, 20]"
+    (page)="onPageChange($event)" showFirstLastButtons aria-label="Select page of guests">
+  </mat-paginator> -->
+</div>
+
+<!-- }  -->
+
+<!-- @else {
+<div style="padding: 20px; text-align: center; color: red; font-weight: bold; background: #fee2e2;">
+  Data load nahi hua ya fir array khali hai! Current Length: {{ rawGuests().length }}
+</div> -->
+<!-- } -->
