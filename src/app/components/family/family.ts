@@ -104,8 +104,16 @@ export class Family implements OnInit, AfterViewInit {
 
 
         setTimeout(() => {
-          //     // Table me automatic top par push ho jayega bina refresh ke
-          this.rawFamilies.data = [...this.rawFamilies.data, result];
+          // 1. CHECK: Kya is ID ki family table me pehle se load hai?
+          const isAlreadyPresent = this.rawFamilies.data.some((f: any) => f.id === result.id);
+          if (isAlreadyPresent) {
+            // Agar family pehle se hai, toh sirf user ko chota sa alert ya log dikhao, table me push mat karo!
+            console.log("Yeh family pehle se table me hai, duplicate push roka gaya.");
+            alert("Family Already Exists !!");
+          } else {
+            // Table me automatic top par push ho jayega bina refresh ke
+            this.rawFamilies.data = [...this.rawFamilies.data, result];
+          }
           // 2. Table ko refresh karne ke liye force trigger lagaya
           this.cdr.detectChanges();
         }, 0);

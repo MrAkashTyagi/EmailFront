@@ -52,7 +52,7 @@ export class GuestComponent implements OnInit {
   guestSearchQuery = signal<string>('');
 
   // Pagination states ke liye naye signals
-  pageSize = signal<number>(5);  // Ek page par default 5 rows dikhengi
+  pageSize = signal<number>(10);  // Ek page par default 5 rows dikhengi
   currentPage = signal<number>(0); // Default page index 0 rahega
 
   // Yeh computed signal automatic data ko slice (page) karega jab bhi rawGuests, currentPage ya pageSize badlega
@@ -112,6 +112,19 @@ export class GuestComponent implements OnInit {
       // Jab form successful database me save hoke data dega
       if (result) {
         console.log("Database se save hoke aaya live object:", result);
+
+
+       
+
+
+        Promise.resolve().then(() => {
+           this.rawGuests.set([...this.rawGuests(), result]);
+          this.cdr.detectChanges();
+        });
+
+
+
+
         // Table me automatic top par push ho jayega bina refresh ke
         this.rawGuests.set([result, ...this.rawGuests()]);
       }
@@ -175,13 +188,14 @@ export class GuestComponent implements OnInit {
       if (result) {
         console.log("Database se update hokar aaya live object:", result);
 
-        // UI Table me us specific row ko live change karne ka modern signal map tarika
-        const updatedList = this.rawGuests().map(guest =>
-          guest.id === result.id ? result : guest
-        );
 
-        this.rawGuests.set(updatedList);
-        this.cdr.detectChanges();
+        setTimeout(() => {
+          const updatedList = this.rawGuests().map(guest =>
+            guest.id === result.id ? result : guest
+          );
+          this.rawGuests.set(updatedList);
+          this.cdr.detectChanges();
+        });
       }
     });
   }

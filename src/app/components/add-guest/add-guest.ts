@@ -1,7 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog'; // MAT_DIALOG_DATA add kiya
+import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -9,9 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { EmailService } from '../../service/emailService';
 import { GuestService } from '../../service/guest-service';
+import { Familyservice } from '../../service/familyservice';
 import { error } from 'console';
-
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 @Component({
   selector: 'app-add-guest',
   standalone: true,
@@ -23,21 +23,24 @@ import { error } from 'console';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatAutocompleteModule 
   ],
   templateUrl: './add-guest.html',
   styleUrls: ['./add-guest.css']
 })
 export class AddGuestComponent implements OnInit {
-  // ISKO OPTIONAL BANA DIYA TA KI AGAR DIRECT PAGE PAR BHI RENDER HO TO ERROR NA AAYE
   private dialogRef = inject(MatDialogRef<AddGuestComponent>, { optional: true });
   public dialogData = inject(MAT_DIALOG_DATA, { optional: true });
 
   private guestService = inject(GuestService);
-
+  private familyService = inject(Familyservice);
+  private cdr = inject(ChangeDetectorRef);
   public editData = inject(MAT_DIALOG_DATA, { optional: true });
 
   isEditMode = false;
+  families: any[] = [];
+  filteredFamilies: any[] = [];
 
   guest = {
     id: undefined,
@@ -49,44 +52,71 @@ export class AddGuestComponent implements OnInit {
     email: '',
     guestCategory: '',
     family: {
+      id: undefined as number | undefined,
       familyName: ''
     }
   };
 
   ngOnInit(): void {
-    // 2. Agar editData khali nahi hai, matlab user Edit click karke aaya hai
+    // Families list loading for simple dropdown selection mapping
+    this.familyService.getData().subscribe({
+      next: (response: any) => {
+        let parsedData = typeof response === 'string' ? JSON.parse(response) : response;
+
+
+        setTimeout(() => {
+          this.families = parsedData?.content || parsedData?.familyList || (Array.isArray(parsedData) ? parsedData : [parsedData]);
+          this.filteredFamilies = this.families;
+          console.log("Dropdown ke liye loaded families:", this.families);
+          this.cdr.detectChanges();
+        }, 0);
+      },
+      error: (err) => console.error("Error loading families:", err)
+    });
+
+    // Edit configuration tracking layer load
     if (this.editData) {
       this.isEditMode = true;
-      // Purane data ki copy bana kar inputs me bind kar di
       this.guest = { ...this.editData };
 
       if (!this.guest.family) {
-        this.guest.family = { familyName: '' };
+        this.guest.family = { id: undefined, familyName: '' };
       }
+
+      setTimeout(() => {
+        this.cdr.detectChanges();
+      }, 0);
+    }
+  }
+
+
+  filterFamilies(): void {
+    const value = this.guest.family?.familyName ? this.guest.family.familyName.toLowerCase().trim() : '';
+
+    if (!value) {
+      this.filteredFamilies = this.families;
+    } else {
+      this.filteredFamilies = this.families.filter(family =>
+        family.familyName?.toLowerCase().includes(value)
+      );
     }
   }
 
   save(): void {
-    // 1. Agar whatsapp number khali choda hai toh phone number copy karlo
     if (!this.guest.whatsapp_Number) {
       this.guest.whatsapp_Number = this.guest.phoneNumber;
     }
 
-    // ----------------------------------------------------
-    // EDIT MODE LOGIC (Yahan se data UPDATE hone database me jayega)
-    // ----------------------------------------------------
+    // ====================================================
+    // 1. EDIT MODE CONFIGURATION LAYER (WORKING PROPERLY)
+    // ====================================================
     if (this.isEditMode) {
-
       const guestId = this.guest.id ? Number(this.guest.id) : (this.editData?.id ? Number(this.editData.id) : null);
       if (!guestId) {
-        console.error("Angular side validation fail: ID nahi mili!", this.guest);
         alert("Error: Guest ID nahi mil paa rahi hai!");
         return;
       }
 
-      // Update payload me ID bhejna mandatory (zaroori) hai taaki backend ko pata chale kis row ko badalna hai
-
-      // const guestId = Number(this.guest.id);
       const updatePayload = {
         id: guestId,
         name: this.guest.name,
@@ -103,28 +133,22 @@ export class AddGuestComponent implements OnInit {
 
       console.log("Database me update karne ke liye data ja rha h:", updatePayload);
 
-      // API PUT call trigger kiya (guest.id ke sath)
       this.guestService.updateGuest(+this.guest.id!, updatePayload).subscribe({
         next: (updatedGuestFromBackend) => {
-          console.log("Mubarak ho! Database me record successfully update ho gaya:", updatedGuestFromBackend);
-
-          // Popup close karenge aur backend se aaya naya updated data main table ko de denge
-          if (this.dialogRef) {
-            this.dialogRef.close(updatedGuestFromBackend);
-          }
+          if (this.dialogRef) this.dialogRef.close(updatedGuestFromBackend);
         },
-        error: (err) => {
-          console.error("Database update failed error trace:", err);
-          alert("Guest details update nahi ho payi! Console check karein.");
-        }
+        error: (err) => alert("Guest details update nahi ho payi!")
       });
 
-      // ----------------------------------------------------
-      // ADD MODE LOGIC (Aapka purana superhit code jo bina kisi change ke chalega)
-      // ----------------------------------------------------
+      // ====================================================
+      // 2. ADD MODE HANDLER (FIXED: CLEAN POST USING BASE API)
+      // ====================================================
     } else {
 
-      // 2. ABSOLUTE PERFECT PAYLOAD (Bina kisi ID ke jaisa aapke postman response me h)
+      // Extraction Check: Dropdown item se direct clean text target content read kiya
+      const selectedFamilyName = this.guest.family?.familyName ? this.guest.family.familyName : 'General';
+
+      // 100% POSTMAN VERIFIED FIXED STRUCTURE PAYLOAD (No custom URLs needed)
       const exactPayload = {
         name: this.guest.name,
         phoneNumber: this.guest.phoneNumber,
@@ -134,18 +158,16 @@ export class AddGuestComponent implements OnInit {
         gender: this.guest.gender,
         adultOrchild: this.guest.adultOrchild,
         family: {
-          familyName: this.guest.family.familyName || 'General' // No ID here!
+          familyName: selectedFamilyName // Flat string text mapping matching backend constraints
         }
       };
 
-      console.log("Postman verified format sending from Angular:", exactPayload);
+      console.log("Postman verified format sending from Angular via base save:", exactPayload);
 
-      // 3. API POST call trigger kiya
+      // Direct dynamic single pipeline trigger to standard endpoint http://localhost:8090/guests
       this.guestService.save(exactPayload).subscribe({
         next: (savedGuestFromBackend) => {
           console.log("Mubarak ho! Database me successfully save ho gaya:", savedGuestFromBackend);
-
-          // Popup close karke naya data main table ko pass kar denge
           if (this.dialogRef) {
             this.dialogRef.close(savedGuestFromBackend);
           }
@@ -158,5 +180,5 @@ export class AddGuestComponent implements OnInit {
     }
   }
 
-
+  
 }

@@ -1,42 +1,30 @@
 <div class="card-wrapper">
   <mat-card class="guest-card">
-    
+
     <mat-card-header>
       <mat-card-title class="form-title">Add New Guest</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
       <div class="form-body">
-        
+
         <!-- Full Name -->
         <mat-form-field appearance="outline">
           <mat-label>Full Name</mat-label>
-          <input 
-            matInput [(ngModel)]="guest.name"
-            name="guestName" 
-            placeholder="Enter full name"
-            required>
+          <input matInput [(ngModel)]="guest.name" name="guestName" placeholder="Enter full name" required>
         </mat-form-field>
 
         <!-- Email Address -->
         <mat-form-field appearance="outline">
           <mat-label>Email Address</mat-label>
-          <input 
-            matInput 
-            type="email" 
-            [(ngModel)]="guest.email" 
-            name="guestEmail" 
-            placeholder="example@mail.com">
+          <input matInput type="email" [(ngModel)]="guest.email" name="guestEmail" placeholder="example@mail.com">
         </mat-form-field>
 
         <!-- Gender & Type Row -->
         <div class="form-row">
           <mat-form-field appearance="outline">
             <mat-label>Gender</mat-label>
-            <mat-select 
-                [(ngModel)]="guest.gender" 
-                name="guestGender" 
-                required>
+            <mat-select [(ngModel)]="guest.gender" name="guestGender" required>
               <mat-option value="Male">Male</mat-option>
               <mat-option value="Female">Female</mat-option>
             </mat-select>
@@ -73,10 +61,24 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- Family Name -->
+        <!-- Smart Combobox: Selection as well as New Typing Entry Choice -->
         <mat-form-field appearance="outline">
           <mat-label>Family Name</mat-label>
-          <input matInput [(ngModel)]="guest.family.familyName" name="guestFamilyName" placeholder="">
+
+          <!-- Typing text input connected to autocomplete window pointer -->
+          <input type="text" placeholder="Select family or type new name..." matInput
+            [(ngModel)]="guest.family.familyName" name="familySelectionName" (input)="filterFamilies()"
+            [matAutocomplete]="autoFamily" required>
+
+          <!-- Dropdown Auto Suggestion panel container block -->
+          <mat-autocomplete #autoFamily="matAutocomplete">
+            <!-- Loop through filtered suggestions tracking unique item indices -->
+            @for (familyItem of filteredFamilies; track familyItem.id || $index) {
+            <mat-option [value]="familyItem.familyName">
+              {{ familyItem.familyName }}
+            </mat-option>
+            }
+          </mat-autocomplete>
         </mat-form-field>
 
         <!-- LIVE DATA BINDING VIEW USING JSON PIPE -->
@@ -90,9 +92,8 @@
 
     <mat-card-actions align="end" class="form-actions">
       <button mat-button mat-dialog-close>Cancel</button>
-      <button mat-raised-button color="primary" 
-              [disabled]="!guest.name || !guest.gender || !guest.phoneNumber || !guest.guestCategory" 
-              (click)="save()">
+      <button mat-raised-button color="primary"
+        [disabled]="!guest.name || !guest.gender || !guest.phoneNumber || !guest.guestCategory" (click)="save()">
         Save Guest
       </button>
     </mat-card-actions>
