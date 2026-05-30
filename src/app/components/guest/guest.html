@@ -1,27 +1,27 @@
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 15px 10px 0 10px;">
+<!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 15px 10px 0 10px;"> -->
 
 
   <!-- Modern Search Input Box -->
-  <mat-form-field appearance="outline" style="width: 350px; font-size: 14px;">
+  <!-- <mat-form-field appearance="outline" style="width: 350px; font-size: 14px;">
     <mat-label>Search Guests</mat-label>
     <input matInput (keyup)="applyGuestFilter($event)" placeholder="Type a name to search..." #input>
     <!-- Beautiful Material Icon or Text Prefix -->
-    <span matPrefix style="margin-right: 8px; opacity: 0.6; font-size: 16px;">🔍</span>
-  </mat-form-field>
+    <!-- <span matPrefix style="margin-right: 8px; opacity: 0.6; font-size: 16px;">🔍</span>
+  </mat-form-field>  -->
 
   <!-- Modern Angular Material Button -->
-  <button mat-raised-button color="primary" (click)="openAddGuestDialog()"
+  <!-- <button mat-raised-button color="primary" (click)="openAddGuestDialog()"
     style="font-weight: 500; padding: 22px 24px; border-radius: 8px;">
     <span style="margin-right: 8px; font-size: 18px; font-weight: bold;">+</span> Add New Guest
   </button>
 
-</div>
+</div> -->
 
 @if (rawGuests() && rawGuests().length > 0) {
 
 <div class="mat-elevation-z8">
   <!-- 1. [dataSource] me pagedGuests() pass kiya -->
-  <table mat-table [dataSource]="filteredGuests()">
+  <table mat-table [dataSource]="pagedGuests()">
 
     <!-- ID Column -->
     <ng-container matColumnDef="id">

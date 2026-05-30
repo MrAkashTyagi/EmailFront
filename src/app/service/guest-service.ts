@@ -27,10 +27,10 @@ export class GuestService {
   return this.http.put<any>(`${this.baseUrl}/guests/${id}`, guestData);
 }
 
-// Payload me sirf family name jayega, aur ID path variable (URL) ke zariye server controller ko pass hogi
-saveGuestWithFamily(familyId: number, guestPayload: any): Observable<any> {
-  // Final URL path format: http://localhost:8090/guests/family/4
-  return this.http.put<any>(`${this.baseUrl}/family/${familyId}`, guestPayload);
-}
+// // Payload me sirf family name jayega, aur ID path variable (URL) ke zariye server controller ko pass hogi
+// saveGuestWithFamily(familyId: number, guestPayload: any): Observable<any> {
+//   // Final URL path format: http://localhost:8090/guests/family/4
+//   return this.http.put<any>(`${this.baseUrl}/guest/${familyId}`, guestPayload);
+// }
 
 }
