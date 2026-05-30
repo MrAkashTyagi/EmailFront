@@ -18,6 +18,24 @@
   -webkit-font-smoothing: antialiased;
 }
 
-body{
+/* body{
   background-color: #e2e2e2;
+} */
+
+/* FIX FIXED: Pure wrapper block ka size dynamic kiya aur space khali dikhna band kiya */
+html, body, .main-container, .card-wrapper {
+  margin: 0;
+  padding: 0;
+  min-height: auto !important; /* Fixed 100vh height ko hamesha ke liye toda */
+  height: auto !important;
+  background-color: #ffffff !important; /* Grey background ko pure white card match me badla */
+  background: #ffffff !important;
+}
+
+/* Router outlet wrapper page component content layout custom adjustment */
+.page-content-wrapper {
+  padding: 10px 16px !important;
+  background-color: #e2e2e2;
+  min-height: auto !important;
+  height: auto !important;
 }

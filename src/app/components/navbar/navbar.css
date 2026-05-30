@@ -15,31 +15,31 @@ body, .main-container {
   padding: 0;
 }
 
-/* Router-outlet ke content ko navbar ke niche dhakelne ke liye space */
 .page-content-wrapper {
-  padding: 40px 20px; /* Top se 40px ki sundar spacing di hai */
+  padding: 40px 20px; 
   display: block;
 }
 
 
 /* ==========================================
-   2. FORCED WHITE BACKGROUND & SIZE FOR M3 MENU
+   2. FORCED SOLID WHITE BACKGROUND FOR M3 MENU PANEL
    ========================================== */
 
-/* FIX 1: CDK pane container layout width adjust kiya */
+/* CDK pane container panel behavior sizing */
 ::v-deep .cdk-overlay-pane:has(.custom-premium-menu) {
   min-width: 280px !important;
 }
 
-/* 
-   FIX 2: M3 ke internal global design variables ko direct class par override kiya.
-   M3 components inhi variables se apna automatic background color light/dark banate hain.
-*/
-::v-deep .mat-mdc-menu-panel.custom-premium-menu {
+/* Complete Material 3 core surface tokens forced to pure white */
+::v-deep .mat-mdc-menu-panel.custom-premium-menu,
+.mat-mdc-menu-panel,
+.mat-mdc-menu-content,
+.custom-premium-menu,
+.mdc-menu-surface {
   --mat-menu-container-color: #ffffff !important;   
   --mdc-menu-container-color: #ffffff !important;   
-  --mat-sys-surface: #ffffff !important;            /* M3 Core surface token to white */
-  --mat-sys-surface-container: #ffffff !important;  /* Menu internal surface block to white */
+  --mat-sys-surface: #ffffff !important;            
+  --mat-sys-surface-container: #ffffff !important;  
   
   max-width: unset !important;
   min-width: 280px !important;
@@ -52,7 +52,7 @@ body, .main-container {
   padding: 8px 4px !important;
 }
 
-/* FIX 3: Content container elements ko inner system level par transparency di */
+/* Content wrapper inner transparency normalization */
 ::v-deep .custom-premium-menu .mat-mdc-menu-content {
   background-color: #ffffff !important;
   background: #ffffff !important;
@@ -60,64 +60,92 @@ body, .main-container {
   padding: 0 !important;
 }
 
-/* Menu items/rows ke fonts aur size ko bada karna */
-::v-deep .custom-premium-menu .mat-mdc-menu-item {
-  height: 52px !important; 
+
+/* ==========================================
+   3. MENU BUTTONS FORMATTING & HOVER STATES
+   ========================================== */
+::v-deep .custom-premium-menu .mat-mdc-menu-item,
+.mat-mdc-menu-item {
+  height: 48px !important; 
   font-size: 15px !important; 
   font-weight: 500 !important;
-  color: #2c3e50 !important;
+  color: #334155 !important; /* Premium Slate Grey Text */
   border-radius: 8px !important;
   margin: 4px 6px !important; 
-  transition: background-color 0.2s ease;
+  width: calc(100% - 12px) !important;
+  transition: all 0.2s ease-in-out !important;
 }
 
-/* Hover dynamic micro-interaction behavior */
-::v-deep .custom-premium-menu .mat-mdc-menu-item:hover {
-  background-color: #f4f6f9 !important; 
+/* Icon text margin alignment inside dropdown buttons */
+::v-deep .custom-premium-menu mat-icon,
+mat-icon {
+  color: #64748b !important;
+  margin-right: 12px !important;
+}
+
+/* Hover background style over inactive items */
+::v-deep .custom-premium-menu .mat-mdc-menu-item:hover,
+.mat-mdc-menu-item:hover {
+  background-color: #f1f5f9 !important; 
+  color: #0f172a !important;
 }
 
 
 /* ==========================================
-   3. ROUTE LINKS ACTIVE HIGH-LIGHTING STATE
+   4. ACTIVE CURRENT ROUTE LINK HIGHLIGHTS (COLORFUL)
    ========================================== */
 
-/* Active link element state control inside popup menu */
-::v-deep .custom-premium-menu .mat-mdc-menu-item.active-menu-item {
-  background-color: #e8eaf6 !important; 
-  color: #3f51b5 !important; 
-  font-weight: 600 !important;
-}
-
-/* Fallback legacy active classes */
+/* FIX FIXED: Old dull background removed. Added premium Royal Blue background with white text */
+::v-deep .custom-premium-menu .mat-mdc-menu-item.active-menu-item,
 .active-menu-item {
-  color: #3f51b5 !important;
-  font-weight: bold;
-  background-color: rgba(63, 81, 181, 0.04);
+  background-color: #3f51b5 !important; /* Premium Royal Blue */
+  color: #ffffff !important; /* Pure White Text */
+  font-weight: 600 !important;
+  box-shadow: 0px 4px 10px rgba(63, 81, 181, 0.25) !important;
 }
 
+/* Dynamic active state white icon representation tracker mapping */
+::v-deep .custom-premium-menu .mat-mdc-menu-item.active-menu-item mat-icon,
+.active-menu-item mat-icon {
+  color: #ffffff !important;
+}
+
+/* Toolbar active route indicator links properties */
 .active-btn {
   background-color: rgba(255, 255, 255, 0.2) !important;
   border-bottom: 3px solid #fff;
   border-radius: 4px 4px 0 0 !important;
 }
 
-/* Angular Material 3 Menu container background ko force fully solid white karne ke liye */
-.mat-mdc-menu-panel,
-.mat-mdc-menu-content,
-.custom-premium-menu,
-.mdc-menu-surface {
-  background-color: #ffffff !important;
-  background: #ffffff !important;
-  --mat-menu-container-color: #ffffff !important;
-  --mat-sys-surface: #ffffff !important;
-  --mat-sys-surface-container: #ffffff !important;
-  border-radius: 6px !important;
-  box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 
-              0px 8px 10px 1px rgba(0, 0, 0, 0.14), 
-              0px 3px 14px 2px rgba(0, 0, 0, 0.12) !important;
+/* ==========================================
+   1. NAVBAR & GLOBAL WRAPPER STYLES (COLOR CHANGE)
+   ========================================== */
+mat-toolbar,
+.mat-toolbar,
+.mat-mdc-toolbar {
+  /* FIX FIXED: Purana boring blue hatakar ekdum premium Deep Slate Dark Slate color lagaya */
+  background-color: #1e293b !important; /* Premium Charcoal/Slate Dark Blue */
+  background: #1e293b !important;
+  color: #ffffff !important; /* Pure White Text */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Menu items par hover state ko thoda beautiful touch dene ke liye (Optional) */
-.mat-mdc-menu-item:hover {
-  background-color: #f1f5f9 !important;
+/* Navbar ke andar lage icons ka color white karne ke liye */
+mat-toolbar mat-icon,
+.mat-toolbar .mat-icon {
+  color: #ffffff !important;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+body, .main-container {
+  margin: 0;
+  padding: 0;
+}
+
+.page-content-wrapper {
+  padding: 40px 20px; 
+  display: block;
 }

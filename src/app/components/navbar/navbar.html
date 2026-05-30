@@ -5,27 +5,27 @@
     <button mat-icon-button [matMenuTriggerFor]="appMenu" aria-label="Menu icon">
       <mat-icon>menu</mat-icon>
     </button>
-    <span style="font-weight: 500; font-size: 18px; letter-spacing: 0.5px;">Email GUI</span>
+    <span style="font-weight: 500; font-size: 18px; letter-spacing: 0.5px;">Shadi GUI</span>
   </div>
 
   <!-- Right Section: Shared input controls block shifting from main tables -->
-  <div style="display: flex; align-items: center; gap: 16px;">
+   <div style="display: flex; align-items: center; gap: 16px;">
     
-    <!-- Premium Balanced Dynamic Search Bar -->
+    <!-- Premium Balanced Dynamic Search Bar (Solid White Background) -->
     <div style="position: relative; display: flex; align-items: center;">
-      <span style="position: absolute; left: 12px; color: rgba(255,255,255,0.7); font-size: 16px;">🔍</span>
+      <!-- Icon color changed to Black with 0.6 opacity for subtle modern look -->
+      <span style="position: absolute; left: 12px; color: rgba(0,0,0,0.6); font-size: 16px; z-index: 5;">🔍</span>
       <input type="text" 
              [placeholder]="getPlaceholderText()" 
              (keyup)="onSearch($event)"
-             style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); color: white; padding: 8px 12px 8px 36px; border-radius: 6px; width: 250px; font-size: 14px; outline: none; transition: all 0.3s;"
-             onfocus="this.style.background='#ffffff'; this.style.color='#333333'"
-             onblur="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.color='#ffffff'">
+             style="background: #ffffff !important; border: 1px solid #cbd5e1; color: #000000 !important; padding: 8px 12px 8px 36px; border-radius: 6px; width: 250px; font-size: 14px; outline: none; transition: all 0.3s; font-weight: 500;"
+             placeholder-color="rgba(0,0,0,0.4)">
     </div>
 
-    <!-- Premium Balanced Dynamic Action Trigger Button -->
+    <!-- Premium Balanced Dynamic Action Trigger Button (Solid White Background & Black Text) -->
     <button mat-flat-button (click)="onAddClick()"
-      style="background: rgba(255, 255, 255, 0.2); color: white; font-weight: 500; border-radius: 6px; height: 38px; border: 1px solid rgba(255,255,255,0.1);">
-      <span style="margin-right: 4px; font-weight: bold;">+</span> {{ getButtonText() }}
+      style="background: #ffffff !important; color: #000000 !important; font-weight: 600; border-radius: 6px; height: 38px; border: 1px solid #cbd5e1; box-shadow: 0px 1px 3px rgba(0,0,0,0.05);">
+      <span style="margin-right: 4px; font-weight: bold; color: #000000 !important;">+</span> {{ getButtonText() }}
     </button>
   </div>
 
@@ -33,25 +33,40 @@
 
 <!-- Detached Dropdown Menu block -->
 <mat-menu #appMenu="matMenu" panelClass="custom-premium-menu">
-  <div style="background-color: #ffffff !important; --mat-menu-container-color: #ffffff !important; --mat-sys-surface: #ffffff !important; --mat-sys-surface-container: #ffffff !important; padding: 4px; border-radius: 4px;">
-    
-    <button mat-menu-item routerLink="/" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active-menu-item">
-      <mat-icon>home</mat-icon><span>Home</span>
-    </button>
-    
-    <button mat-menu-item routerLink="/sendemail" routerLinkActive="active-menu-item">
-      <mat-icon>email</mat-icon><span>Send Email</span>
-    </button>
-    
-    <button mat-menu-item routerLink="/family" routerLinkActive="active-menu-item">
-      <mat-icon>people</mat-icon><span>Family List</span>
-    </button>
-    
-    <button mat-menu-item routerLink="/guests" routerLinkActive="active-menu-item">
-      <mat-icon>person</mat-icon><span>Guest List</span>
-    </button>
+  
+  <!-- Home Page link trigger block -->
+  <button mat-menu-item 
+          routerLink="/" 
+          [routerLinkActiveOptions]="{exact: true}" 
+          routerLinkActive="active-menu-item">
+    <mat-icon>home</mat-icon>
+    <span>Home</span>
+  </button>
+  
+  <!-- Send Email page link trigger block -->
+  <button mat-menu-item 
+          routerLink="/sendemail" 
+          routerLinkActive="active-menu-item">
+    <mat-icon>email</mat-icon>
+    <span>Send Email</span>
+  </button>
+  
+  <!-- Family Management grid page link trigger block -->
+  <button mat-menu-item 
+          routerLink="/family" 
+          routerLinkActive="active-menu-item">
+    <mat-icon>people</mat-icon>
+    <span>Family List</span>
+  </button>
+  
+  <!-- Mehman / Guest Management grid page link trigger block -->
+  <button mat-menu-item 
+          routerLink="/guests" 
+          routerLinkActive="active-menu-item">
+    <mat-icon>person</mat-icon>
+    <span>Guest List</span>
+  </button>
 
-  </div>
 </mat-menu>
 
 <!-- Spacer layout constraint override to push pages below floating bar -->

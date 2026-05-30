@@ -1,106 +1,109 @@
-<!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 15px 10px 0 10px;"> -->
+<!-- MAIN CONTENT CONTAINER WRAPPER (TOP SPACING MINIMIZED TO TOUCH NAVBAR) -->
+<div style="padding: 5px 8px 5px 8px; box-sizing: border-box; width: 100%;">
 
+  @if (rawGuests() && rawGuests().length > 0) {
 
-  <!-- Modern Search Input Box -->
-  <!-- <mat-form-field appearance="outline" style="width: 350px; font-size: 14px;">
-    <mat-label>Search Guests</mat-label>
-    <input matInput (keyup)="applyGuestFilter($event)" placeholder="Type a name to search..." #input>
-    <!-- Beautiful Material Icon or Text Prefix -->
-    <!-- <span matPrefix style="margin-right: 8px; opacity: 0.6; font-size: 16px;">🔍</span>
-  </mat-form-field>  -->
+  <!-- INTERNALLY SCROLLABLE TABLE CONTAINER (HEIGHT MAXIMUM EXPANDED, NO GLOBAL PAGE SCROLL) -->
+  <div class="mat-elevation-z8" style="max-height: max-content; height: auto; overflow-y: auto; overflow-x: auto; border-radius: 8px 8px 0 0; background: white; width: 100%; display: block; box-sizing: border-box; position: relative;">
+    
+    <table mat-table [dataSource]="pagedGuests()" style="width: 100% !important; min-width: 1200px; table-layout: fixed; border-collapse: collapse;">
 
-  <!-- Modern Angular Material Button -->
-  <!-- <button mat-raised-button color="primary" (click)="openAddGuestDialog()"
-    style="font-weight: 500; padding: 22px 24px; border-radius: 8px;">
-    <span style="margin-right: 8px; font-size: 18px; font-weight: bold;">+</span> Add New Guest
-  </button>
+      <!-- ID Column (6% Width) -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 6%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Id </th>
+        <td mat-cell *matCellDef="let element" style="padding: 14px 16px;"> {{element.id}} </td>
+      </ng-container>
 
-</div> -->
+      <!-- Name Column (14% Width) -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 14%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Name </th>
+        <td mat-cell *matCellDef="let element" style="padding: 14px 16px; font-weight: 500; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> {{element.name}} </td>
+      </ng-container>
 
-@if (rawGuests() && rawGuests().length > 0) {
+      <!-- Gender Column (10% Width) -->
+      <ng-container matColumnDef="gender">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 10%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Gender </th>
+        <td mat-cell *matCellDef="let element" style="padding: 14px 16px;"> {{element.gender}} </td>
+      </ng-container>
 
-<div class="mat-elevation-z8">
-  <!-- 1. [dataSource] me pagedGuests() pass kiya -->
-  <table mat-table [dataSource]="pagedGuests()">
+      <!-- Type Column (9% Width) -->
+      <ng-container matColumnDef="adultOrChild">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 9%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Type </th>
+        <td mat-cell *matCellDef="let element" style="padding: 14px 16px;">
+          <span [style.background-color]="element.adultOrchild === 'Adult' ? '#e0f2fe' : '#fef3c7'"
+                [style.color]="element.adultOrchild === 'Adult' ? '#0369a1' : '#b45309'"
+                style="font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; white-space: nowrap;">
+            {{element.adultOrchild}}
+          </span>
+        </td>
+      </ng-container>
 
-    <!-- ID Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> Id </th>
-      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-    </ng-container>
+      <!-- Phone Number Column (13% Width) -->
+      <ng-container matColumnDef="phoneNumber">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 13%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Phone Number </th>
+        <td mat-cell *matCellDef="let element" style="padding: 14px 16px; color: #475569; white-space: nowrap;"> {{element.phoneNumber}} </td>
+      </ng-container>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-    </ng-container>
+      <!-- Whatsapp number Column (13% Width) -->
+      <ng-container matColumnDef="whatsapp_Number">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 13%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Whatsapp Number </th>
+        <td mat-cell *matCellDef="let element" style="padding: 14px 16px; color: #475569; white-space: nowrap;">
+          <span>💬</span> {{element.whatsapp_Number}}
+        </td>
+      </ng-container>
 
-    <!-- Gender Column -->
-    <ng-container matColumnDef="gender">
-      <th mat-header-cell *matHeaderCellDef> Gender </th>
-      <td mat-cell *matCellDef="let element"> {{element.gender}} </td>
-    </ng-container>
+      <!-- Guest Category Column (12% Width) -->
+      <ng-container matColumnDef="guestCategory">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 12%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Category </th>
+        <td mat-cell *matCellDef="let element" style="padding: 14px 16px;">
+          <span style="font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; background-color: #f1f5f9; color: #475569; white-space: nowrap;">
+            {{element.guestCategory}}
+          </span>
+        </td>
+      </ng-container>
 
-    <!-- Type Column -->
-    <ng-container matColumnDef="adultOrChild">
-      <th mat-header-cell *matHeaderCellDef> Type </th>
-      <td mat-cell *matCellDef="let element"> {{element.adultOrchild}} </td>
-    </ng-container>
+      <!-- Family Name Column (11% Width) -->
+      <ng-container matColumnDef="familyName">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 11%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Family Name </th>
+        <td mat-cell *matCellDef="let element" style="padding: 14px 16px; font-weight: 600; color: #3f51b5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> {{element.family?.familyName || 'General'}} </td>
+      </ng-container>
 
-    <!-- Phone Number Column -->
-    <ng-container matColumnDef="phoneNumber">
-      <th mat-header-cell *matHeaderCellDef> Phone Number </th>
-      <td mat-cell *matCellDef="let element"> {{element.phoneNumber}} </td>
-    </ng-container>
+      <!-- Actions Column (12% Width) -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center; font-weight: 600; padding: 14px 16px; width: 12%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Actions </th>
+        <td mat-cell *matCellDef="let element" style="text-align: center; padding: 14px 16px; white-space: nowrap;">
+          <button mat-flat-button color="primary" (click)="openEditGuestDialog(element)"
+            style="border-radius: 6px; padding: 0 10px; min-width: 65px; height: 34px; background-color: #3f51b5; margin-right: 6px; font-size: 13px;">
+            ✏️ Edit
+          </button>
+          <button mat-flat-button color="warn" (click)="deleteGuestRecord(element.id)"
+            style="border-radius: 6px; padding: 0 10px; min-width: 65px; height: 34px; font-size: 13px;">
+            🗑️ Delete
+          </button>
+        </td>
+      </ng-container>
 
-    <!-- Whatsapp number Column -->
-    <ng-container matColumnDef="whatsapp_Number">
-      <th mat-header-cell *matHeaderCellDef> Whatsapp Number </th>
-      <td mat-cell *matCellDef="let element"> {{element.whatsapp_Number}} </td>
-    </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="border-bottom: 1px solid #f1f5f9;"></tr>
+    </table>
 
-    <!-- Guest Category Column -->
-    <ng-container matColumnDef="guestCategory">
-      <th mat-header-cell *matHeaderCellDef> Category </th>
-      <td mat-cell *matCellDef="let element"> {{element.guestCategory}} </td>
-    </ng-container>
+  </div>
 
-    <!-- Family Name Column -->
-    <ng-container matColumnDef="familyName">
-      <th mat-header-cell *matHeaderCellDef> Family Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.family?.familyName}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Actions </th>
-      <td mat-cell *matCellDef="let element" style="text-align: center;">
-
-        <!-- Blue Edit Button -->
-        <button mat-flat-button color="primary" (click)="openEditGuestDialog(element)"
-          style="border-radius: 6px; padding: 0 12px; min-width: unset; height: 36px; background-color: #3f51b5; margin-right: 15px;">
-          <span style="font-size: 16px; margin-right: 4px;">✏️</span> Edit
-        </button>
-
-        <!-- Red Delete Button -->
-        <button mat-flat-button color="warn" (click)="deleteGuestRecord(element.id)"
-          style="border-radius: 6px; padding: 0 12px; min-width: unset; height: 36px;">
-          <span style="font-size: 16px; margin-right: 4px;">🗑️</span> Delete
-        </button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-
-  <!-- 2. Paginator controls yahan add kiye -->
-  <mat-paginator [length]="filteredGuests().length" [pageSize]="pageSize()" [pageSizeOptions]="[5, 10, 20]"
-    [pageIndex]="currentPage()" (page)="onPageChange($event)" showFirstLastButtons aria-label="Select page of guests">
+  <!-- Paginator controls layout -->
+  <mat-paginator [length]="filteredGuests().length" 
+                 [pageSize]="pageSize()" 
+                 [pageSizeOptions]="[5, 10, 20]"
+                 [pageIndex]="currentPage()" 
+                 (page)="onPageChange($event)" 
+                 showFirstLastButtons 
+                 aria-label="Select page of guests"
+                 style="border-top: 1px solid #e2e8f0; background: white; border-radius: 0 0 8px 8px; width: 100%; box-sizing: border-box;" class="mat-elevation-z8">
   </mat-paginator>
-</div>
 
-} @else {
-<div style="padding: 20px; text-align: center; color: red; font-weight: bold; background: #fee2e2;">
-  Data load nahi hua ya fir array khali hai! Current Length: {{ rawGuests().length }}
+  } @else {
+  <div style="padding: 20px; text-align: center; color: red; font-weight: bold; background: #fee2e2; border-radius: 8px;">
+    Data load nahi hua ya fir array khali hai! Current Length: {{ rawGuests().length }}
+  </div>
+  }
+
 </div>
-}
