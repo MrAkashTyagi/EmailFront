@@ -49,12 +49,15 @@
   </table>
 
   <!-- 2. Paginator controls yahan add kiye -->
-  <!-- <mat-paginator [length]="rawGuests().length" [pageSize]="pageSize()" [pageSizeOptions]="[5, 10, 20]"
-    (page)="onPageChange($event)" showFirstLastButtons aria-label="Select page of guests">
-  </mat-paginator> -->
+  <mat-paginator
+  [pageSize]="5" 
+   showFirstLastButtons
+   [pageSizeOptions]="[5, 10, 20]"   
+    aria-label="Select page of families">
+  </mat-paginator> 
 </div>
 
-<!-- }  -->
+<!-- } 
 
 <!-- @else {
 <div style="padding: 20px; text-align: center; color: red; font-weight: bold; background: #fee2e2;">

@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Familyservice } from '../../service/familyservice';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -8,9 +8,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { JsonPipe } from '@angular/common';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AddFamily } from '../add-family/add-family';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-family',
@@ -26,13 +27,17 @@ import { AddFamily } from '../add-family/add-family';
     MatProgressSpinnerModule,
     MatTableModule,
     MatDialogModule,
-    AddFamily
+    AddFamily,    
+    MatPaginatorModule
+
 
   ],
   templateUrl: './family.html',
   styleUrl: './family.css',
 })
-export class Family {
+export class Family implements OnInit, AfterViewInit {
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator
 
   private dialog = inject(MatDialog);
 
@@ -42,9 +47,17 @@ export class Family {
     'actions'
   ];
 
-  rawFamilies: any[] = [];
+  // rawFamilies: any[] = [];
+
+  // 3. rawFamilies ko ab hum MatTableDataSource banayenge
+  rawFamilies = new MatTableDataSource(<any>[]);
 
   constructor(private familyService: Familyservice, private cdr: ChangeDetectorRef) { }
+
+  // 3. Yeh naya hook add kijiye jo data loading ke baad paginator link karega
+  ngAfterViewInit() {
+    this.rawFamilies.paginator = this.paginator;
+  }
 
   ngOnInit(): void {
     // App ke load hote hi yeh automatic trigger ho jayega
@@ -53,11 +66,14 @@ export class Family {
         console.log('Data loaded successfully:', response);
 
         let parsedData = typeof response === 'string' ? JSON.parse(response) : response;
-        const dataArray = this.rawFamilies = parsedData?.content || parsedData?.familyList || (Array.isArray(parsedData) ? parsedData : [parsedData]);
+        const dataArray = parsedData?.content || parsedData?.familyList || (Array.isArray(parsedData) ? parsedData : [parsedData]);
 
 
         setTimeout(() => {
-          this.rawFamilies = dataArray;
+          // 4. Data ko data source me dala aur paginator connect kiya
+          this.rawFamilies.data = dataArray;
+          // this.rawFamilies.paginator = this.paginator;
+
           this.cdr.detectChanges();
         }, 0);
 
@@ -87,7 +103,7 @@ export class Family {
 
         setTimeout(() => {
           //     // Table me automatic top par push ho jayega bina refresh ke
-          this.rawFamilies = ([...this.rawFamilies, result]);
+          this.rawFamilies.data = [...this.rawFamilies.data, result];
           // 2. Table ko refresh karne ke liye force trigger lagaya
           this.cdr.detectChanges();
         }, 0);
@@ -105,7 +121,7 @@ export class Family {
           console.log(`Family ID ${id} successfully delete ho gayi!`);
 
           // UI se us record ko live bina page reload kiye hatane ka tarika
-          this.rawFamilies = this.rawFamilies.filter(family => family.id !== id);
+          this.rawFamilies.data = this.rawFamilies.data.filter((family: any) => family.id !== id);
 
           // Screen ko refresh ka signal diya
           this.cdr.detectChanges();
@@ -118,7 +134,7 @@ export class Family {
     }
   }
 
-  openEditFamilyDialog(familyData: any): void{
+  openEditFamilyDialog(familyData: any): void {
     console.log("Clicked edit button", familyData);
 
     const dialogRef = this.dialog.open(AddFamily, {
@@ -130,15 +146,15 @@ export class Family {
 
     dialogRef.afterClosed().subscribe(result => {
       // Jab user edit form save karke live updated object wapas bhejega
-      if(result){
-        console.log("Databse se aaya hua updated object : ",result);
+      if (result) {
+        console.log("Databse se aaya hua updated object : ", result);
 
-        setTimeout(()=> {
-           // UI ke array me se purane record ko naye (result) se replace karne ka live tarika
-          this.rawFamilies = this.rawFamilies.map(family => family.id === result.id ? result : family);
+        setTimeout(() => {
+          // UI ke array me se purane record ko naye (result) se replace karne ka live tarika
+          this.rawFamilies.data = this.rawFamilies.data.map((family: any) => family.id === result.id ? result : family);
 
           this.cdr.detectChanges();
-        },0);
+        }, 0);
 
       }
     });
