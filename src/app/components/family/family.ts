@@ -37,6 +37,8 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 })
 export class Family implements OnInit, AfterViewInit {
 
+  expandedElement: any | null = null;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator
 
   private dialog = inject(MatDialog);

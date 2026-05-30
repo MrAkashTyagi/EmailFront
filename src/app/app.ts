@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { Home } from "./components/home/home";
 import { Navbar } from "./components/navbar/navbar";
 
@@ -9,7 +9,8 @@ import { Navbar } from "./components/navbar/navbar";
   imports: [
     RouterOutlet,
     Home,
-    Navbar    
+    Navbar,
+    RouterLink   
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'

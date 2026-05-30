@@ -1,79 +1,148 @@
+<!-- TOP BAR: SEARCH AND ADD BUTTON -->
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 15px 10px 0 10px;">
-
 
   <!-- Modern Search Input Box -->
   <mat-form-field appearance="outline" style="width: 350px; font-size: 14px;">
     <mat-label>Search Family</mat-label>
     <input matInput (keyup)="applyFamilyFilter($event)" placeholder="Type a name to search..." #input>
-    <!-- Beautiful Material Icon or Text Prefix -->
     <span matPrefix style="margin-right: 8px; opacity: 0.6; font-size: 16px;">🔍</span>
   </mat-form-field>
 
-  <!-- Modern Angular Material Button -->
+  <!-- Add New Family Button -->
   <button mat-raised-button color="primary" (click)="openAddFamilyDialog()"
     style="font-weight: 500; padding: 22px 24px; border-radius: 8px;">
     <span style="margin-right: 8px; font-size: 18px; font-weight: bold;">+</span> Add New Family
   </button>
 </div>
 
-
-<!-- @if (rawGuests() && rawGuests().length > 0) { -->
-
+<!-- DATA TABLE SECTION -->
 <div class="mat-elevation-z8">
-  <!-- 1. [dataSource] me pagedGuests() pass kiya -->
-  <table mat-table [dataSource]="rawFamilies">
+  <table mat-table [dataSource]="rawFamilies" multiTemplateDataRows>
 
     <!-- ID Column -->
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> Id </th>
+      <th mat-header-cell *matHeaderCellDef style="font-weight: 600;"> Id </th>
       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <th mat-header-cell *matHeaderCellDef style="font-weight: 600;"> Name </th>
       <td mat-cell *matCellDef="let element"> {{element.familyName}} </td>
     </ng-container>
 
-   <!-- Actions Column -->
-<ng-container matColumnDef="actions">
-  <!-- Header ko bhi right align kiya taaki buttons se match kare -->
-  <th mat-header-cell *matHeaderCellDef style="text-align: right; padding-right: 24px; font-weight: 600;"> Actions </th>
-  <td mat-cell *matCellDef="let element" style="text-align: right; padding-right: 24px;">
-    
-    <!-- Flexbox Wrapper: Buttons ko right side (end) me align karne aur gap dene ke liye -->
-    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px; width: 100%;">
-      
-      <!-- Blue Edit Button -->
-      <button mat-flat-button color="primary" (click)="openEditFamilyDialog(element)"
-        style="border-radius: 6px; padding: 0 16px; min-width: 80px; height: 36px; background-color: #3f51b5;">
-        <span style="font-size: 14px; margin-right: 6px;">✏️</span> Edit
-      </button>
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef style="text-align: right; padding-right: 24px; font-weight: 600;"> Actions </th>
+      <td mat-cell *matCellDef="let element" style="text-align: right; padding-right: 24px;">
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px; width: 100%;">
 
-      <!-- Red Delete Button -->
-      <button mat-flat-button color="warn" (click)="deleteFamilyRecord(element.id)"
-        style="border-radius: 6px; padding: 0 16px; min-width: 80px; height: 36px;">
-        <span style="font-size: 14px; margin-right: 6px;">🗑️</span> Delete
-      </button>
-      
-    </div>
-  </td>
-</ng-container>
+          <!-- Blue Edit Button (With stopPropagation) -->
+          <button mat-flat-button color="primary" (click)="openEditFamilyDialog(element); $event.stopPropagation()"
+            style="border-radius: 6px; padding: 0 16px; min-width: 80px; height: 36px; background-color: #3f51b5;">
+            <span style="font-size: 14px; margin-right: 6px;">✏️</span> Edit
+          </button>
 
+          <!-- Red Delete Button (With stopPropagation) -->
+          <button mat-flat-button color="warn" (click)="deleteFamilyRecord(element.id); $event.stopPropagation()"
+            style="border-radius: 6px; padding: 0 16px; min-width: 80px; height: 36px;">
+            <span style="font-size: 14px; margin-right: 6px;">🗑️</span> Delete
+          </button>
+
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- EXPANDABLE CONTENT ROW COLUMN (GUEST LIST CONTAINER) -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length" style="padding: 0 !important;">
+        <div class="example-element-detail-wrapper"
+          [class.example-element-detail-wrapper-expanded]="expandedElement === element">
+
+          <div class="guest-list-box" style="padding: 20px; background: #f8fafc; border-radius: 8px; margin: 12px 24px; width: 100%; box-sizing: border-box;">
+            <h4 style="margin: 0 0 16px 0; color: #3f51b5; font-size: 15px; font-weight: 600;">👤 Guests in this Family:</h4>
+
+            <!-- Loop through backend guestList -->
+            @if (element.guestList && element.guestList.length > 0) {
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                @for (guest of element.guestList; track guest.id) {
+
+                  <!-- Equal Width Grid Row Template -->
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: white; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); box-sizing: border-box; width: 100%;">
+                    
+                    <!-- Section 1: Guest Primary Name (25% Width Allocation) -->
+                    <div style="flex: 0 0 25%; min-width: 180px; font-weight: 600; font-size: 15px; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                      {{ guest.name || guest.guestName }}
+                    </div>
+                    
+                    <!-- Section 2: Badges Group Block (25% Width Allocation) -->
+                    <div style="flex: 0 0 25%; display: flex; gap: 8px; align-items: center; flex-wrap: nowrap;">
+                      <!-- Adult/Child Badge with dual casing safe checkpoint -->
+                      @let status = guest.adultOrchild || guest.adultOrChild;
+                      <span [style.background-color]="status === 'Adult' ? '#e0f2fe' : '#fef3c7'"
+                            [style.color]="status === 'Adult' ? '#0369a1' : '#b45309'"
+                            style="font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 600; white-space: nowrap;">
+                        {{ status || 'N/A' }}
+                      </span>
+
+                      <!-- Gender Status Badge -->
+                      <span style="font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 600; background-color: #f1f5f9; color: #475569; white-space: nowrap;">
+                        {{ guest.gender || 'N/A' }}
+                      </span>
+
+                      <!-- Category Status Badge -->
+                      @if (guest.guestCategory) {
+                        <span style="font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 600; background-color: #e0e7ff; color: #3730a3; white-space: nowrap;">
+                          {{ guest.guestCategory }}
+                        </span>
+                      }
+                    </div>
+
+                    <!-- Section 3: Communication Phone Block (22% Width Allocation) -->
+                    <div style="flex: 0 0 22%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+                      <span>📞</span> <span><b style="color: #64748b;">Phone:</b> {{ guest.phoneNumber || 'N/A' }}</span>
+                    </div>
+
+                    <!-- Section 4: Communication WhatsApp Block (22% Width Allocation) -->
+                    <div style="flex: 0 0 22%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+                      <span style="color: #25d366;">💬</span> <span><b style="color: #64748b;">WhatsApp:</b> {{ guest.whatsapp_Number || guest.whatsappNumber || 'N/A' }}</span>
+                    </div>
+
+                    <!-- Section 5: Dynamic Record ID Block (6% Width Allocation, Right Aligned) -->
+                    <div style="flex: 0 0 6%; color: #94a3b8; font-size: 13px; font-weight: 500; text-align: right; white-space: nowrap;">
+                      ID: {{ guest.id }}
+                    </div>
+
+                  </div>
+
+                }
+              </div>
+            } @else {
+              <div style="color: #94a3b8; font-style: italic; font-size: 13px; padding: 5px 0;">
+                Is family me koi guest mapped nahi hai.
+              </div>
+            }
+          </div>
+
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- ROW DEFINITIONS -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <!-- Main clickable row that toggles expanded element -->
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element" style="cursor: pointer;">
+    </tr>
+
+    <!-- Secondary row dedicated entirely to the guest list container -->
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row" style="height: 0px !important;"></tr>
   </table>
 
-  <!-- 2. Paginator controls yahan add kiye -->
+  <!-- PAGINATOR CONTROLS -->
   <mat-paginator [pageSize]="5" showFirstLastButtons [pageSizeOptions]="[5, 10, 20]"
     aria-label="Select page of families">
   </mat-paginator>
 </div>
-
-<!-- } 
-
-<!-- @else {
-<div style="padding: 20px; text-align: center; color: red; font-weight: bold; background: #fee2e2;">
-  Data load nahi hua ya fir array khali hai! Current Length: {{ rawGuests().length }}
-</div> -->
-<!-- } -->
