@@ -1,5 +1,14 @@
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 15px 10px 0 10px;">
 
-<div style="display: flex; justify-content: flex-end; margin-bottom: 20px; padding: 10px 5px 0 0;">
+
+  <!-- Modern Search Input Box -->
+  <mat-form-field appearance="outline" style="width: 350px; font-size: 14px;">
+    <mat-label>Search Family</mat-label>
+    <input matInput (keyup)="applyFamilyFilter($event)" placeholder="Type a name to search..." #input>
+    <!-- Beautiful Material Icon or Text Prefix -->
+    <span matPrefix style="margin-right: 8px; opacity: 0.6; font-size: 16px;">🔍</span>
+  </mat-form-field>
+
   <!-- Modern Angular Material Button -->
   <button mat-raised-button color="primary" (click)="openAddFamilyDialog()"
     style="font-weight: 500; padding: 22px 24px; border-radius: 8px;">
@@ -26,35 +35,39 @@
       <td mat-cell *matCellDef="let element"> {{element.familyName}} </td>
     </ng-container>
 
-        <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Actions </th>
-      <td mat-cell *matCellDef="let element" style="text-align: center;">
-
-         <!-- Blue Edit Button -->
+   <!-- Actions Column -->
+<ng-container matColumnDef="actions">
+  <!-- Header ko bhi right align kiya taaki buttons se match kare -->
+  <th mat-header-cell *matHeaderCellDef style="text-align: right; padding-right: 24px; font-weight: 600;"> Actions </th>
+  <td mat-cell *matCellDef="let element" style="text-align: right; padding-right: 24px;">
+    
+    <!-- Flexbox Wrapper: Buttons ko right side (end) me align karne aur gap dene ke liye -->
+    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px; width: 100%;">
+      
+      <!-- Blue Edit Button -->
       <button mat-flat-button color="primary" (click)="openEditFamilyDialog(element)"
-        style="border-radius: 6px; padding: 0 12px; min-width: unset; height: 36px; background-color: #3f51b5; margin-right: 15px;">
-        <span style="font-size: 16px; margin-right: 4px;">✏️</span> Edit
+        style="border-radius: 6px; padding: 0 16px; min-width: 80px; height: 36px; background-color: #3f51b5;">
+        <span style="font-size: 14px; margin-right: 6px;">✏️</span> Edit
       </button>
 
-        <!-- Red Delete Button -->
-        <button mat-flat-button color="warn" (click)="deleteFamilyRecord(element.id)"
-          style="border-radius: 6px; padding: 0 12px; min-width: unset; height: 36px;">
-          <span style="font-size: 16px; margin-right: 4px;">🗑️</span> Delete
-        </button>
-      </td>
-    </ng-container>
+      <!-- Red Delete Button -->
+      <button mat-flat-button color="warn" (click)="deleteFamilyRecord(element.id)"
+        style="border-radius: 6px; padding: 0 16px; min-width: 80px; height: 36px;">
+        <span style="font-size: 14px; margin-right: 6px;">🗑️</span> Delete
+      </button>
+      
+    </div>
+  </td>
+</ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
   <!-- 2. Paginator controls yahan add kiye -->
-  <mat-paginator
-  [pageSize]="5" 
-   showFirstLastButtons
-   [pageSizeOptions]="[5, 10, 20]"   
+  <mat-paginator [pageSize]="5" showFirstLastButtons [pageSizeOptions]="[5, 10, 20]"
     aria-label="Select page of families">
-  </mat-paginator> 
+  </mat-paginator>
 </div>
 
 <!-- } 

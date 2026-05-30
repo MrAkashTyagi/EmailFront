@@ -1,16 +1,27 @@
-<div style="display: flex; justify-content: flex-end; margin-bottom: 20px; padding: 10px 5px 0 0;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 15px 10px 0 10px;">
+
+
+  <!-- Modern Search Input Box -->
+  <mat-form-field appearance="outline" style="width: 350px; font-size: 14px;">
+    <mat-label>Search Guests</mat-label>
+    <input matInput (keyup)="applyGuestFilter($event)" placeholder="Type a name to search..." #input>
+    <!-- Beautiful Material Icon or Text Prefix -->
+    <span matPrefix style="margin-right: 8px; opacity: 0.6; font-size: 16px;">🔍</span>
+  </mat-form-field>
+
   <!-- Modern Angular Material Button -->
   <button mat-raised-button color="primary" (click)="openAddGuestDialog()"
     style="font-weight: 500; padding: 22px 24px; border-radius: 8px;">
     <span style="margin-right: 8px; font-size: 18px; font-weight: bold;">+</span> Add New Guest
   </button>
+
 </div>
 
 @if (rawGuests() && rawGuests().length > 0) {
 
 <div class="mat-elevation-z8">
   <!-- 1. [dataSource] me pagedGuests() pass kiya -->
-  <table mat-table [dataSource]="pagedGuests()">
+  <table mat-table [dataSource]="filteredGuests()">
 
     <!-- ID Column -->
     <ng-container matColumnDef="id">
@@ -64,11 +75,11 @@
       <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Actions </th>
       <td mat-cell *matCellDef="let element" style="text-align: center;">
 
-         <!-- Blue Edit Button -->
-      <button mat-flat-button color="primary" (click)="openEditGuestDialog(element)"
-        style="border-radius: 6px; padding: 0 12px; min-width: unset; height: 36px; background-color: #3f51b5; margin-right: 15px;">
-        <span style="font-size: 16px; margin-right: 4px;">✏️</span> Edit
-      </button>
+        <!-- Blue Edit Button -->
+        <button mat-flat-button color="primary" (click)="openEditGuestDialog(element)"
+          style="border-radius: 6px; padding: 0 12px; min-width: unset; height: 36px; background-color: #3f51b5; margin-right: 15px;">
+          <span style="font-size: 16px; margin-right: 4px;">✏️</span> Edit
+        </button>
 
         <!-- Red Delete Button -->
         <button mat-flat-button color="warn" (click)="deleteGuestRecord(element.id)"
@@ -83,8 +94,8 @@
   </table>
 
   <!-- 2. Paginator controls yahan add kiye -->
-  <mat-paginator [length]="rawGuests().length" [pageSize]="pageSize()" [pageSizeOptions]="[5, 10, 20]"
-    (page)="onPageChange($event)" showFirstLastButtons aria-label="Select page of guests">
+  <mat-paginator [length]="filteredGuests().length" [pageSize]="pageSize()" [pageSizeOptions]="[5, 10, 20]"
+    [pageIndex]="currentPage()" (page)="onPageChange($event)" showFirstLastButtons aria-label="Select page of guests">
   </mat-paginator>
 </div>
 

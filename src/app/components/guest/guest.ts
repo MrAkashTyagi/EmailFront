@@ -7,6 +7,8 @@ import { AddGuestComponent } from '../add-guest/add-guest';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { GuestService } from '../../service/guest-service';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @Component({
@@ -18,15 +20,17 @@ import { GuestService } from '../../service/guest-service';
     MatPaginatorModule,
     AddGuestComponent,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatFormField,
+    MatInputModule
 
   ], // Dono modules yahan rkhein
   templateUrl: './guest.html',
   styleUrls: ['./guest.css']
 })
 export class GuestComponent implements OnInit {
-    private dialog = inject(MatDialog);
-    private guestService = inject(GuestService);
+  private dialog = inject(MatDialog);
+  private guestService = inject(GuestService);
 
   // Aapke naye HTML ke matColumnDef ke hisab se columns array updated h
   displayedColumns: string[] = [
@@ -44,6 +48,9 @@ export class GuestComponent implements OnInit {
   // Asli data store karne ke liye main signal
   rawGuests = signal<any[]>([]);
 
+  // 2. Naya signal user ke search text ko track karne ke liye
+  guestSearchQuery = signal<string>('');
+
   // Pagination states ke liye naye signals
   pageSize = signal<number>(5);  // Ek page par default 5 rows dikhengi
   currentPage = signal<number>(0); // Default page index 0 rahega
@@ -52,7 +59,7 @@ export class GuestComponent implements OnInit {
   pagedGuests = computed(() => {
     const startIndex = this.currentPage() * this.pageSize();
     const endIndex = startIndex + this.pageSize();
-    return this.rawGuests().slice(startIndex, endIndex);
+    return this.filteredGuests().slice(startIndex, endIndex);
   });
 
   constructor(
@@ -92,9 +99,9 @@ export class GuestComponent implements OnInit {
     });
   }
 
-  
 
-    // ADD BUTTON CLICK PAR POPUP FORM KHOLNE KA LOGIC
+
+  // ADD BUTTON CLICK PAR POPUP FORM KHOLNE KA LOGIC
   openAddGuestDialog(): void {
     const dialogRef = this.dialog.open(AddGuestComponent, {
       width: '500px', // Premium standard desktop size layout
@@ -131,54 +138,76 @@ export class GuestComponent implements OnInit {
   }
 
   // 2. DELETE FUNCTION LOGIC
-deleteGuestRecord(id: number): void {
-  // Browser popup se confirmation confirmation puchenge
-  if (confirm("Kya aap sach me is guest ko delete karna chahte hain?")) {
-    
-    // GuestService ka delete method call kiya
-    this.guestService.deleteGuest(id).subscribe({
-      next: () => {
-        console.log(`Guest ID ${id} database se delete ho gaya!`);
-        
-        // UI se us record ko live bina reload ke hatane ka tarika
-        const filteredList = this.rawGuests().filter(guest => guest.id !== id);
-        this.rawGuests.set(filteredList);
-        
+  deleteGuestRecord(id: number): void {
+    // Browser popup se confirmation confirmation puchenge
+    if (confirm("Kya aap sach me is guest ko delete karna chahte hain?")) {
+
+      // GuestService ka delete method call kiya
+      this.guestService.deleteGuest(id).subscribe({
+        next: () => {
+          console.log(`Guest ID ${id} database se delete ho gaya!`);
+
+          // UI se us record ko live bina reload ke hatane ka tarika
+          const filteredList = this.rawGuests().filter(guest => guest.id !== id);
+          this.rawGuests.set(filteredList);
+
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Delete karne me koi error aaya:", err);
+          alert("Backend se record delete nahi ho paya! Console trace check karein.");
+        }
+      });
+    }
+
+  }
+
+  openEditGuestDialog(guestData: any): void {
+    // Dialog open karte waqt hum 'data' property me row ka data bhej rahe hain
+    const dialogRef = this.dialog.open(AddGuestComponent, {
+      width: '500px',
+      disableClose: true,
+      data: guestData // <-- Isse naye component ko pura data mil jayega
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Jab user update karke form close karega, toh result me naya updated data milega
+      if (result) {
+        console.log("Database se update hokar aaya live object:", result);
+
+        // UI Table me us specific row ko live change karne ka modern signal map tarika
+        const updatedList = this.rawGuests().map(guest =>
+          guest.id === result.id ? result : guest
+        );
+
+        this.rawGuests.set(updatedList);
         this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error("Delete karne me koi error aaya:", err);
-        alert("Backend se record delete nahi ho paya! Console trace check karein.");
       }
     });
   }
 
-}
 
-openEditGuestDialog(guestData: any): void {
-  // Dialog open karte waqt hum 'data' property me row ka data bhej rahe hain
-  const dialogRef = this.dialog.open(AddGuestComponent, {
-    width: '500px',
-    disableClose: true,
-    data: guestData // <-- Isse naye component ko pura data mil jayega
-  });
+  // 3. Yeh magic computed signal hai jo automatic filter karega jab bhi rawGuests ya searchQuery badlegi
+  filteredGuests = computed(() => {
+    const query = this.guestSearchQuery().trim().toLowerCase();
+    const allGuests = this.rawGuests();
 
-  dialogRef.afterClosed().subscribe(result => {
-    // Jab user update karke form close karega, toh result me naya updated data milega
-    if (result) {
-      console.log("Database se update hokar aaya live object:", result);
-      
-      // UI Table me us specific row ko live change karne ka modern signal map tarika
-      const updatedList = this.rawGuests().map(guest => 
-        guest.id === result.id ? result : guest
-      );
-      
-      this.rawGuests.set(updatedList);
-      this.cdr.detectChanges();
+    if (!query) {
+      return allGuests; // Agar search box khali hai toh saare guests dikhao
     }
+
+    // Yahan check karein ki guest ka naam filter se match ho raha hai ya nahi
+    // Note: Agar aapki key 'name' ki jagah 'guestName' hai, toh element.guestName likh lena
+    return allGuests.filter((element: any) =>
+      element.name?.toLowerCase().includes(query) ||
+      element.id?.toString().includes(query)
+    );
   });
-}
 
-
+  applyGuestFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.guestSearchQuery.set(filterValue);
+    this.currentPage.set(0);
+  }
 
 }

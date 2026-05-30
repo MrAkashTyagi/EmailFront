@@ -27,7 +27,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
     MatProgressSpinnerModule,
     MatTableModule,
     MatDialogModule,
-    AddFamily,    
+    AddFamily,
     MatPaginatorModule
 
 
@@ -159,6 +159,20 @@ export class Family implements OnInit, AfterViewInit {
       }
     });
 
+  }
+
+
+  applyFamilyFilter(event: Event): void {
+    // User ne input box me jo type kiya use pakda
+    const filterValue = (event.target as HTMLInputElement).value;
+
+    // Data source me filter value pass kar di (automatic trim aur lowercase hoke search karega)
+    this.rawFamilies.filter = filterValue.trim().toLowerCase();
+
+    // Agar user page 2 par baitha hai aur search karta hai, toh table automatic page 1 par aa jaye
+    if (this.rawFamilies.paginator) {
+      this.rawFamilies.paginator.firstPage();
+    }
   }
 
 }

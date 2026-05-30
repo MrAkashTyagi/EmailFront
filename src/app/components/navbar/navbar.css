@@ -1,9 +1,102 @@
-
+/* ==========================================
+   1. NAVBAR & GLOBAL WRAPPER STYLES
+   ========================================== */
 mat-toolbar {
   background-color: var(--mat-sys-primary); /* New M3 token variable */
   color: var(--mat-sys-on-primary);
 }
+
 .example-spacer {
   flex: 1 1 auto;
 }
 
+body, .main-container {
+  margin: 0;
+  padding: 0;
+}
+
+/* Router-outlet ke content ko navbar ke niche dhakelne ke liye space */
+.page-content-wrapper {
+  padding: 40px 20px; /* Top se 40px ki sundar spacing di hai */
+  display: block;
+}
+
+
+/* ==========================================
+   2. FORCED WHITE BACKGROUND & SIZE FOR M3 MENU
+   ========================================== */
+
+/* FIX 1: CDK pane container layout width adjust kiya */
+::v-deep .cdk-overlay-pane:has(.custom-premium-menu) {
+  min-width: 280px !important;
+}
+
+/* 
+   FIX 2: M3 ke internal global design variables ko direct class par override kiya.
+   M3 components inhi variables se apna automatic background color light/dark banate hain.
+*/
+::v-deep .mat-mdc-menu-panel.custom-premium-menu {
+  --mat-menu-container-color: #ffffff !important;   
+  --mdc-menu-container-color: #ffffff !important;   
+  --mat-sys-surface: #ffffff !important;            /* M3 Core surface token to white */
+  --mat-sys-surface-container: #ffffff !important;  /* Menu internal surface block to white */
+  
+  max-width: unset !important;
+  min-width: 280px !important;
+  width: 280px !important; 
+  border-radius: 12px !important; 
+  background-color: #ffffff !important; 
+  background: #ffffff !important;
+  box-shadow: 0px 12px 35px rgba(0, 0, 0, 0.15) !important; 
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  padding: 8px 4px !important;
+}
+
+/* FIX 3: Content container elements ko inner system level par transparency di */
+::v-deep .custom-premium-menu .mat-mdc-menu-content {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+}
+
+/* Menu items/rows ke fonts aur size ko bada karna */
+::v-deep .custom-premium-menu .mat-mdc-menu-item {
+  height: 52px !important; 
+  font-size: 15px !important; 
+  font-weight: 500 !important;
+  color: #2c3e50 !important;
+  border-radius: 8px !important;
+  margin: 4px 6px !important; 
+  transition: background-color 0.2s ease;
+}
+
+/* Hover dynamic micro-interaction behavior */
+::v-deep .custom-premium-menu .mat-mdc-menu-item:hover {
+  background-color: #f4f6f9 !important; 
+}
+
+
+/* ==========================================
+   3. ROUTE LINKS ACTIVE HIGH-LIGHTING STATE
+   ========================================== */
+
+/* Active link element state control inside popup menu */
+::v-deep .custom-premium-menu .mat-mdc-menu-item.active-menu-item {
+  background-color: #e8eaf6 !important; 
+  color: #3f51b5 !important; 
+  font-weight: 600 !important;
+}
+
+/* Fallback legacy active classes */
+.active-menu-item {
+  color: #3f51b5 !important;
+  font-weight: bold;
+  background-color: rgba(63, 81, 181, 0.04);
+}
+
+.active-btn {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-bottom: 3px solid #fff;
+  border-radius: 4px 4px 0 0 !important;
+}

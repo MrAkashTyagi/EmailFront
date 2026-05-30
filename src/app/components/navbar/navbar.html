@@ -1,8 +1,32 @@
-<mat-toolbar class="mat-elevation-z4">
-<button matIconButton class="example-icon" aria-label="Example icon-button with menu icon">
-    <mat-icon fontIcon="menu"></mat-icon>
+<mat-toolbar color="primary" class="mat-elevation-z4">
+  <!-- Menu Button -->
+  <button mat-icon-button [matMenuTriggerFor]="appMenu" aria-label="Menu button icon">
+    <mat-icon>menu</mat-icon>
   </button>
- 
   
-<span>Email GUI</span>
+  <span style="font-weight: 500; margin-left: 10px;">Email GUI</span>
 </mat-toolbar>
+
+<mat-menu #appMenu="matMenu" panelClass="custom-premium-menu">
+  
+  <button mat-menu-item routerLink="/" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active-menu-item">
+    <mat-icon style="color: #3f51b5;">home</mat-icon>
+    <span>Home Dashboard</span>
+  </button>
+  
+  <button mat-menu-item routerLink="/sendemail" routerLinkActive="active-menu-item">
+    <mat-icon style="color: #e91e63;">email</mat-icon>
+    <span>Send Email Portal</span>
+  </button>
+
+  <button mat-menu-item routerLink="/family" routerLinkActive="active-menu-item">
+    <mat-icon style="color: #4caf50;">people</mat-icon>
+    <span>Family Management</span>
+  </button>
+  
+  <button mat-menu-item routerLink="/guests" routerLinkActive="active-menu-item">
+    <mat-icon style="color: #ff9800;">person</mat-icon>
+    <span>Guest Registry</span>
+  </button>
+
+</mat-menu>
