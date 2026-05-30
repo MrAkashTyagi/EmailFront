@@ -90,7 +90,7 @@ export class Family {
           this.rawFamilies = ([...this.rawFamilies, result]);
           // 2. Table ko refresh karne ke liye force trigger lagaya
           this.cdr.detectChanges();
-        },0);
+        }, 0);
       }
     });
   }
@@ -118,5 +118,31 @@ export class Family {
     }
   }
 
+  openEditFamilyDialog(familyData: any): void{
+    console.log("Clicked edit button", familyData);
+
+    const dialogRef = this.dialog.open(AddFamily, {
+
+      width: '500px',
+      disableClose: true,
+      data: familyData // <--- Yeh purana data hum popup ke andar bhej rahe hain
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Jab user edit form save karke live updated object wapas bhejega
+      if(result){
+        console.log("Databse se aaya hua updated object : ",result);
+
+        setTimeout(()=> {
+           // UI ke array me se purane record ko naye (result) se replace karne ka live tarika
+          this.rawFamilies = this.rawFamilies.map(family => family.id === result.id ? result : family);
+
+          this.cdr.detectChanges();
+        },0);
+
+      }
+    });
+
+  }
 
 }

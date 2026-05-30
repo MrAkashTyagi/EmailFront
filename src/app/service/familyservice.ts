@@ -27,4 +27,10 @@ export class Familyservice {
     return this.http.delete<any>(`${this.baseUrl}/family/${id}`);
   }
 
+
+  updateFamily(familyData: any):Observable<any>{
+    console.log("Service se API call ja rahi hai update ke liye:", familyData);
+    return this.http.put<any>(`${this.baseUrl}/family/${familyData.id}`,familyData);
+  }
+
 }
