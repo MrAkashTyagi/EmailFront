@@ -35,7 +35,7 @@ html, body, .main-container, .card-wrapper {
 /* Router outlet wrapper page component content layout custom adjustment */
 .page-content-wrapper {
   padding: 10px 16px !important;
-  background-color: #e2e2e2;
+  background-color: #ffffff !important;
   min-height: auto !important;
   height: auto !important;
 }

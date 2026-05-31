@@ -48,81 +48,90 @@ export class GuestComponent implements OnInit, OnDestroy {
 
   rawGuests = signal<any[]>([]);
   guestSearchQuery = signal<string>('');
-  pageSize = signal<number>(10);  
-  currentPage = signal<number>(0); 
+  pageSize = signal<number>(10);
+  currentPage = signal<number>(0);
+  totalElements = signal<number>(0);
 
   pagedGuests = computed(() => {
-    const startIndex = this.currentPage() * this.pageSize();
-    const endIndex = startIndex + this.pageSize();
-    return this.filteredGuests().slice(startIndex, endIndex);
+    // const startIndex = this.currentPage() * this.pageSize();
+    // const endIndex = startIndex + this.pageSize();
+    // return this.filteredGuests().slice(startIndex, endIndex);
+
+    return this.filteredGuests();
   });
 
   filteredGuests = computed(() => {
-    const query = this.guestSearchQuery().trim().toLowerCase();
-    const allGuests = this.rawGuests();
+    // const query = this.guestSearchQuery().trim().toLowerCase();
+    // const allGuests = this.rawGuests();
 
-    if (!query) {
-      return allGuests; 
-    }
+    // if (!query) {
+    //   return allGuests; 
+    // }
 
-    return allGuests.filter((element: any) =>
-      element.name?.toLowerCase().includes(query) ||
-      element.id?.toString().includes(query)
-    );
+    // return allGuests.filter((element: any) =>
+    //   element.name?.toLowerCase().includes(query) ||
+    //   element.id?.toString().includes(query)
+    // );
+
+    return this.rawGuests();
+
   });
 
   constructor(
     private emailService: EmailService,
     private cdr: ChangeDetectorRef
-  ) { 
+  ) {
     // FIX FIXED: Angular Signal effect globally listens to central navbar search emissions
     effect(() => {
       const query = this.navBarService.searchQuery();
       console.log('Navbar action signal se live guest search text aaya:', query);
-      
+
       // Navbar input query ko standard computed signal me map kar diya layout refresh ke liye
       this.guestSearchQuery.set(query);
       this.currentPage.set(0); // Search hone par page 1 par reset karega hamesha
+      this.fetchPaginatedGuests();
     });
   }
 
   ngOnInit(): void {
     // Initial content array stream grid load
-    this.emailService.getData().subscribe({
-      next: (response: any) => {
-        let parsedData = response;
 
-        if (typeof response === 'string') {
-          try {
-            parsedData = JSON.parse(response);
-          } catch (e) {
-            console.error("JSON Parse Error:", e);
-          }
-        }
+    this.fetchPaginatedGuests();
+    // this.emailService.getData().subscribe({
+    //   next: (response: any) => {
+    //     let parsedData = response;
 
-        let dataArray = [];
-        if (parsedData && Array.isArray(parsedData)) {
-          dataArray = parsedData;
-        } else if (parsedData && parsedData.content) {
-          dataArray = parsedData.content;
-        } else {
-          dataArray = parsedData ? [parsedData] : [];
-        }
+    //     if (typeof response === 'string') {
+    //       try {
+    //         parsedData = JSON.parse(response);
+    //       } catch (e) {
+    //         console.error("JSON Parse Error:", e);
+    //       }
+    //     }
 
-        console.log("Sahi Array Length:", dataArray.length);
-        this.rawGuests.set(dataArray);
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error("API Error: ", err);
-      }
-    });
+    //     let dataArray = [];
+    //     if (parsedData && Array.isArray(parsedData)) {
+    //       dataArray = parsedData;
+    //     } else if (parsedData && parsedData.content) {
+    //       dataArray = parsedData.content;
+    //     } else {
+    //       dataArray = parsedData ? [parsedData] : [];
+    //     }
+
+    //     console.log("Sahi Array Length:", dataArray.length);
+    //     this.rawGuests.set(dataArray);
+    //     this.cdr.detectChanges();
+    //   },
+    //   error: (err) => {
+    //     console.error("API Error: ", err);
+    //   }
+    // });
 
     // FIX FIXED: Top dynamic navbar button subscription trigger setup
     this.navBarAddSubscription = this.navBarService.addClick$.subscribe(() => {
       if (window.location.pathname.includes('guests')) {
         console.log('Navbar header click sequence se guest popup trigger fire hua!');
-        this.openAddGuestDialog(); 
+        this.openAddGuestDialog();
       }
     });
   }
@@ -136,8 +145,8 @@ export class GuestComponent implements OnInit, OnDestroy {
 
   openAddGuestDialog(): void {
     const dialogRef = this.dialog.open(AddGuestComponent, {
-      width: '500px', 
-      disableClose: true 
+      width: '500px',
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -153,7 +162,7 @@ export class GuestComponent implements OnInit, OnDestroy {
   }
 
   loadAllGuests(): void {
-    this.emailService.getData().subscribe({ 
+    this.emailService.getData().subscribe({
       next: (response: any) => {
         let parsedData = typeof response === 'string' ? JSON.parse(response) : response;
         let dataArray = parsedData?.content || parsedData?.guestList || (Array.isArray(parsedData) ? parsedData : [parsedData]);
@@ -167,6 +176,7 @@ export class GuestComponent implements OnInit, OnDestroy {
   onPageChange(event: PageEvent): void {
     this.currentPage.set(event.pageIndex);
     this.pageSize.set(event.pageSize);
+    this.fetchPaginatedGuests();
   }
 
   deleteGuestRecord(id: number): void {
@@ -190,7 +200,7 @@ export class GuestComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(AddGuestComponent, {
       width: '500px',
       disableClose: true,
-      data: guestData 
+      data: guestData
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -212,4 +222,25 @@ export class GuestComponent implements OnInit, OnDestroy {
     this.guestSearchQuery.set(filterValue);
     this.currentPage.set(0);
   }
+
+  // Naya method jo har baar fresh paginated data layega
+  fetchPaginatedGuests(): void {
+    const page = this.currentPage();
+    const size = this.pageSize();
+
+    // Apni API matching pagination query url params ke sath hit karein
+    this.guestService.getGuestsPaged(page, size).subscribe({
+      next: (response: any) => {
+        // Spring Boot Page object se content aur totalElements nikaalein
+         console.log("Sahi Array Length:", response);
+        this.rawGuests.set(response.content || []);
+        this.totalElements.set(response.totalElements || 0);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Pagination data fetch error: ", err);
+      }
+    });
+  }
+
 }
