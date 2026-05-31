@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal, computed, ChangeDetectorRef, inject, effect } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, ChangeDetectorRef, inject, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmailService } from '../../service/emailService';
 import { MatTableModule } from '@angular/material/table';
@@ -87,10 +87,13 @@ export class GuestComponent implements OnInit, OnDestroy {
       console.log('Navbar action signal se live guest search text aaya:', query);
 
       // Navbar input query ko standard computed signal me map kar diya layout refresh ke liye
+     // 2. Untracked block ke andar page reset aur fetch karein taaki loop na bane
+    untracked(() => {
       this.guestSearchQuery.set(query);
-      this.currentPage.set(0); // Search hone par page 1 par reset karega hamesha
-      this.fetchPaginatedGuests();
+      this.currentPage.set(0); // Sirf search badalne par hi page 0 hoga
+      this.fetchPaginatedGuests(); 
     });
+  });
   }
 
   ngOnInit(): void {
