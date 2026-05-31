@@ -28,10 +28,11 @@ export class GuestService {
   }
 
   // get paginated guests
-  getGuestsPaged(page: number, size: number): Observable<any> {
+  getGuestsPaged(page: number, size: number, search: string=''): Observable<any> {
     const params = new HttpParams()
     .set('page', page.toString())
-    .set('size', size.toString());
+    .set('size', size.toString())
+    .set('search',search);
     return this.http.get<any>(`${this.baseUrl}/guests/guest`,{ params });
   }
 
