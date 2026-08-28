@@ -51,6 +51,9 @@ export class AddGuestComponent implements OnInit {
     whatsapp_Number: '',
     email: '',
     guestCategory: '',
+    gift: '',
+    cash: '',
+    stay: '',
     family: {
       id: undefined as number | undefined,
       familyName: ''
@@ -126,6 +129,9 @@ export class AddGuestComponent implements OnInit {
         guestCategory: this.guest.guestCategory || '',
         gender: this.guest.gender,
         adultOrchild: this.guest.adultOrchild,
+        gift: this.guest.gift,
+        cash: this.guest.cash,
+        stay: this.guest.stay,
         family: {
           familyName: this.guest.family?.familyName || 'General'
         }
