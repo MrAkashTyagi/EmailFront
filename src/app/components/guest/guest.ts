@@ -11,6 +11,8 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NavbarActionService } from '../../service/navbar-action-service'; // Sahi path inject kiya
 import { Subscription } from 'rxjs';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-guest',
@@ -23,7 +25,9 @@ import { Subscription } from 'rxjs';
     MatButtonModule,
     MatDialogModule,
     MatFormField,
-    MatInputModule
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule
   ],
   templateUrl: './guest.html',
   styleUrls: ['./guest.css']
@@ -42,6 +46,9 @@ export class GuestComponent implements OnInit, OnDestroy {
     'phoneNumber',
     'whatsapp_Number',
     'guestCategory',
+    'gift',
+    'cash',
+    'stay',
     'familyName',
     'actions'
   ];
@@ -51,11 +58,21 @@ export class GuestComponent implements OnInit, OnDestroy {
   pageSize = signal<number>(10);
   currentPage = signal<number>(0);
   totalElements = signal<number>(0);
+  selectedGender = signal<string>('');
+  selectedType = signal<string>('');
+  selectedCategory = signal<string>('');
+  selectedGift = signal<string>('');
+  selectedStay = signal<string>('');
+  selectedCash = signal<string>('');
+
+  
 
   pagedGuests = computed(() => {
     // const startIndex = this.currentPage() * this.pageSize();
     // const endIndex = startIndex + this.pageSize();
     // return this.filteredGuests().slice(startIndex, endIndex);
+
+    
 
     return this.filteredGuests();
   });
@@ -76,6 +93,42 @@ export class GuestComponent implements OnInit, OnDestroy {
     return this.rawGuests();
 
   });
+
+  onGenderChange(gender: string): void {
+  this.selectedGender.set(gender);
+  this.currentPage.set(0);
+  this.fetchPaginatedGuests();
+}
+
+onTypeChange(type: string): void {
+  this.selectedType.set(type);
+  this.currentPage.set(0);
+  this.fetchPaginatedGuests();
+}
+
+onCategoryChange(value: string) {
+this.selectedCategory.set(value);
+this.currentPage.set(0);
+this.fetchPaginatedGuests();
+}
+
+onCashChange(cash: string){
+  this.selectedCash.set(cash);
+  this.currentPage.set(0);
+  this.fetchPaginatedGuests();
+}
+
+onGiftChange(gift: string){
+  this.selectedGift.set(gift);
+  this.currentPage.set(0);
+  this.fetchPaginatedGuests();
+}
+
+onStayChange(stay: string){
+  this.selectedStay.set(stay);
+  this.currentPage.set(0);
+  this.fetchPaginatedGuests();
+}
 
   constructor(
     private emailService: EmailService,
@@ -182,6 +235,18 @@ export class GuestComponent implements OnInit, OnDestroy {
     this.fetchPaginatedGuests();
   }
 
+  clearFilters() {
+  this.selectedGender.set('');
+  this.selectedType.set('');
+  this.selectedCategory.set('');
+  this.selectedGift.set('');
+  this.selectedStay.set('');
+  this.selectedCash.set('');
+
+  this.currentPage.set(0);
+  this.fetchPaginatedGuests();
+}
+
   deleteGuestRecord(id: number): void {
     if (confirm("Kya aap sach me is guest ko delete karna<li>hante hain?")) {
       this.guestService.deleteGuest(id).subscribe({
@@ -231,9 +296,25 @@ export class GuestComponent implements OnInit, OnDestroy {
     const page = this.currentPage();
     const size = this.pageSize();
     const search = this.guestSearchQuery();
+    const gender = this.selectedGender();
+    const type = this.selectedType();
+    const category = this.selectedCategory();
+    const gift = this.selectedGift();
+    const stay = this.selectedStay();
+    const cash = this.selectedCash();
+    
 
     // Apni API matching pagination query url params ke sath hit karein
-    this.guestService.getGuestsPaged(page, size, search).subscribe({
+    this.guestService.getGuestsPaged(
+      page,
+       size,
+        search,
+         gender,
+          type,
+           category,
+            gift,
+             stay,
+              cash).subscribe({
       next: (response: any) => {
         // Spring Boot Page object se content aur totalElements nikaalein
         console.log("Sahi Array Length:", response);
