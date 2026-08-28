@@ -61,6 +61,38 @@
           </mat-select>
         </mat-form-field>
 
+                <!-- Gift -->
+        <mat-form-field appearance="outline">
+          <mat-label>Gift</mat-label>
+          <mat-select [(ngModel)]="guest.gift" name="gift" required>            
+            <mat-option value="Saree">Saree</mat-option>
+            <mat-option value="Joda">Joda</mat-option>
+            <mat-option value="Comforter">Comforter</mat-option>
+            <mat-option value="Cash">Cash</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+                        <!-- Cash -->
+        <mat-form-field appearance="outline">
+          <mat-label>Cash</mat-label>
+          <mat-select [(ngModel)]="guest.cash" name="cash" required>            
+            <mat-option value="100">100</mat-option>
+            <mat-option value="200">200</mat-option>
+            <mat-option value="251">251</mat-option>
+            <mat-option value="500">500</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+            <mat-label>Stay</mat-label>
+            <mat-select [(ngModel)]="guest.stay" name="stay" required>
+              <mat-option value="Yes">Yes</mat-option>
+              <mat-option value="No">No</mat-option>
+            </mat-select>
+          </mat-form-field>
+       
+
+
         <!-- Smart Combobox: Selection as well as New Typing Entry Choice -->
         <mat-form-field appearance="outline">
           <mat-label>Family Name</mat-label>
