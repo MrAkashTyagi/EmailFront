@@ -1,18 +1,16 @@
 /* Card ko background par completely center karne ke liye */
 .card-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+display: flex;
+justify-content: center;
+align-items: flex-start; /* center ki jagah */
+padding: 20px;
 }
 
 .guest-card {
-  width: 100%;
-  max-width: 550px;
-  border-radius: 12px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
-  background-color: #ffffff;
-  padding: 12px;
+width: 100%;
+max-width: 550px;
+max-height: 80vh;
+overflow-y: auto;
 }
 
 .form-title {
