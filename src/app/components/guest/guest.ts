@@ -13,6 +13,7 @@ import { NavbarActionService } from '../../service/navbar-action-service'; // Sa
 import { Subscription } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-guest',
@@ -27,7 +28,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatFormField,
     MatInputModule,
     MatFormFieldModule,
-    MatSelectModule
+    MatSelectModule,
+    MatExpansionModule
   ],
   templateUrl: './guest.html',
   styleUrls: ['./guest.css']
@@ -39,7 +41,6 @@ export class GuestComponent implements OnInit, OnDestroy {
   private navBarAddSubscription!: Subscription; // Unsubscribe track handle karne ke liye variable
 
   displayedColumns: string[] = [
-    'id',
     'name',
     'gender',
     'adultOrChild',
@@ -65,70 +66,49 @@ export class GuestComponent implements OnInit, OnDestroy {
   selectedStay = signal<string>('');
   selectedCash = signal<string>('');
 
-  
-
   pagedGuests = computed(() => {
-    // const startIndex = this.currentPage() * this.pageSize();
-    // const endIndex = startIndex + this.pageSize();
-    // return this.filteredGuests().slice(startIndex, endIndex);
-
-    
-
     return this.filteredGuests();
   });
 
   filteredGuests = computed(() => {
-    // const query = this.guestSearchQuery().trim().toLowerCase();
-    // const allGuests = this.rawGuests();
-
-    // if (!query) {
-    //   return allGuests; 
-    // }
-
-    // return allGuests.filter((element: any) =>
-    //   element.name?.toLowerCase().includes(query) ||
-    //   element.id?.toString().includes(query)
-    // );
-
     return this.rawGuests();
-
   });
 
   onGenderChange(gender: string): void {
-  this.selectedGender.set(gender);
-  this.currentPage.set(0);
-  this.fetchPaginatedGuests();
-}
+    this.selectedGender.set(gender);
+    this.currentPage.set(0);
+    this.fetchPaginatedGuests();
+  }
 
-onTypeChange(type: string): void {
-  this.selectedType.set(type);
-  this.currentPage.set(0);
-  this.fetchPaginatedGuests();
-}
+  onTypeChange(type: string): void {
+    this.selectedType.set(type);
+    this.currentPage.set(0);
+    this.fetchPaginatedGuests();
+  }
 
-onCategoryChange(value: string) {
-this.selectedCategory.set(value);
-this.currentPage.set(0);
-this.fetchPaginatedGuests();
-}
+  onCategoryChange(value: string) {
+    this.selectedCategory.set(value);
+    this.currentPage.set(0);
+    this.fetchPaginatedGuests();
+  }
 
-onCashChange(cash: string){
-  this.selectedCash.set(cash);
-  this.currentPage.set(0);
-  this.fetchPaginatedGuests();
-}
+  onCashChange(cash: string) {
+    this.selectedCash.set(cash);
+    this.currentPage.set(0);
+    this.fetchPaginatedGuests();
+  }
 
-onGiftChange(gift: string){
-  this.selectedGift.set(gift);
-  this.currentPage.set(0);
-  this.fetchPaginatedGuests();
-}
+  onGiftChange(gift: string) {
+    this.selectedGift.set(gift);
+    this.currentPage.set(0);
+    this.fetchPaginatedGuests();
+  }
 
-onStayChange(stay: string){
-  this.selectedStay.set(stay);
-  this.currentPage.set(0);
-  this.fetchPaginatedGuests();
-}
+  onStayChange(stay: string) {
+    this.selectedStay.set(stay);
+    this.currentPage.set(0);
+    this.fetchPaginatedGuests();
+  }
 
   constructor(
     private emailService: EmailService,
@@ -153,35 +133,6 @@ onStayChange(stay: string){
     // Initial content array stream grid load
 
     this.fetchPaginatedGuests();
-    // this.emailService.getData().subscribe({
-    //   next: (response: any) => {
-    //     let parsedData = response;
-
-    //     if (typeof response === 'string') {
-    //       try {
-    //         parsedData = JSON.parse(response);
-    //       } catch (e) {
-    //         console.error("JSON Parse Error:", e);
-    //       }
-    //     }
-
-    //     let dataArray = [];
-    //     if (parsedData && Array.isArray(parsedData)) {
-    //       dataArray = parsedData;
-    //     } else if (parsedData && parsedData.content) {
-    //       dataArray = parsedData.content;
-    //     } else {
-    //       dataArray = parsedData ? [parsedData] : [];
-    //     }
-
-    //     console.log("Sahi Array Length:", dataArray.length);
-    //     this.rawGuests.set(dataArray);
-    //     this.cdr.detectChanges();
-    //   },
-    //   error: (err) => {
-    //     console.error("API Error: ", err);
-    //   }
-    // });
 
     // FIX FIXED: Top dynamic navbar button subscription trigger setup
     this.navBarAddSubscription = this.navBarService.addClick$.subscribe(() => {
@@ -236,16 +187,16 @@ onStayChange(stay: string){
   }
 
   clearFilters() {
-  this.selectedGender.set('');
-  this.selectedType.set('');
-  this.selectedCategory.set('');
-  this.selectedGift.set('');
-  this.selectedStay.set('');
-  this.selectedCash.set('');
+    this.selectedGender.set('');
+    this.selectedType.set('');
+    this.selectedCategory.set('');
+    this.selectedGift.set('');
+    this.selectedStay.set('');
+    this.selectedCash.set('');
 
-  this.currentPage.set(0);
-  this.fetchPaginatedGuests();
-}
+    this.currentPage.set(0);
+    this.fetchPaginatedGuests();
+  }
 
   deleteGuestRecord(id: number): void {
     if (confirm("Kya aap sach me is guest ko delete karna<li>hante hain?")) {
@@ -267,7 +218,7 @@ onStayChange(stay: string){
   openEditGuestDialog(guestData: any): void {
     const dialogRef = this.dialog.open(AddGuestComponent, {
       width: '500px',
-      disableClose: true,
+      disableClose: false,
       data: guestData
     });
 
@@ -281,6 +232,44 @@ onStayChange(stay: string){
           this.rawGuests.set(updatedList);
           this.cdr.detectChanges();
         });
+      }
+    });
+  }
+
+  downloadExcel(): void {
+
+    this.guestService.downloadGuests(
+      this.selectedGender(),
+      this.selectedType(),
+      this.selectedGift(),
+      this.selectedCash(),
+      this.selectedCategory(),
+      this.selectedStay()
+    ).subscribe({
+      next: (response: Blob) => {
+
+        const blob = new Blob(
+          [response],
+          {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          }
+        );
+
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'Guests.xlsx';
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Excel download failed', err);
       }
     });
   }
@@ -302,30 +291,30 @@ onStayChange(stay: string){
     const gift = this.selectedGift();
     const stay = this.selectedStay();
     const cash = this.selectedCash();
-    
+
 
     // Apni API matching pagination query url params ke sath hit karein
     this.guestService.getGuestsPaged(
       page,
-       size,
-        search,
-         gender,
-          type,
-           category,
-            gift,
-             stay,
-              cash).subscribe({
-      next: (response: any) => {
-        // Spring Boot Page object se content aur totalElements nikaalein
-        console.log("Sahi Array Length:", response);
-        this.rawGuests.set(response.content || []);
-        this.totalElements.set(response.totalElements || 0);
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error("Pagination data fetch error: ", err);
-      }
-    });
+      size,
+      search,
+      gender,
+      type,
+      category,
+      gift,
+      stay,
+      cash).subscribe({
+        next: (response: any) => {
+          // Spring Boot Page object se content aur totalElements nikaalein
+          console.log("Sahi Array Length:", response);
+          this.rawGuests.set(response.content || []);
+          this.totalElements.set(response.totalElements || 0);
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Pagination data fetch error: ", err);
+        }
+      });
   }
 
 }
