@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { text } from 'stream/consumers';
@@ -13,9 +13,15 @@ export class Familyservice {
 
   private baseUrl: string = "http://localhost:8090"
 
-  getData(): Observable<string> {
-    return this.http.get(`${this.baseUrl}/family`, { responseType: 'text' });
-  }
+  // getData(): Observable<string> {
+  //   return this.http.get(`${this.baseUrl}/family`, { responseType: 'text' });
+  // }
+
+  getData(): Observable<any> {
+  return this.http.get<any>(
+    `${this.baseUrl}/family`
+  );
+}
 
   saveFamily(familyData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/family`, familyData);
@@ -32,5 +38,24 @@ export class Familyservice {
     console.log("Service se API call ja rahi hai update ke liye:", familyData);
     return this.http.put<any>(`${this.baseUrl}/family/${familyData.id}`,familyData);
   }
+
+// get paginated family
+
+getFamilyPaginated(page: number, size: number, search: string): Observable<any> {
+const params = new HttpParams()
+.set('page', page.toString())
+.set('size', size.toString())
+.set('search', search)
+
+return this.http.get<any>(`${this.baseUrl}/family`, {params});  
+}
+
+getAllFamiliesForDropdown(): Observable<any> {
+
+  return this.http.get<any>(
+    `${this.baseUrl}/family/getAll`
+  );
+
+}
 
 }
