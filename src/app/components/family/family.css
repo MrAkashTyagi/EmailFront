@@ -17,3 +17,35 @@ tr.example-detail-row {
 tr.example-element-row:not(.example-expanded-row):hover {
   background: #f8fafc;
 }
+.family-name-cell{
+  font-size:15px;
+  font-weight:600;
+  color:#5b21b6;
+}
+
+.action-buttons{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+.edit-btn{
+  background:#4f46e5 !important;
+  color:white !important;
+}
+
+.delete-btn{
+  background:#ef4444 !important;
+  color:white !important;
+}
+
+.guest-section-title{
+  color:#5b21b6;
+  margin-bottom:16px;
+  font-weight:600;
+}
+
+.guest-card:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(50, 23, 204, 0.881);
+}
