@@ -24,7 +24,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatSelectModule,
     MatButtonModule,
     MatCardModule,
-    MatAutocompleteModule 
+    MatAutocompleteModule
   ],
   templateUrl: './add-guest.html',
   styleUrls: ['./add-guest.css']
@@ -62,18 +62,19 @@ export class AddGuestComponent implements OnInit {
 
   ngOnInit(): void {
     // Families list loading for simple dropdown selection mapping
-    this.familyService.getData().subscribe({
+    this.familyService.getAllFamiliesForDropdown().subscribe({
       next: (response: any) => {
-        let parsedData = typeof response === 'string' ? JSON.parse(response) : response;
+        this.families = response || [];
+        this.filteredFamilies = this.families;
 
+        console.log(
+          "Dropdown ke liye loaded families:",
+          this.families.length
+        );
 
-        setTimeout(() => {
-          this.families = parsedData?.content || parsedData?.familyList || (Array.isArray(parsedData) ? parsedData : [parsedData]);
-          this.filteredFamilies = this.families;
-          console.log("Dropdown ke liye loaded families:", this.families);
-          this.cdr.detectChanges();
-        }, 0);
+        this.cdr.detectChanges();
       },
+
       error: (err) => console.error("Error loading families:", err)
     });
 
@@ -81,11 +82,9 @@ export class AddGuestComponent implements OnInit {
     if (this.editData) {
       this.isEditMode = true;
       this.guest = { ...this.editData };
-
       if (!this.guest.family) {
         this.guest.family = { id: undefined, familyName: '' };
       }
-
       setTimeout(() => {
         this.cdr.detectChanges();
       }, 0);
@@ -185,6 +184,4 @@ export class AddGuestComponent implements OnInit {
       });
     }
   }
-
-  
 }
