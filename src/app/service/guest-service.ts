@@ -28,11 +28,15 @@ export class GuestService {
   }
 
   // get paginated guests
-  getGuestsPaged(page: number, size: number, search: string='', gender: string = '', type: string='',
-     category: string,
-      gift: string,
-       stay: string,
-        cash: string): Observable<any> {
+  getGuestsPaged(page: number, 
+    size: number, 
+    search: string='', 
+    gender: string = '', 
+    type: string='',
+    category: string,
+    gift: string,
+    stay: string,
+    cash: string): Observable<any> {
     const params = new HttpParams()
     .set('page', page.toString())
     .set('size', size.toString())
@@ -47,6 +51,31 @@ export class GuestService {
     return this.http.get<any>(`${this.baseUrl}/guests/guest`,{ params });
   }
 
+ downloadGuests(
+  gender: string,
+  adultOrchild: string,
+  gift: string,
+  cash: string,
+  guestCategory: string,
+  stay: string
+) {
+
+  let params = new HttpParams()
+    .set('gender', gender || '')
+    .set('adultOrchild', adultOrchild || '')
+    .set('gift', gift || '')
+    .set('cash', cash || '')
+    .set('guestCategory', guestCategory || '')
+    .set('stay', stay || '');
+
+  return this.http.get(
+    `${this.baseUrl}/guests/download`,
+    {
+      params,
+      responseType: 'blob'
+    }
+  );
+}
 
   // // Payload me sirf family name jayega, aur ID path variable (URL) ke zariye server controller ko pass hogi
   // saveGuestWithFamily(familyId: number, guestPayload: any): Observable<any> {
@@ -54,4 +83,6 @@ export class GuestService {
   //   return this.http.put<any>(`${this.baseUrl}/guest/${familyId}`, guestPayload);
   // }
 
+
+  
 }
