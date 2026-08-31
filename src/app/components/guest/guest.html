@@ -1,259 +1,353 @@
-<!-- MAIN CONTENT CONTAINER WRAPPER (TOP SPACING MINIMIZED TO TOUCH NAVBAR) -->
-<div style="padding: 5px 8px 5px 8px; box-sizing: border-box; width: 100%;">
-
-  @if (rawGuests() && rawGuests().length > 0) {
-
-<div
-  style="
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 16px;
-    align-items: center;
-  "
->
-
-  <!-- Gender Filter -->
-  <mat-form-field appearance="outline" style="width: 180px;">
-    <mat-label>Gender</mat-label>
-    <mat-select
-      [value]="selectedGender()"
-      (selectionChange)="onGenderChange($event.value)"
-    >
-      <mat-option value="">All</mat-option>
-      <mat-option value="Male">Male</mat-option>
-      <mat-option value="Female">Female</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Type Filter -->
-  <mat-form-field appearance="outline" style="width: 180px;">
-    <mat-label>Type</mat-label>
-    <mat-select
-      [value]="selectedType()"
-      (selectionChange)="onTypeChange($event.value)"
-    >
-      <mat-option value="">All</mat-option>
-      <mat-option value="Adult">Adult</mat-option>
-      <mat-option value="Child">Child</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Category Filter -->
-  <mat-form-field appearance="outline" style="width: 180px;">
-    <mat-label>Category</mat-label>
-    <mat-select
-      [value]="selectedCategory()"
-      (selectionChange)="onCategoryChange($event.value)"
-    >
-      <mat-option value="">All</mat-option>
-      <mat-option value="sagai">Sagai</mat-option>
-      <mat-option value="shadi">Shadi</mat-option>
-      <mat-option value="both">Both</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Gift Filter -->
-  <mat-form-field appearance="outline" style="width: 180px;">
-    <mat-label>Gift</mat-label>
-    <mat-select
-      [value]="selectedGift()"
-      (selectionChange)="onGiftChange($event.value)"
-    >
-      <mat-option value="">All</mat-option>
-      <mat-option value="saree">Saree</mat-option>
-      <mat-option value="joda">Joda</mat-option>
-      <mat-option value="comforter">Comforter</mat-option>
-      <mat-option value="cash">Cash</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Stay Filter -->
-  <mat-form-field appearance="outline" style="width: 180px;">
-    <mat-label>Stay</mat-label>
-    <mat-select
-      [value]="selectedStay()"
-      (selectionChange)="onStayChange($event.value)"
-    >
-      <mat-option value="">All</mat-option>
-      <mat-option value="Yes">Yes</mat-option>
-      <mat-option value="No">No</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Cash Filter -->
-  <mat-form-field appearance="outline" style="width: 180px;">
-    <mat-label>Cash</mat-label>
-    <mat-select
-      [value]="selectedCash()"
-      (selectionChange)="onCashChange($event.value)"
-    >
-      <mat-option value="">All</mat-option>
-      <mat-option value="500">500</mat-option>
-      <mat-option value="1000">1000</mat-option>
-      <mat-option value="2100">2100</mat-option>
-      <mat-option value="5100">5100</mat-option>
-      <mat-option value="11000">11000</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Clear Filter Button -->
-  <button
-    mat-raised-button
-    color="warn"
-    (click)="clearFilters()"
-    style="height: 56px;"
-  >
-    Clear Filters
-  </button>
-
-</div>
-
-
-  <!-- INTERNALLY SCROLLABLE TABLE CONTAINER (HEIGHT MAXIMUM EXPANDED, NO GLOBAL PAGE SCROLL) -->
-  <div class="mat-elevation-z8" style="max-height: max-content; height: auto; overflow-y: auto; overflow-x: auto; border-radius: 8px 8px 0 0; background: white; width: 100%; display: block; box-sizing: border-box; position: relative;">
-    
-    <table mat-table [dataSource]="pagedGuests()" style="width: 100% !important; min-width: 1200px; table-layout: fixed; border-collapse: collapse;">
-
-      <!-- ID Column (6% Width) -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 6%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Id </th>
-        <td mat-cell *matCellDef="let element" style="padding: 14px 16px;"> {{element.id}} </td>
-      </ng-container>
-
-      <!-- Name Column (14% Width) -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 14%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Name </th>
-        <td mat-cell *matCellDef="let element" style="padding: 14px 16px; font-weight: 500; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> {{element.name}} </td>
-      </ng-container>
-
-      <!-- Gender Column (10% Width) -->
-      <ng-container matColumnDef="gender">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 10%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Gender </th>
-        <td mat-cell *matCellDef="let element" style="padding: 14px 16px;"> {{element.gender}} </td>
-      </ng-container>
-
-      <!-- Type Column (9% Width) -->
-      <ng-container matColumnDef="adultOrChild">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 9%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Type </th>
-        <td mat-cell *matCellDef="let element" style="padding: 14px 16px;">
-          <span [style.background-color]="element.adultOrchild === 'Adult' ? '#e0f2fe' : '#fef3c7'"
-                [style.color]="element.adultOrchild === 'Adult' ? '#0369a1' : '#b45309'"
-                style="font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; white-space: nowrap;">
-            {{element.adultOrchild}}
-          </span>
-        </td>
-      </ng-container>
-
-      <!-- Phone Number Column (13% Width) -->
-      <ng-container matColumnDef="phoneNumber">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 13%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Phone Number </th>
-        <td mat-cell *matCellDef="let element" style="padding: 14px 16px; color: #475569; white-space: nowrap;"> {{element.phoneNumber}} </td>
-      </ng-container>
-
-      <!-- Whatsapp number Column (13% Width) -->
-      <ng-container matColumnDef="whatsapp_Number">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 13%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Whatsapp Number </th>
-        <td mat-cell *matCellDef="let element" style="padding: 14px 16px; color: #475569; white-space: nowrap;">
-          <span>💬</span> {{element.whatsapp_Number}}
-        </td>
-      </ng-container>
-
-      <!-- Guest Category Column (12% Width) -->
-      <ng-container matColumnDef="guestCategory">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 12%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Category </th>
-        <td mat-cell *matCellDef="let element" style="padding: 14px 16px;">
-          <span style="font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; background-color: #f1f5f9; color: #475569; white-space: nowrap;">
-            {{element.guestCategory}}
-          </span>
-        </td>
-      </ng-container>
-
-            <!-- Gift Column (12% Width) -->
-      <ng-container matColumnDef="gift">
-        <th mat-header-cell
-         *matHeaderCellDef
-        style="font-weight: 600;
-         padding: 14px 16px; 
-         width: 12%; 
-         position: sticky; 
-         top: 0; background-color: 
-         #f8fafc; z-index: 100; 
-         border-bottom: 2px solid 
-         #e2e8f0;"> Gift </th>
-        <td mat-cell *matCellDef=" let element" style="padding: 14px 16px;">
-          <span style="font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; background-color: #f1f5f9; color: #475569; white-space: nowrap;">
-            {{element.gift}}
-          </span>
-        </td>
-      </ng-container>
-
-                  <!-- Stay Column (12% Width) -->
-      <ng-container matColumnDef="stay">
-        <th mat-header-cell
-         *matHeaderCellDef
-        style="font-weight: 600; padding: 14px 16px; width: 12%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Stay </th>
-        <td mat-cell *matCellDef=" let element" style="padding: 14px 16px;">
-          <span style="font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; background-color: #f1f5f9; color: #475569; white-space: nowrap;">
-            {{element.stay}}
-          </span>
-        </td>
-      </ng-container>
-
-            <!-- Cash Column (12% Width) -->
-      <ng-container matColumnDef="cash">
-        <th mat-header-cell
-         *matHeaderCellDef
-        style="font-weight: 600; padding: 14px 16px; width: 12%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Cash </th>
-        <td mat-cell *matCellDef=" let element" style="padding: 14px 16px;">
-          <span style="font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; background-color: #f1f5f9; color: #475569; white-space: nowrap;">
-            {{element.cash}}
-          </span>
-        </td>
-      </ng-container>
-
-      <!-- Family Name Column (11% Width) -->
-      <ng-container matColumnDef="familyName">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: 600; padding: 14px 16px; width: 11%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Family Name </th>
-        <td mat-cell *matCellDef="let element" style="padding: 14px 16px; font-weight: 600; color: #3f51b5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> {{element.family?.familyName || 'General'}} </td>
-      </ng-container>
-
-      <!-- Actions Column (12% Width) -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef style="text-align: center; font-weight: 600; padding: 14px 16px; width: 12%; position: sticky; top: 0; background-color: #f8fafc; z-index: 100; border-bottom: 2px solid #e2e8f0;"> Actions </th>
-        <td mat-cell *matCellDef="let element" style="text-align: center; padding: 14px 16px; white-space: nowrap;">
-          <button mat-flat-button color="primary" (click)="openEditGuestDialog(element)"
-            style="border-radius: 6px; padding: 0 10px; min-width: 65px; height: 34px; background-color: #3f51b5; margin-right: 6px; font-size: 13px;">
-            ✏️ Edit
-          </button>
-          <button mat-flat-button color="warn" (click)="deleteGuestRecord(element.id)"
-            style="border-radius: 6px; padding: 0 10px; min-width: 65px; height: 34px; font-size: 13px;">
-            🗑️ Delete
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="border-bottom: 1px solid #f1f5f9;"></tr>
-    </table>
-
+<div class="guest-page">
+  <div class="quick-summary">
+    <div class="summary-item">
+      <div class="summary-left">
+        👥 <strong>Total Guests:</strong> {{ totalElements() }}
+      </div>
+      <button mat-flat-button type="button" class="export-btn" (click)="downloadExcel()">
+        <span class="button-icon">⇩</span>
+        Export Excel
+      </button>
+    </div>
   </div>
 
-  <!-- Paginator controls layout -->
-  <mat-paginator [length]="totalElements()" 
-                 [pageSize]="pageSize()" 
-                 [pageSizeOptions]="[5, 10, 20, 50]"
-                 [pageIndex]="currentPage()" 
-                 (page)="onPageChange($event)" 
-                 showFirstLastButtons 
-                 aria-label="Select page of guests"
-                 style="border-top: 1px solid #e2e8f0; background: white; border-radius: 0 0 8px 8px; width: 100%; box-sizing: border-box;" class="mat-elevation-z8">
-  </mat-paginator>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        🔍 Filters
+      </mat-panel-title>
+    </mat-expansion-panel-header>
 
-  } @else {
-  <div style="padding: 20px; text-align: center; color: red; font-weight: bold; background: #fee2e2; border-radius: 8px;">
-    Data load nahi hua ya fir array khali hai! Current Length: {{ rawGuests().length }}
-  </div>
-  }
+    <div class="filter-grid">
+      <!-- Filters -->
+      <section class="filters-card">
+        <div class="section-header">
+          <div class="section-title-wrapper">
+            <div class="section-icon">⚙</div>
+            <div>
+              <h2>Filter Guests</h2>
+              <!-- <p>Refine the guest list using one or more options.</p> -->
+            </div>
+          </div>
+          <span class="filter-status">
+            {{ totalElements() }} result(s)
+          </span>
+        </div>
 
+        <div class="filter-grid">
+
+          <!-- Gender Filter -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Gender</mat-label>
+            <mat-select [value]="selectedGender()" (selectionChange)="onGenderChange($event.value)">
+              <mat-option value="">All Genders</mat-option>
+              <mat-option value="Male">Male</mat-option>
+              <mat-option value="Female">Female</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Type Filter -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Type</mat-label>
+
+            <mat-select [value]="selectedType()" (selectionChange)="onTypeChange($event.value)">
+              <mat-option value="">All Types</mat-option>
+              <mat-option value="Adult">Adult</mat-option>
+              <mat-option value="Child">Child</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Category Filter -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Category</mat-label>
+
+            <mat-select [value]="selectedCategory()" (selectionChange)="onCategoryChange($event.value)">
+              <mat-option value="">All Categories</mat-option>
+              <mat-option value="Sagai">Sagai</mat-option>
+              <mat-option value="Shadi">Shadi</mat-option>
+              <mat-option value="Both">Both</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Gift Filter -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Gift</mat-label>
+
+            <mat-select [value]="selectedGift()" (selectionChange)="onGiftChange($event.value)">
+              <mat-option value="">All Gifts</mat-option>
+              <mat-option value="Saree">Saree</mat-option>
+              <mat-option value="Joda">Joda</mat-option>
+              <mat-option value="Comforter">Comforter</mat-option>
+              <mat-option value="Cash">Cash</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Stay Filter -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Stay</mat-label>
+
+            <mat-select [value]="selectedStay()" (selectionChange)="onStayChange($event.value)">
+              <mat-option value="">All Stay Options</mat-option>
+              <mat-option value="Yes">Yes</mat-option>
+              <mat-option value="No">No</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Cash Filter -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Cash</mat-label>
+
+            <mat-select [value]="selectedCash()" (selectionChange)="onCashChange($event.value)">
+              <mat-option value="">All Cash Values</mat-option>
+              <mat-option value="500">₹500</mat-option>
+              <mat-option value="1000">₹1,000</mat-option>
+              <mat-option value="2100">₹2,100</mat-option>
+              <mat-option value="5100">₹5,100</mat-option>
+              <mat-option value="11000">₹11,000</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+
+        <!-- Filter action buttons -->
+        <div class="filter-actions">
+
+          <button mat-stroked-button type="button" class="clear-btn" (click)="clearFilters()">
+            <span class="button-icon">↻</span>
+            Clear Filters
+          </button>
+        </div>
+      </section>
+    </div>
+
+  </mat-expansion-panel>
+  <!-- Guest table -->
+  <section class="table-section">
+    <div class="table-scroll-container">
+      <table mat-table [dataSource]="pagedGuests()" class="guest-table">
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef class="column-id">
+            ID
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-id">
+            <span class="guest-id">
+              #{{ element.id }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef class="column-name">
+            Guest Name
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-name">
+            <span class="guest-name" [title]="element.name">
+              {{ element.name }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Gender Column -->
+        <ng-container matColumnDef="gender">
+          <th mat-header-cell *matHeaderCellDef class="column-gender">
+            Gender
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-gender">
+            <span class="data-chip" [class.gender-male]="element.gender === 'Male'"
+              [class.gender-female]="element.gender === 'Female'">
+              {{ element.gender || 'Not set' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Type Column -->
+        <ng-container matColumnDef="adultOrChild">
+          <th mat-header-cell *matHeaderCellDef class="column-type">
+            Type
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-type">
+            <span class="data-chip" [class.type-adult]="element.adultOrchild === 'Adult'"
+              [class.type-child]="element.adultOrchild === 'Child'">
+              {{ element.adultOrchild || 'Not set' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Phone Number Column -->
+        <ng-container matColumnDef="phoneNumber">
+          <th mat-header-cell *matHeaderCellDef class="column-phone">
+            Phone
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-phone">
+            <div class="contact-value">
+              <span class="contact-icon">☎</span>
+
+              <span [title]="element.phoneNumber">
+                {{ element.phoneNumber || 'Not available' }}
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- WhatsApp Number Column -->
+        <ng-container matColumnDef="whatsapp_Number">
+          <th mat-header-cell *matHeaderCellDef class="column-whatsapp">
+            WhatsApp
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-whatsapp">
+            <div class="contact-value whatsapp-value">
+              <span class="contact-icon">◉</span>
+
+              <span [title]="element.whatsapp_Number">
+                {{ element.whatsapp_Number || 'Not available' }}
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Guest Category Column -->
+        <ng-container matColumnDef="guestCategory">
+          <th mat-header-cell *matHeaderCellDef class="column-category">
+            Category
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-category">
+            <span class="data-chip" [class.category-sagai]="element.guestCategory === 'Sagai'"
+              [class.category-shadi]="element.guestCategory === 'Shadi'"
+              [class.category-both]="element.guestCategory === 'Both'" [class.empty-chip]="!element.guestCategory">
+              {{ element.guestCategory || 'Not set' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Gift Column -->
+        <ng-container matColumnDef="gift">
+          <th mat-header-cell *matHeaderCellDef class="column-gift">
+            Gift
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-gift">
+            <span class="data-chip gift-chip" [class.empty-chip]="!element.gift">
+              {{ element.gift || 'Not set' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Cash Column -->
+        <ng-container matColumnDef="cash">
+          <th mat-header-cell *matHeaderCellDef class="column-cash">
+            Cash
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-cash">
+            @if (element.cash) {
+            <span class="data-chip cash-chip">
+              ₹{{ element.cash }}
+            </span>
+            } @else {
+            <span class="data-chip empty-chip">
+              Not set
+            </span>
+            }
+          </td>
+        </ng-container>
+
+        <!-- Stay Column -->
+        <ng-container matColumnDef="stay">
+          <th mat-header-cell *matHeaderCellDef class="column-stay">
+            Stay
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-stay">
+            <span class="data-chip" [class.stay-yes]="element.stay === 'Yes'" [class.stay-no]="element.stay === 'No'"
+              [class.empty-chip]="!element.stay">
+              {{ element.stay || 'Not set' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Family Name Column -->
+        <ng-container matColumnDef="familyName">
+          <th mat-header-cell *matHeaderCellDef class="column-family">
+            Family
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-family">
+            <div class="family-cell" [title]="element.family?.familyName || 'General'">
+              <span class="family-icon">⌂</span>
+
+              <span class="family-name">
+                {{ element.family?.familyName || 'General' }}
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="column-actions">
+            Actions
+          </th>
+
+          <td mat-cell *matCellDef="let element" class="column-actions">
+            <div class="action-buttons">
+
+              <button mat-flat-button type="button" class="edit-btn" (click)="openEditGuestDialog(element)"
+                aria-label="Edit guest">
+                <span>✎</span>
+                Edit
+              </button>
+
+              <button mat-flat-button type="button" class="delete-btn" (click)="deleteGuestRecord(element.id)"
+                aria-label="Delete guest">
+                <span>♲</span>
+                Delete
+              </button>
+
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      </table>
+
+      <!-- Empty state inside table card -->
+      @if (rawGuests().length === 0) {
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          🔍
+        </div>
+        <h3>No guests found</h3>
+        <p>
+          No records match the selected filters. Try adjusting the
+          filters or reset them to view all guests.
+        </p>
+
+        <button mat-flat-button type="button" class="empty-clear-btn" (click)="clearFilters()">
+          ↻ Clear All Filters
+        </button>
+      </div>
+      }
+
+    </div>
+    <!-- Paginator -->
+    <div class="paginator-wrapper">
+
+      <mat-paginator [length]="totalElements()" [pageSize]="pageSize()" [pageSizeOptions]="[5, 10, 20, 50]"
+        [pageIndex]="currentPage()" (page)="onPageChange($event)" showFirstLastButtons
+        aria-label="Select page of guests">
+      </mat-paginator>
+    </div>
+  </section>
 </div>
