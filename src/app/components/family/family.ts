@@ -177,12 +177,20 @@ export class Family implements OnInit, OnDestroy {
     this.familyService.getFamilyPaginated(page, size, search).subscribe({
 
       next: (response: any) => {
-        // Spring Boot Page object se content aur totalElements nikaalein
-        console.log("Sahi Array Length:", response);
-        this.rawFamilies.set(response.content || []);
-        this.totalElements.set(response.totalElements || 0);
-        this.cdr.detectChanges();
-      },
+
+  this.rawFamilies.set(response.content || []);
+
+  this.totalElements.set(
+    response.totalElements || 0
+  );
+
+  this.cdr.detectChanges();
+
+  this.navBarService.totalGuestCount.set(
+  response.totalElements
+);
+
+},
       error: (err) => {
         console.error("Pagination data fetch error: ", err);
       }
