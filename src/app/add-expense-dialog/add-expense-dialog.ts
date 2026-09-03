@@ -103,13 +103,13 @@ export class AddExpenseDialog implements OnInit {
 
   onBillSelected(event: Event): void {
 
-  const input = event.target as HTMLInputElement;
+    const input = event.target as HTMLInputElement;
 
-  if (input.files && input.files.length > 0) {
-    this.selectedBill = input.files[0];
+    if (input.files && input.files.length > 0) {
+      this.selectedBill = input.files[0];
+    }
+
   }
-
-}
 
   saveExpense(): void {
 
@@ -129,11 +129,26 @@ export class AddExpenseDialog implements OnInit {
     // EDIT MODE
     if (this.data?.id) {
 
+      const formData = new FormData();
+
+      formData.append(
+        'expense',
+        JSON.stringify(payload)
+      );
+
+      if (this.selectedBill) {
+
+        formData.append(
+          'bill',
+          this.selectedBill
+        );
+
+      }
+
       this.expenseService.updateExpense(
         this.data.id,
-        payload
+        formData
       ).subscribe({
-
         next: (updatedExpense: any) => {
 
           setTimeout(() => {
