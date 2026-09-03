@@ -3,7 +3,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { RouterLink, RouterLinkActive } from '@angular/router'; 
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule, Location } from '@angular/common'; // Location API add kiya jo server safe h
 import { NavbarActionService } from '../../service/navbar-action-service';
 
@@ -27,28 +27,77 @@ export class Navbar {
   protected navbarService = inject(NavbarActionService);
   private location = inject(Location); // SSR Safe location identifier
 
+  public navBarService = inject(NavbarActionService);
+
+
+
+
+  onExportClick() {
+    this.navBarService.triggerExportClick();
+  }
+
+
+
   // 1. Safe path reader logic
   getPlaceholderText(): string {
     const currentPath = this.location.path();
-    if (currentPath.includes('family')) return 'Search Family...';
-    if (currentPath.includes('guests')) return 'Search Guest...';
+
+    if (currentPath.includes('family')) {
+      return 'Search Family...';
+    }
+
+    if (currentPath.includes('guests')) {
+      return 'Search Guest...';
+    }
+
+    if (currentPath.includes('expenses')) {
+      return 'Search Expense...';
+    }
+
     return 'Search here...';
   }
-
   // 2. Safe button reader logic
   getButtonText(): string {
     const currentPath = this.location.path();
-    if (currentPath.includes('family')) return 'Add Family';
-    if (currentPath.includes('guests')) return 'Add Guest';
+
+    if (currentPath.includes('family')) {
+      return 'Add Family';
+    }
+
+    if (currentPath.includes('guests')) {
+      return 'Add Guest';
+    }
+
+    if (currentPath.includes('expenses')) {
+      return 'Add Expense';
+    }
+
     return 'Add New';
   }
 
   onSearch(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
+    console.log('Navbar Search => ', filterValue);
     this.navbarService.searchQuery.set(filterValue);
   }
 
   onAddClick(): void {
     this.navbarService.triggerAddClick();
   }
+
+  getCountLabel(): string {
+
+    const currentPath = this.location.path();
+
+    if (currentPath.includes('family')) {
+      return `Total Families: ${this.navBarService.totalGuestCount()}`;
+    }
+
+    if (currentPath.includes('expenses')) {
+      return `Total Expenses: ${this.navBarService.totalGuestCount()}`;
+    }
+
+    return `Total Guests: ${this.navBarService.totalGuestCount()}`;
+  }
+
 }
