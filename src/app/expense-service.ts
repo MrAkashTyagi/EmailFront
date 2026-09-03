@@ -63,17 +63,17 @@ export class ExpenseService {
     );
   }
 
-  updateExpense(
-    id: number,
-    expense: any
-  ): Observable<any> {
+updateExpense(
+  id: number,
+  formData: FormData
+): Observable<any> {
 
-    return this.http.put<any>(
-      `${this.baseUrl}/expenses/${id}`,
-      expense
-    );
+  return this.http.put<any>(
+    `${this.baseUrl}/expenses/${id}`,
+    formData
+  );
 
-  }
+}
 
   deleteExpense(id: number): Observable<any> {
     return this.http.delete(
