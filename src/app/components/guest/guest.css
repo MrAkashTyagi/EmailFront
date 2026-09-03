@@ -137,8 +137,8 @@
   align-items: center;
   gap: 16px;
   overflow: hidden;
-  min-height: 126px;
-  padding: 20px;
+  min-height: 25px;
+  padding: 10px;
   border: 1px solid var(--border);
   border-radius: 18px;
   background: var(--white);
