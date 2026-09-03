@@ -129,8 +129,20 @@ export class GuestComponent implements OnInit, OnDestroy {
     });
   }
 
+
   ngOnInit(): void {
     // Initial content array stream grid load
+
+    this.navBarService.exportClick$
+      .subscribe(() => {
+
+        if (
+          window.location.pathname.includes('guests')
+        ) {
+          this.downloadExcel();
+        }
+
+      });
 
     this.fetchPaginatedGuests();
 
@@ -305,12 +317,20 @@ export class GuestComponent implements OnInit, OnDestroy {
       stay,
       cash).subscribe({
         next: (response: any) => {
-          // Spring Boot Page object se content aur totalElements nikaalein
-          console.log("Sahi Array Length:", response);
-          this.rawGuests.set(response.content || []);
-          this.totalElements.set(response.totalElements || 0);
-          this.cdr.detectChanges();
-        },
+
+  console.log("Sahi Array Length:", response);
+
+  this.rawGuests.set(response.content || []);
+
+  this.totalElements.set(response.totalElements || 0);
+
+  this.navBarService.totalGuestCount.set(
+    response.totalElements
+  );
+
+  this.cdr.detectChanges();
+}
+,
         error: (err) => {
           console.error("Pagination data fetch error: ", err);
         }
