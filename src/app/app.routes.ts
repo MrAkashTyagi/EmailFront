@@ -4,6 +4,7 @@ import { Home } from './components/home/home';
 import { GuestComponent } from './components/guest/guest';
 import { AddGuestComponent } from './components/add-guest/add-guest';
 import { Family } from './components/family/family';
+import { Expense } from './expense/expense';
 
 
 
@@ -33,6 +34,11 @@ export const routes: Routes = [
     {
         path:"family",
         component:Family,
+        pathMatch:"full"
+    },
+    {
+        path:"expenses",
+        component:Expense,
         pathMatch:"full"
     }
 
