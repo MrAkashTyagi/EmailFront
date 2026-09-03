@@ -1,0 +1,256 @@
+<div class="expense-page">
+
+  <!-- Filters -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        💰 Expense Filters
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="filter-grid">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+
+        <mat-select [value]="selectedCategory()" (selectionChange)="onCategoryChange($event.value)">
+
+          <mat-option value="">All Categories</mat-option>
+          <mat-option value="Food">Food</mat-option>
+          <mat-option value="Decoration">Decoration</mat-option>
+          <mat-option value="Venue">Venue</mat-option>
+          <mat-option value="Photography">Photography</mat-option>
+          <mat-option value="Entertainment">Entertainment</mat-option>
+          <mat-option value="Transportation">Transportation</mat-option>
+          <mat-option value="Accommodation">Accommodation</mat-option>
+          <mat-option value="Invitation">Invitation</mat-option>
+          <mat-option value="Clothing">Clothing</mat-option>
+          <mat-option value="Gift">Gift</mat-option>
+          <mat-option value="Jewellery">Jewellery</mat-option>
+          <mat-option value="Miscellaneous">Miscellaneous</mat-option>
+
+        </mat-select>
+
+      </mat-form-field>
+
+    </div>
+
+  </mat-expansion-panel>
+
+  <div class="summary-cards">
+
+    <div class="summary-card">
+      <div class="value">
+        ₹ {{ summary().totalExpense }}
+      </div>
+      <div class="label">
+        Total Expense
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="value">
+        {{ summary().totalExpenses }}
+      </div>
+      <div class="label">
+        Total Expenses
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="value">
+        ₹ {{ summary().highestExpense }}
+      </div>
+      <div class="label">
+        Highest Expense
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="value">
+        {{ summary().topCategory }}
+      </div>
+      <div class="label">
+        Top Category
+      </div>
+    </div>
+
+  </div>
+  <div class="expense-content">
+
+    <!-- Expense Table -->
+    <div class="table-section mat-elevation-z4">
+
+      <!-- table -->
+      <table mat-table [dataSource]="rawExpenses()">
+
+        <!-- Expense Name -->
+        <ng-container matColumnDef="expenseName">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Expense Name
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            {{ element.expenseName }}
+          </td>
+
+        </ng-container>
+
+        <!-- Category -->
+        <ng-container matColumnDef="category">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Category
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            {{ element.category }}
+          </td>
+
+        </ng-container>
+
+        <!-- Amount -->
+        <ng-container matColumnDef="amount">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Amount
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            ₹ {{ element.amount }}
+          </td>
+
+        </ng-container>
+
+        <!-- Paid By -->
+        <ng-container matColumnDef="paidBy">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Paid By
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            {{ element.paidBy }}
+          </td>
+
+        </ng-container>
+
+        <!-- Expense Date -->
+        <ng-container matColumnDef="expenseDate">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Date
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            {{ element.expenseDate }}
+          </td>
+
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Actions
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="editExpense(element)" matTooltip="Edit Expense">
+
+              <mat-icon>edit</mat-icon>
+
+            </button>
+
+            <button mat-icon-button color="warn" (click)="deleteExpense(element)" matTooltip="Delete Expense">
+
+              <mat-icon>delete</mat-icon>
+
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="bill">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Bill
+          </th>
+          <td mat-cell *matCellDef="let element">
+
+            @if (element.billPath && element.billPath.trim()) {
+
+            <button mat-icon-button color="primary" matTooltip="View Bill" (click)="viewBill(element)">
+
+              <mat-icon>visibility</mat-icon>
+
+            </button>
+
+            <button mat-icon-button color="accent" matTooltip="Download Bill" (click)="downloadBill(element)">
+
+              <mat-icon>download</mat-icon>
+
+            </button>
+
+            } @else {
+
+            <span class="no-bill">
+              No Bill
+            </span>
+
+            }
+
+          </td>
+
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns">
+        </tr>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+
+      </table>
+
+
+
+
+      <mat-paginator [length]="totalElements()" [pageSize]="pageSize()" [pageIndex]="currentPage()"
+        [pageSizeOptions]="[5,10,20,50]" (page)="onPageChange($event)" showFirstLastButtons>
+      </mat-paginator>
+
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="mini-chart-card">
+
+      <h4>Expense Distribution</h4>
+
+      <canvas baseChart [type]="pieChartType" [data]="pieChartData">
+      </canvas>
+
+
+
+      <div class="expense-breakdown">
+
+        @for (item of categorySummary; track item.category) {
+
+        <div class="breakdown-row">
+
+          <span class="category-name">
+            {{ item.category }}
+          </span>
+
+          <span class="category-value">
+            ₹ {{ item.totalAmount }}
+          </span>
+
+        </div>
+
+        }
+
+      </div>
+
+    </div>
+
+  </div>
