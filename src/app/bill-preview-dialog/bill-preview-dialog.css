@@ -1,0 +1,23 @@
+.dialog-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px;
+}
+
+.close-btn {
+  color: #6b7280;
+}
+
+.close-btn:hover {
+  background: #f3f4f6;
+}
+
+.preview-container {
+  padding: 12px;
+}
+
+.preview-image {
+  width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+}
