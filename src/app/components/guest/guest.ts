@@ -164,8 +164,10 @@ export class GuestComponent implements OnInit, OnDestroy {
 
   openAddGuestDialog(): void {
     const dialogRef = this.dialog.open(AddGuestComponent, {
-      width: '500px',
-      disableClose: true
+      width: '950px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -229,8 +231,10 @@ export class GuestComponent implements OnInit, OnDestroy {
 
   openEditGuestDialog(guestData: any): void {
     const dialogRef = this.dialog.open(AddGuestComponent, {
-      width: '500px',
-      disableClose: false,
+      width: '950px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      autoFocus: false,
       data: guestData
     });
 
@@ -318,19 +322,19 @@ export class GuestComponent implements OnInit, OnDestroy {
       cash).subscribe({
         next: (response: any) => {
 
-  console.log("Sahi Array Length:", response);
+          console.log("Sahi Array Length:", response);
 
-  this.rawGuests.set(response.content || []);
+          this.rawGuests.set(response.content || []);
 
-  this.totalElements.set(response.totalElements || 0);
+          this.totalElements.set(response.totalElements || 0);   // 👈 YAHI
 
-  this.navBarService.totalGuestCount.set(
-    response.totalElements
-  );
+          this.navBarService.totalGuestCount.set(
+            response.totalElements
+          );
 
-  this.cdr.detectChanges();
-}
-,
+          this.cdr.detectChanges();
+        }
+        ,
         error: (err) => {
           console.error("Pagination data fetch error: ", err);
         }
