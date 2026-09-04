@@ -4,13 +4,15 @@ display: flex;
 justify-content: center;
 align-items: flex-start; /* center ki jagah */
 padding: 20px;
+
 }
 
 .guest-card {
-width: 100%;
-max-width: 550px;
-max-height: 80vh;
-overflow-y: auto;
+  width: 100%;
+  max-width: 900px;
+  /* border-radius: 180px; */
+  overflow-y: auto;
+  max-height: 80vh;
 }
 
 .form-title {
@@ -20,11 +22,21 @@ overflow-y: auto;
   margin-bottom: 10px;
 }
 
-.form-body {
+/* .form-body {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding-top: 15px;
+} */
+
+.form-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
 }
 
 .form-row {
@@ -43,7 +55,7 @@ mat-form-field {
 /* JSON Debugger Layout */
 .json-viewer {
   background: #1e293b;
-  color: #cbd5e1;
+  color: #f5f6f8;
   padding: 14px;
   border-radius: 8px;
   font-family: monospace;
@@ -62,4 +74,23 @@ mat-form-field {
 .form-actions {
   padding: 16px 8px 8px 8px !important;
   gap: 10px;
+}
+
+.guest-header {
+  padding: 12px 0 20px;
+  /* border-bottom: 1px solid #e5e7eb; */
+  margin-bottom: 20px;
+}
+
+.guest-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.guest-header p {
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 14px;
 }
