@@ -61,6 +61,23 @@ export class AddGuestComponent implements OnInit {
   };
 
   ngOnInit(): void {
+
+    if (this.editData) {
+
+      this.isEditMode = true;
+
+      this.guest = {
+        ...this.guest,
+        ...this.editData
+      };
+
+      this.guest.family = this.editData.family || {
+        id: undefined,
+        familyName: ''
+      };
+
+    }
+
     // Families list loading for simple dropdown selection mapping
     this.familyService.getAllFamiliesForDropdown().subscribe({
       next: (response: any) => {
@@ -107,6 +124,28 @@ export class AddGuestComponent implements OnInit {
   save(): void {
     if (!this.guest.whatsapp_Number) {
       this.guest.whatsapp_Number = this.guest.phoneNumber;
+    }
+
+
+    if (!/^[0-9]{10}$/.test(this.guest.phoneNumber)) {
+
+      alert('Phone number must be exactly 10 digits');
+
+      return;
+    }
+
+    if (
+      this.guest.whatsapp_Number &&
+      !/^[0-9]{10}$/.test(
+        this.guest.whatsapp_Number
+      )
+    ) {
+
+      alert(
+        'Whatsapp number must be exactly 10 digits'
+      );
+
+      return;
     }
 
     // ====================================================
@@ -162,8 +201,13 @@ export class AddGuestComponent implements OnInit {
         guestCategory: this.guest.guestCategory || '',
         gender: this.guest.gender,
         adultOrchild: this.guest.adultOrchild,
+
+        gift: this.guest.gift,
+        cash: this.guest.cash,
+        stay: this.guest.stay,
+
         family: {
-          familyName: selectedFamilyName // Flat string text mapping matching backend constraints
+          familyName: selectedFamilyName
         }
       };
 
