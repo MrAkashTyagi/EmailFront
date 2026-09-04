@@ -1,70 +1,81 @@
 <div class="card-wrapper">
-  <mat-card class="guest-card">
+  <mat-card style="background: rgba(0,0,0,0);" class="guest-card">
 
-    <mat-card-header>
-      <mat-card-title class="form-title">Add New Guest</mat-card-title>
-    </mat-card-header>
+    <div class="guest-header">
+
+      <div>
+
+        <h2>
+          👥 {{ isEditMode ? 'Update Guest' : 'Add New Guest' }}
+        </h2>
+
+        <!-- <p>
+          Manage guest details, contact information and family association
+        </p> -->
+
+      </div>
+
+    </div>
 
     <mat-card-content>
       <div class="form-body">
 
+
         <!-- Full Name -->
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Full Name</mat-label>
           <input matInput [(ngModel)]="guest.name" name="guestName" placeholder="Enter full name" required>
         </mat-form-field>
 
-        <!-- Email Address -->
+        <!-- Row 1 -->
+        <mat-form-field appearance="outline">
+          <mat-label>Phone Number</mat-label>
+          <input matInput [(ngModel)]="guest.phoneNumber" name="guestPhone" maxlength="10"
+            placeholder="Enter 10 digit number" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Whatsapp Number</mat-label>
+          <input matInput [(ngModel)]="guest.whatsapp_Number" name="guestWhatsapp" maxlength="10"
+            placeholder="Enter 10 digit number">
+        </mat-form-field>
+
+        <!-- Row 2 -->
         <mat-form-field appearance="outline">
           <mat-label>Email Address</mat-label>
           <input matInput type="email" [(ngModel)]="guest.email" name="guestEmail" placeholder="example@mail.com">
         </mat-form-field>
 
-        <!-- Gender & Type Row -->
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>Gender</mat-label>
-            <mat-select [(ngModel)]="guest.gender" name="guestGender" required>
-              <mat-option value="Male">Male</mat-option>
-              <mat-option value="Female">Female</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Type</mat-label>
-            <mat-select [(ngModel)]="guest.adultOrchild" name="guestType" required>
-              <mat-option value="Adult">Adult</mat-option>
-              <mat-option value="Child">Child</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <!-- Phone Number -->
-        <mat-form-field appearance="outline">
-          <mat-label>Phone Number</mat-label>
-          <input matInput [(ngModel)]="guest.phoneNumber" name="guestPhone" placeholder="+91..." required>
-        </mat-form-field>
-
-        <!-- Whatsapp Number -->
-        <mat-form-field appearance="outline">
-          <mat-label>Whatsapp Number</mat-label>
-          <input matInput [(ngModel)]="guest.whatsapp_Number" name="guestWhatsapp" placeholder="+91...">
-        </mat-form-field>
-
-        <!-- Category -->
         <mat-form-field appearance="outline">
           <mat-label>Category</mat-label>
-          <mat-select [(ngModel)]="guest.guestCategory" name="guestCat" required>            
+          <mat-select [(ngModel)]="guest.guestCategory" name="guestCat">
             <mat-option value="Sagai">Sagai</mat-option>
             <mat-option value="Shadi">Shadi</mat-option>
             <mat-option value="Both">Both</mat-option>
           </mat-select>
         </mat-form-field>
 
-                <!-- Gift -->
+        <!-- Row 3 -->
+        <mat-form-field appearance="outline">
+          <mat-label>Gender</mat-label>
+          <mat-select [(ngModel)]="guest.gender" name="guestGender">
+            <mat-option value="Male">Male</mat-option>
+            <mat-option value="Female">Female</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <mat-select [(ngModel)]="guest.adultOrchild" name="guestType">
+            <mat-option value="Adult">Adult</mat-option>
+            <mat-option value="Child">Child</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Row 4 -->
         <mat-form-field appearance="outline">
           <mat-label>Gift</mat-label>
-          <mat-select [(ngModel)]="guest.gift" name="gift" required>            
+          <mat-select [(ngModel)]="guest.gift" name="gift">
             <mat-option value="Saree">Saree</mat-option>
             <mat-option value="Joda">Joda</mat-option>
             <mat-option value="Comforter">Comforter</mat-option>
@@ -72,10 +83,9 @@
           </mat-select>
         </mat-form-field>
 
-                        <!-- Cash -->
         <mat-form-field appearance="outline">
           <mat-label>Cash</mat-label>
-          <mat-select [(ngModel)]="guest.cash" name="cash" required>            
+          <mat-select [(ngModel)]="guest.cash" name="cash">
             <mat-option value="100">100</mat-option>
             <mat-option value="200">200</mat-option>
             <mat-option value="251">251</mat-option>
@@ -83,35 +93,39 @@
           </mat-select>
         </mat-form-field>
 
-                  <mat-form-field appearance="outline">
-            <mat-label>Stay</mat-label>
-            <mat-select [(ngModel)]="guest.stay" name="stay" required>
-              <mat-option value="Yes">Yes</mat-option>
-              <mat-option value="No">No</mat-option>
-            </mat-select>
-          </mat-form-field>
-       
+        <!-- Row 5 -->
+        <mat-form-field appearance="outline">
+          <mat-label>Stay</mat-label>
+          <mat-select [(ngModel)]="guest.stay" name="stay">
+            <mat-option value="Yes">Yes</mat-option>
+            <mat-option value="No">No</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-
-        <!-- Smart Combobox: Selection as well as New Typing Entry Choice -->
         <mat-form-field appearance="outline">
           <mat-label>Family Name</mat-label>
 
-          <!-- Typing text input connected to autocomplete window pointer -->
-          <input type="text" placeholder="Select family or type new name..." matInput
-            [(ngModel)]="guest.family.familyName" name="familySelectionName" (input)="filterFamilies()"
-            [matAutocomplete]="autoFamily" required>
+          @if (guest.family) {
 
-          <!-- Dropdown Auto Suggestion panel container block -->
+          <input type="text" matInput [(ngModel)]="guest.family.familyName" name="familySelectionName"
+            (input)="filterFamilies()" [matAutocomplete]="autoFamily">
+
+          }
+
           <mat-autocomplete #autoFamily="matAutocomplete">
-            <!-- Loop through filtered suggestions tracking unique item indices -->
+
             @for (familyItem of filteredFamilies; track familyItem.id || $index) {
+
             <mat-option [value]="familyItem.familyName">
               {{ familyItem.familyName }}
             </mat-option>
+
             }
+
           </mat-autocomplete>
+
         </mat-form-field>
+
 
         <!-- LIVE DATA BINDING VIEW USING JSON PIPE -->
         <!-- <div class="json-viewer">
