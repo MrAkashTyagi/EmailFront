@@ -45,6 +45,7 @@ import {
 } from 'chart.js';
 
 import { BaseChartDirective } from 'ng2-charts';
+import { BillPreviewDialog } from '../bill-preview-dialog/bill-preview-dialog';
 
 @Component({
   selector: 'app-expense',
@@ -62,7 +63,8 @@ import { BaseChartDirective } from 'ng2-charts';
     MatDialogModule,
     MatTooltipModule,
     MatIconModule,
-    BaseChartDirective
+    BaseChartDirective,
+    BillPreviewDialog
   ],
   templateUrl: './expense.html',
   styleUrl: './expense.css'
@@ -86,6 +88,8 @@ export class Expense implements OnInit {
       }
     ]
   };
+
+  // categorySummary: any[] = [];
 
   summary = signal<any>({
     totalExpense: 0,
@@ -256,6 +260,16 @@ categorySummary: any[] = [];
 
   }
 
+public pieChartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'bottom' as const
+    }
+  }
+};
+
+
   loadSummary(): void {
 
     this.expenseService
@@ -276,12 +290,20 @@ categorySummary: any[] = [];
 
   viewBill(expense: any): void {
 
-    window.open(
-      `http://localhost:8090/expenses/bill/${expense.id}`,
-      '_blank'
-    );
+  this.dialog.open(
+    BillPreviewDialog,
+    {
+      width: '90vw',
+      maxWidth: '1200px',
+      maxHeight: '90vh',
+      data: {
+        url: `http://localhost:8090/expenses/bill/${expense.id}`
+      }
+    }
+  );
 
-  }
+}
+
 
   downloadBill(expense: any): void {
 
@@ -297,7 +319,7 @@ categorySummary: any[] = [];
       width: '680px',
       maxWidth: '95vw',
       maxHeight: '90vh',
-      disableClose: true,
+      disableClose: false,
       autoFocus: false
     });
 
@@ -316,10 +338,10 @@ categorySummary: any[] = [];
   editExpense(expense: any): void {
 
     const dialogRef = this.dialog.open(AddExpenseDialog, {
-      width: '680px',
+      width: '750px',
       maxWidth: '95vw',
-      maxHeight: '90vh',
-      disableClose: true,
+      maxHeight: '100vh',
+      disableClose: false,
       autoFocus: false,
       data: expense
     });
