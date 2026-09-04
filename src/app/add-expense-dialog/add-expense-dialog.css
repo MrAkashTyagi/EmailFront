@@ -101,3 +101,31 @@ mat-dialog-actions {
     grid-column: auto;
   }
 }
+.bill-upload-container {
+  width: 100%;
+}
+
+.upload-title {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.compact-upload-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.selected-file-name {
+  font-size: 13px;
+  color: #4b5563;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
