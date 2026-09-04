@@ -189,32 +189,20 @@
             <button mat-icon-button color="accent" matTooltip="Download Bill" (click)="downloadBill(element)">
 
               <mat-icon>download</mat-icon>
-
             </button>
-
             } @else {
-
             <span class="no-bill">
               No Bill
             </span>
-
             }
-
           </td>
-
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns">
         </tr>
-
         <tr mat-row *matRowDef="let row; columns: displayedColumns;">
         </tr>
-
       </table>
-
-
-
-
       <mat-paginator [length]="totalElements()" [pageSize]="pageSize()" [pageIndex]="currentPage()"
         [pageSizeOptions]="[5,10,20,50]" (page)="onPageChange($event)" showFirstLastButtons>
       </mat-paginator>
@@ -223,13 +211,24 @@
 
     <!-- Pie Chart -->
     <div class="mini-chart-card">
-
       <h4>Expense Distribution</h4>
-
-      <canvas baseChart [type]="pieChartType" [data]="pieChartData">
+      <canvas baseChart [type]="pieChartType" [data]="pieChartData" [options]="pieChartOptions">
       </canvas>
+      <!-- 
+      <div class="expense-breakdown">
+        @for (item of categorySummary; track item.category) {
+        <div class="breakdown-row">
+          <span class="category-name">
+            {{ item.category }}
+          </span>
+          <span class="category-value">
+            ₹ {{ item.totalAmount }}
+          </span>
+        </div>
+        }
+      </div> -->
 
-
+      @if (categorySummary.length > 0) {
 
       <div class="expense-breakdown">
 
@@ -250,6 +249,8 @@
         }
 
       </div>
+
+      }
 
     </div>
 
