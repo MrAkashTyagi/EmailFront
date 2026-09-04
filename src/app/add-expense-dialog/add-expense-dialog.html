@@ -65,7 +65,7 @@
         <mat-error>Amount must be greater than zero</mat-error>
         }
       </mat-form-field>
-
+      <!-- 
       <mat-form-field appearance="outline">
         <mat-label>Expense Date</mat-label>
 
@@ -77,49 +77,89 @@
         ) {
         <mat-error>Expense date is required</mat-error>
         }
+      </mat-form-field> -->
+      <mat-form-field appearance="outline">
+
+        <mat-label>Expense Date</mat-label>
+
+        <input matInput [matDatepicker]="picker" [max]="today" formControlName="expenseDate" readonly
+          (click)="picker.open()">
+
+        <mat-datepicker-toggle matIconSuffix [for]="picker">
+        </mat-datepicker-toggle>
+
+        <mat-datepicker #picker>
+        </mat-datepicker>
+
       </mat-form-field>
 
-       <mat-form-field appearance="outline" class="full-width">
+
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Paid By</mat-label>
 
-        <input
-          matInput
-          type="text"
-          formControlName="paidBy"
-          placeholder="Enter payer name"
-        />
+        <input matInput type="text" formControlName="paidBy" placeholder="Enter payer name" />
 
         @if (
-          expenseForm.get('paidBy')?.touched &&
-          expenseForm.get('paidBy')?.hasError('required')
+        expenseForm.get('paidBy')?.touched &&
+        expenseForm.get('paidBy')?.hasError('required')
         ) {
-          <mat-error>Paid by is required</mat-error>
+        <mat-error>Paid by is required</mat-error>
         }
       </mat-form-field>
 
-      <div class="full-width">
 
-        <label>Upload Bill</label>
-
-        <input type="file" accept=".pdf,.jpg,.jpeg,.png" (change)="onBillSelected($event)" />
-
-      </div>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
-
-        <textarea matInput rows="3" formControlName="description" placeholder="Enter expense description"></textarea>
+        <textarea matInput rows="2" formControlName="description" placeholder="Enter expense description"></textarea>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
+      <!-- <mat-form-field appearance="outline" class="full-width">
         <mat-label>Bill Path</mat-label>
-
         <input matInput type="text" formControlName="billPath" placeholder="Optional bill path" />
+      </mat-form-field> -->
 
-        <mat-hint>
-          Actual bill upload will be added after enabling multipart API
-        </mat-hint>
-      </mat-form-field>
+      <!-- <div class="full-width">
+        <label>Upload Bill </label>
+        <input type="file" accept=".pdf,.jpg,.jpeg,.png" (change)="onBillSelected($event)" />
+      </div> -->
+
+      <div class="bill-upload-container">
+
+        <!-- <label class="upload-title">
+          Upload Bill
+        </label> -->
+
+        <div class="compact-upload-box">
+
+          <input #billInput type="file" accept=".pdf,.jpg,.jpeg,.png" hidden (change)="onBillSelected($event)" />
+
+          <button mat-stroked-button color="primary" type="button" (click)="billInput.click()">
+
+            <mat-icon>upload_file</mat-icon>
+            Upload Bill
+
+          </button>
+          @if (selectedBill) {
+
+          <span class="selected-file-name">
+            📄 {{ selectedBill.name }}
+          </span>
+
+          }
+
+          @if (!selectedBill && existingBillName) {
+
+          <span class="selected-file-name">
+            📄 {{ existingBillName }}
+          </span>
+
+          }
+
+        </div>
+
+      </div>
+
 
       @if (saveError) {
       <div class="error-message">
