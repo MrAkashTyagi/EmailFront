@@ -7,7 +7,6 @@ import {
   Validators
 } from '@angular/forms';
 
-
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -17,12 +16,19 @@ import {
   MatDialogTitle
 } from '@angular/material/dialog';
 
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
+import {
+  provideNativeDateAdapter
+} from '@angular/material/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ExpenseService } from '../expense-service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-add-expense-dialog',
@@ -37,7 +43,9 @@ import { ExpenseService } from '../expense-service';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDatepickerModule,
+    MatIconModule
   ],
   templateUrl: './add-expense-dialog.html',
   styleUrl: './add-expense-dialog.css'
@@ -50,9 +58,10 @@ export class AddExpenseDialog implements OnInit {
 
   isSaving = false;
   saveError = '';
-
+  existingBillName = '';
   selectedBill: File | null = null;
 
+  today = new Date();
 
   readonly categories: string[] = [
     'Food',
@@ -87,6 +96,17 @@ export class AddExpenseDialog implements OnInit {
 
     if (this.data) {
 
+      console.log('Edit Data => ', this.data);
+
+      if (this.data?.billPath) {
+        this.existingBillName =
+          this.data.billPath.split(/[\\/]/).pop() || '';
+        console.log(
+          'Existing Bill =>',
+          this.existingBillName
+        );
+      }
+
       this.expenseForm.patchValue({
         expenseName: this.data.expenseName,
         category: this.data.category,
@@ -96,6 +116,15 @@ export class AddExpenseDialog implements OnInit {
         paidBy: this.data.paidBy,
         billPath: this.data.billPath
       });
+
+      if (this.data?.billPath) {
+        this.existingBillName =
+          this.data.billPath.split(/[\\/]/).pop() || '';
+        console.log(
+          'Existing Bill =>',
+          this.existingBillName
+        );
+      }
 
     }
 
@@ -127,6 +156,14 @@ export class AddExpenseDialog implements OnInit {
     };
 
     // EDIT MODE
+
+    if (this.data?.billPath) {
+
+      this.existingBillName =
+        this.data.billPath.split(/[\\/]/).pop() || '';
+
+    }
+
     if (this.data?.id) {
 
       const formData = new FormData();
