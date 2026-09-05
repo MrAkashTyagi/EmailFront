@@ -28,54 +28,58 @@ export class GuestService {
   }
 
   // get paginated guests
-  getGuestsPaged(page: number, 
-    size: number, 
-    search: string='', 
-    gender: string = '', 
-    type: string='',
+  getGuestsPaged(page: number,
+    size: number,
+    search: string = '',
+    gender: string = '',
+    type: string = '',
     category: string,
     gift: string,
     stay: string,
-    cash: string): Observable<any> {
+    cash: string,
+    invitationSent: string): Observable<any> {
     const params = new HttpParams()
-    .set('page', page.toString())
-    .set('size', size.toString())
-    .set('search',search)
-    .set('gender', gender)
-    .set('adultOrchild', type)
-    .set('guestCategory', category)
-    .set('gift', gift)
-    .set('stay', stay)
-    .set('cash', cash);
-    
-    return this.http.get<any>(`${this.baseUrl}/guests/guest`,{ params });
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('search', search)
+      .set('gender', gender)
+      .set('adultOrchild', type)
+      .set('guestCategory', category)
+      .set('gift', gift)
+      .set('stay', stay)
+      .set('cash', cash)
+      .set('invitationSent', invitationSent);
+
+    return this.http.get<any>(`${this.baseUrl}/guests/guest`, { params });
   }
 
- downloadGuests(
-  gender: string,
-  adultOrchild: string,
-  gift: string,
-  cash: string,
-  guestCategory: string,
-  stay: string
-) {
+  downloadGuests(
+    gender: string,
+    adultOrchild: string,
+    gift: string,
+    cash: string,
+    guestCategory: string,
+    stay: string,
+    invitationSent: string
+  ) {
 
-  let params = new HttpParams()
-    .set('gender', gender || '')
-    .set('adultOrchild', adultOrchild || '')
-    .set('gift', gift || '')
-    .set('cash', cash || '')
-    .set('guestCategory', guestCategory || '')
-    .set('stay', stay || '');
+    let params = new HttpParams()
+      .set('gender', gender || '')
+      .set('adultOrchild', adultOrchild || '')
+      .set('gift', gift || '')
+      .set('cash', cash || '')
+      .set('guestCategory', guestCategory || '')
+      .set('stay', stay || '')
+      .set('invitationSent', invitationSent || '');
 
-  return this.http.get(
-    `${this.baseUrl}/guests/download`,
-    {
-      params,
-      responseType: 'blob'
-    }
-  );
-}
+    return this.http.get(
+      `${this.baseUrl}/guests/download`,
+      {
+        params,
+        responseType: 'blob'
+      }
+    );
+  }
 
   // // Payload me sirf family name jayega, aur ID path variable (URL) ke zariye server controller ko pass hogi
   // saveGuestWithFamily(familyId: number, guestPayload: any): Observable<any> {
@@ -83,6 +87,16 @@ export class GuestService {
   //   return this.http.put<any>(`${this.baseUrl}/guest/${familyId}`, guestPayload);
   // }
 
+  getGuestSummary() {
+    return this.http.get<any>(
+      `${this.baseUrl}/guests/summary`
+    );
+  }
 
-  
+  getGuestCategorySummary() {
+    return this.http.get<any[]>(
+      `${this.baseUrl}/guests/category-summary`
+    );
+  }
+
 }
