@@ -320,12 +320,24 @@
   width: 100%;
 }
 
-.filter-actions {
+/* .filter-actions {
   grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
   padding-right: 50px;
   margin-top: 4px;
+} */
+
+.filter-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 50px;
+  margin-top: 10px;
+}
+
+.invitation-filter {
+  width: 220px;
 }
 
 
@@ -486,6 +498,19 @@
   color: #475569;
 }
 
+.contact-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+  padding-right: 90px;
+  text-align: left;
+}
+
+.contact-cell div:first-child{
+  font-weight: 600;
+}
+
 .contact-icon {
   flex: 0 0 auto;
   color: var(--primary);
@@ -494,6 +519,10 @@
 
 .whatsapp-value .contact-icon {
   color: var(--green);
+}
+
+.column-cash {
+  width: 80px;
 }
 
 .data-chip {
@@ -840,3 +869,104 @@ mat-expansion-panel-header {
   padding: 12px 0 !important;
 }
 
+.status-sent {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.status-pending {
+  color: #ea580c;
+  font-weight: 600;
+}
+
+.sent-chip {
+  background: #dcfce7;
+  color: #15803d;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pending-chip {
+  background: #faf7f2;
+  color: #c2410c;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+/* .filter-grid mat-form-field {
+  min-width: 220px;
+} */
+
+.filter-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.whatsapp-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.whatsapp-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-top: 10px;
+}
+
+.summary-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.summary-icon {
+  font-size: 28px;
+}
+
+.summary-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.guest-chart-card {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.chart-header h3 {
+  margin: 0 0 16px;
+  color: #1e293b;
+}
+
+.chart-body {
+  max-width: 420px;
+  margin: 0 auto;
+}
