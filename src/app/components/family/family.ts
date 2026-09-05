@@ -88,6 +88,7 @@ export class Family implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    this.navBarService.searchQuery.set('');
     this.fetchPaginatedFamily();
 
     // FIX FIXED: Variable spelling alignment matching 'navBarAddSubscription' pointer reference
