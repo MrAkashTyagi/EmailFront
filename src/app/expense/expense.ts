@@ -117,6 +117,7 @@ categorySummary: any[] = [];
   ];
 
   ngOnInit(): void {
+    this.navBarService.searchQuery.set('');
     this.loadCategoryChart();
     this.loadSummary();
     this.navBarService.searchQuery.set('');
