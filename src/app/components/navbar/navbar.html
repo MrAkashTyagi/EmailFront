@@ -61,7 +61,10 @@
     <div style="position: relative; display: flex; align-items: center;">
       <!-- Icon color changed to Black with 0.6 opacity for subtle modern look -->
       <span style="position: absolute; left: 12px; color: rgba(0,0,0,0.6); font-size: 16px; z-index: 5;">🔍</span>
-      <input type="text" [placeholder]="getPlaceholderText()" (keyup)="onSearch($event)"
+      <input type="text" 
+      [placeholder]="getPlaceholderText()"
+      [value]="searchText"
+      (input)="onSearch($event)"
         style="background: #ffffff !important; border: 1px solid #cbd5e1; color: #000000 !important; padding: 8px 12px 8px 36px; border-radius: 6px; width: 250px; font-size: 14px; outline: none; transition: all 0.3s; font-weight: 500;"
         placeholder-color="rgba(0,0,0,0.4)">
     </div>
