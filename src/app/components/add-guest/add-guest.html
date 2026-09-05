@@ -103,6 +103,21 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
+          <mat-label>Invitation Status</mat-label>
+          <mat-select [(ngModel)]="guest.invitationSent" name="invitationSent">
+
+            <mat-option [value]="true">
+              Sent
+            </mat-option>
+
+            <mat-option [value]="false">
+              Pending
+            </mat-option>
+
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
           <mat-label>Family Name</mat-label>
 
           @if (guest.family) {
