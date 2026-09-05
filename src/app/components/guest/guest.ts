@@ -14,6 +14,27 @@ import { Subscription } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCard } from "@angular/material/card";
+import { MatIcon } from "@angular/material/icon";
+
+import { BaseChartDirective } from 'ng2-charts';
+import {
+  Chart,
+  PieController,
+  ArcElement,
+  Tooltip,
+  Legend
+} from 'chart.js';
+
+import { ChartOptions } from 'chart.js';
+
+
+ Chart.register(
+  PieController,
+  ArcElement,
+  Tooltip,
+  Legend
+);
 
 @Component({
   selector: 'app-guest',
@@ -29,8 +50,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatExpansionModule
-  ],
+    MatExpansionModule,
+    MatCard,
+    MatIcon,
+    BaseChartDirective
+],
   templateUrl: './guest.html',
   styleUrls: ['./guest.css']
 })
@@ -44,12 +68,14 @@ export class GuestComponent implements OnInit, OnDestroy {
     'name',
     'gender',
     'adultOrChild',
-    'phoneNumber',
-    'whatsapp_Number',
+    // 'phoneNumber',
+    // 'whatsapp_Number',
+    'contact',
     'guestCategory',
     'gift',
     'cash',
     'stay',
+    'invitationSent',
     'familyName',
     'actions'
   ];
@@ -65,6 +91,69 @@ export class GuestComponent implements OnInit, OnDestroy {
   selectedGift = signal<string>('');
   selectedStay = signal<string>('');
   selectedCash = signal<string>('');
+  selectedInvitationStatus = signal<string>('');
+
+  guestCategorySummary = signal<any[]>([]);
+
+guestPieChartData: any = {
+  labels: [],
+  datasets: [{
+    data: [],
+    backgroundColor: [
+      '#8b5cf6',
+      '#ec4899',
+      '#f59e0b',
+      '#10b981'
+    ]
+  }]
+};
+
+guestPieChartOptions: ChartOptions<'pie'> = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'bottom'
+    }
+  }
+};
+
+loadGuestCategorySummary(): void {
+
+  this.guestService
+    .getGuestCategorySummary()
+    .subscribe({
+
+      next: (response) => {
+
+        this.guestCategorySummary.set(response);
+
+        this.guestPieChartData = {
+
+          labels: response.map(
+            (x: any) => x.category
+          ),
+
+          datasets: [{
+            data: response.map(
+              (x: any) => x.count
+            ),
+            backgroundColor: [
+              '#8b5cf6',
+              '#ec4899',
+              '#f59e0b',
+              '#10b981'
+            ]
+          }]
+
+        };
+
+      }
+
+    });
+
+}
+
+ 
 
   pagedGuests = computed(() => {
     return this.filteredGuests();
@@ -73,9 +162,38 @@ export class GuestComponent implements OnInit, OnDestroy {
   filteredGuests = computed(() => {
     return this.rawGuests();
   });
+  
 
   onGenderChange(gender: string): void {
     this.selectedGender.set(gender);
+    this.currentPage.set(0);
+    this.fetchPaginatedGuests();
+  }
+  
+  summary = signal({
+  totalGuests: 0,
+  invitationSent: 0,
+  invitationPending: 0,
+  stayRequired: 0
+});
+
+loadGuestSummary(): void {
+
+  this.guestService
+    .getGuestSummary()
+    .subscribe({
+
+      next: (data) => {
+        this.summary.set(data);
+      }
+
+    });
+
+}
+
+  onInvitationStatusChange(status: string): void {
+    console.log('Invitation Filter =>', status);
+    this.selectedInvitationStatus.set(status);
     this.currentPage.set(0);
     this.fetchPaginatedGuests();
   }
@@ -131,6 +249,8 @@ export class GuestComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    this.loadGuestSummary();
+    this.loadGuestCategorySummary();
 
     this.navBarService.searchQuery.set('');
     // Initial content array stream grid load
@@ -174,6 +294,7 @@ export class GuestComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.loadGuestSummary();
         console.log("Database se save hoke aaya live object:", result);
         Promise.resolve().then(() => {
           // Naya record smoothly array ke sabse aakhiri kone (end) me append hoga
@@ -209,7 +330,7 @@ export class GuestComponent implements OnInit, OnDestroy {
     this.selectedGift.set('');
     this.selectedStay.set('');
     this.selectedCash.set('');
-
+    this.selectedInvitationStatus.set('')
     this.currentPage.set(0);
     this.fetchPaginatedGuests();
   }
@@ -221,6 +342,7 @@ export class GuestComponent implements OnInit, OnDestroy {
           console.log(`Guest ID ${id} database se delete ho gaya!`);
           const filteredList = this.rawGuests().filter(guest => guest.id !== id);
           this.rawGuests.set(filteredList);
+          this.loadGuestSummary();
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -242,6 +364,7 @@ export class GuestComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.loadGuestSummary();
         console.log("Database se update hokar aaya live object:", result);
         setTimeout(() => {
           const updatedList = this.rawGuests().map(guest =>
@@ -249,6 +372,7 @@ export class GuestComponent implements OnInit, OnDestroy {
           );
           this.rawGuests.set(updatedList);
           this.cdr.detectChanges();
+          
         });
       }
     });
@@ -262,7 +386,8 @@ export class GuestComponent implements OnInit, OnDestroy {
       this.selectedGift(),
       this.selectedCash(),
       this.selectedCategory(),
-      this.selectedStay()
+      this.selectedStay(),
+      this.selectedInvitationStatus()
     ).subscribe({
       next: (response: Blob) => {
 
@@ -309,6 +434,7 @@ export class GuestComponent implements OnInit, OnDestroy {
     const gift = this.selectedGift();
     const stay = this.selectedStay();
     const cash = this.selectedCash();
+    const invitationSent = this.selectedInvitationStatus();
 
 
     // Apni API matching pagination query url params ke sath hit karein
@@ -321,14 +447,18 @@ export class GuestComponent implements OnInit, OnDestroy {
       category,
       gift,
       stay,
-      cash).subscribe({
+      cash,
+      invitationSent).subscribe({
         next: (response: any) => {
 
           console.log("Sahi Array Length:", response);
 
+
+          this.loadGuestSummary();
+
           this.rawGuests.set(response.content || []);
 
-          this.totalElements.set(response.totalElements || 0);   // 👈 YAHI
+          this.totalElements.set(response.totalElements || 0);
 
           this.navBarService.totalGuestCount.set(
             response.totalElements
