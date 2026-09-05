@@ -103,14 +103,14 @@ export class Navbar {
     const currentPath = this.location.path();
 
     if (currentPath.includes('family')) {
-      return `Total Families: ${this.navBarService.totalGuestCount()}`;
+      return `Families: ${this.navBarService.totalGuestCount()}`;
     }
 
     if (currentPath.includes('expenses')) {
-      return `Total Expenses: ${this.navBarService.totalGuestCount()}`;
+      return `Expenses: ${this.navBarService.totalGuestCount()}`;
     }
 
-    return `Total Guests: ${this.navBarService.totalGuestCount()}`;
+    return `Guests: ${this.navBarService.totalGuestCount()}`;
   }
 
 }
