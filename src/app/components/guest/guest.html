@@ -11,6 +11,114 @@
     </div>
   </div> -->
 
+<div class="summary-cards">
+
+  <div class="summary-card">
+
+    <div class="summary-icon">
+      👥
+    </div>
+
+    <div>
+
+      <div class="summary-value">
+        {{ summary().totalGuests }}
+      </div>
+
+      <div class="summary-label">
+        Total Guests
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="summary-card">
+
+    <div class="summary-icon">
+      ✅
+    </div>
+
+    <div>
+
+      <div class="summary-value">
+        {{ summary().invitationSent }}
+      </div>
+
+      <div class="summary-label">
+        Invitations Sent
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="summary-card">
+
+    <div class="summary-icon">
+      ⏳
+    </div>
+
+    <div>
+
+      <div class="summary-value">
+        {{ summary().invitationPending }}
+      </div>
+
+      <div class="summary-label">
+        Pending Invitations
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="summary-card">
+
+    <div class="summary-icon">
+      🏠
+    </div>
+
+    <div>
+
+      <div class="summary-value">
+        {{ summary().stayRequired }}
+      </div>
+
+      <div class="summary-label">
+        Stay Required
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- <div class="guest-chart-card">
+
+  <div class="chart-header">
+
+    <h3>
+      Guest Category Distribution
+    </h3>
+
+  </div>
+
+  <div class="chart-body">
+
+    <canvas
+      baseChart
+      [data]="guestPieChartData"
+      [type]="'pie'"
+      [options]="guestPieChartOptions">
+
+    </canvas>
+
+  </div>
+
+</div> -->
+
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -69,6 +177,8 @@
             </mat-select>
           </mat-form-field>
 
+
+
           <!-- Gift Filter -->
           <mat-form-field appearance="outline" class="filter-field">
             <mat-label>Gift</mat-label>
@@ -106,16 +216,88 @@
               <mat-option value="11000">₹11,000</mat-option>
             </mat-select>
           </mat-form-field>
+          <!-- 
+          <mat-select [value]="selectedInvitationStatus()" (selectionChange)="onInvitationChange($event.value)">
+
+            <mat-option value="">
+              All
+            </mat-option>
+
+            <mat-option value="true">
+              Sent
+            </mat-option>
+
+            <mat-option value="false">
+              Pending
+            </mat-option>
+
+          </mat-select> -->
 
         </div>
+        <!-- 
+        <div class="filter-footer">
+          <mat-form-field appearance="outline" class="filter-field">
+
+            <mat-label>
+              Invitation Status
+            </mat-label>
+
+            <mat-select [value]="selectedInvitationStatus()" (selectionChange)="onInvitationStatusChange($event.value)">
+              <mat-option value="">
+                All
+              </mat-option>
+              <mat-option value="true">
+                Sent
+              </mat-option>
+              <mat-option value="false">
+                Pending
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div> -->
 
         <!-- Filter action buttons -->
-        <div class="filter-actions">
+        <!-- <div class="filter-actions">
 
           <button mat-stroked-button type="button" class="clear-btn" (click)="clearFilters()">
             <span class="button-icon">↻</span>
             Clear Filters
           </button>
+        </div> -->
+
+
+
+        <div class="filter-actions">
+
+          <mat-form-field appearance="outline" class="filter-field invitation-filter">
+
+            <mat-label>Invitation</mat-label>
+
+            <mat-select [value]="selectedInvitationStatus()" (selectionChange)="onInvitationStatusChange($event.value)">
+
+              <mat-option value="">
+                All
+              </mat-option>
+
+              <mat-option value="true">
+                Sent
+              </mat-option>
+
+              <mat-option value="false">
+                Pending
+              </mat-option>
+
+            </mat-select>
+
+          </mat-form-field>
+
+          <button mat-stroked-button type="button" class="clear-btn" (click)="clearFilters()">
+
+            <span class="button-icon">↻</span>
+            Clear Filters
+
+          </button>
+
         </div>
       </section>
     </div>
@@ -167,7 +349,7 @@
         </ng-container>
 
 
-        
+
         <!-- Type Column -->
         <ng-container matColumnDef="adultOrChild">
           <th mat-header-cell *matHeaderCellDef class="column-type">
@@ -183,7 +365,7 @@
         </ng-container>
 
         <!-- Phone Number Column -->
-        <ng-container matColumnDef="phoneNumber">
+        <!-- <ng-container matColumnDef="phoneNumber">
           <th mat-header-cell *matHeaderCellDef class="column-phone">
             Phone
           </th>
@@ -197,10 +379,10 @@
               </span>
             </div>
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <!-- WhatsApp Number Column -->
-        <ng-container matColumnDef="whatsapp_Number">
+        <!-- <ng-container matColumnDef="whatsapp_Number">
           <th mat-header-cell *matHeaderCellDef class="column-whatsapp">
             WhatsApp
           </th>
@@ -214,6 +396,34 @@
               </span>
             </div>
           </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="contact">
+          <th mat-header-cell *matHeaderCellDef class="contact-column">
+            Contact
+          </th>
+          <td mat-cell *matCellDef="let element" class="contact-column">
+            <div class="contact-cell">
+              <div>
+                📞 {{element.phoneNumber }}
+              </div>
+              @if (
+              element.whatsapp_Number &&
+              element.whatsapp_Number !== element.phoneNumber
+              ) {
+
+              <div class="whatsapp-row">
+
+                <img src="icons/whatsapp.png" class="whatsapp-icon" alt="">
+
+                {{ element.whatsapp_Number }}
+
+              </div>
+
+              }
+            </div>
+          </td>
+
         </ng-container>
 
         <!-- Guest Category Column -->
@@ -229,6 +439,33 @@
               {{ element.guestCategory || 'Not set' }}
             </span>
           </td>
+        </ng-container>
+
+        <!-- Invitation field -->
+
+        <ng-container matColumnDef="invitationSent">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Invitation
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+
+            @if (element.invitationSent === true) {
+
+            <span class="sent-chip">
+              Sent
+            </span>
+
+            } @else {
+
+            <span class="pending-chip">
+              Pending
+            </span>
+
+            }
+          </td>
+
         </ng-container>
 
         <!-- Gift Column -->
@@ -276,6 +513,8 @@
             </span>
           </td>
         </ng-container>
+
+
 
         <!-- Family Name Column -->
         <ng-container matColumnDef="familyName">
