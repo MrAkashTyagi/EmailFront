@@ -54,6 +54,7 @@ export class AddGuestComponent implements OnInit {
     gift: '',
     cash: '',
     stay: '',
+    invitationSent: false,
     family: {
       id: undefined as number | undefined,
       familyName: ''
@@ -170,6 +171,9 @@ export class AddGuestComponent implements OnInit {
         gift: this.guest.gift,
         cash: this.guest.cash,
         stay: this.guest.stay,
+
+        invitationSent: this.guest.invitationSent,
+
         family: {
           familyName: this.guest.family?.familyName || 'General'
         }
@@ -205,6 +209,8 @@ export class AddGuestComponent implements OnInit {
         gift: this.guest.gift,
         cash: this.guest.cash,
         stay: this.guest.stay,
+
+        invitationSent: this.guest.invitationSent,
 
         family: {
           familyName: selectedFamilyName
