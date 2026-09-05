@@ -131,6 +131,8 @@ export class GuestComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+
+    this.navBarService.searchQuery.set('');
     // Initial content array stream grid load
 
     this.navBarService.exportClick$
