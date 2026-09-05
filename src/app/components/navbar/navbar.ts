@@ -6,7 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule, Location } from '@angular/common'; // Location API add kiya jo server safe h
 import { NavbarActionService } from '../../service/navbar-action-service';
-
+import { effect } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
@@ -29,14 +29,22 @@ export class Navbar {
 
   public navBarService = inject(NavbarActionService);
 
+  searchText = '';
 
+  constructor() {
 
+    effect(() => {
+
+      this.searchText =
+        this.navBarService.searchQuery();
+
+    });
+
+  }
 
   onExportClick() {
     this.navBarService.triggerExportClick();
   }
-
-
 
   // 1. Safe path reader logic
   getPlaceholderText(): string {
@@ -76,9 +84,14 @@ export class Navbar {
   }
 
   onSearch(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    console.log('Navbar Search => ', filterValue);
-    this.navbarService.searchQuery.set(filterValue);
+
+    this.searchText =
+      (event.target as HTMLInputElement).value;
+
+    this.navbarService.searchQuery.set(
+      this.searchText
+    );
+
   }
 
   onAddClick(): void {
