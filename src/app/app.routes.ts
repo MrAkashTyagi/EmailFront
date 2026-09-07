@@ -5,6 +5,7 @@ import { GuestComponent } from './components/guest/guest';
 import { AddGuestComponent } from './components/add-guest/add-guest';
 import { Family } from './components/family/family';
 import { Expense } from './expense/expense';
+import { Dashboard } from './components/dashboard/dashboard';
 
 
 
@@ -39,6 +40,11 @@ export const routes: Routes = [
     {
         path:"expenses",
         component:Expense,
+        pathMatch:"full"
+    },
+    {
+        path:"dashboard",
+        component:Dashboard,
         pathMatch:"full"
     }
 
