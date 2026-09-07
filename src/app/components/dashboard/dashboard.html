@@ -12,6 +12,16 @@
 
     </div> -->
 
+<!-- <h1 style="color:red">
+  {{ summary.totalGuests }}
+</h1>
+
+<pre>
+{{ summary | json }}
+</pre> -->
+
+
+
     <div class="dashboard-hero">
 
         <div class="hero-content">
@@ -29,21 +39,63 @@
 
     </div>
 
-    <div class="quick-links">
+    <div class="top-progress-wrapper">
 
-        <a routerLink="/guest" class="quick-link guest">
-            👥 Guests
-        </a>
+    <div class="top-progress-header">
 
-        <a routerLink="/family" class="quick-link family">
-            👨‍👩‍👧 Families
-        </a>
+        <span>📨 Invitation Progress</span>
 
-        <a routerLink="/expense" class="quick-link expense">
-            💰 Expenses
-        </a>
+        <span class="progress-percentage">
+
+            {{
+            summary.invitationSent + summary.pendingInvitations > 0
+            ? (
+            summary.invitationSent * 100 /
+            (
+            summary.invitationSent +
+            summary.pendingInvitations
+            )
+            ).toFixed(0)
+            : 0
+            }}%
+
+        </span>
 
     </div>
+
+    <div class="top-progress-bar">
+
+        <div
+            class="top-progress-fill"
+            [style.width.%]="
+            (summary.invitationSent * 100) /
+            (summary.invitationSent + summary.pendingInvitations)
+        ">
+        </div>
+
+    </div>
+
+    <div class="top-progress-info">
+
+        <span>
+            ✅ Sent:
+            {{ summary.invitationSent }}
+        </span>
+
+        <span>
+            ⏳ Pending:
+            {{ summary.pendingInvitations }}
+        </span>
+
+        <span>
+            👥 Total Guests:
+            {{ summary.totalGuests }}
+        </span>
+
+    </div>
+
+</div>
+
 
     <!-- Row 1 -->
 
@@ -188,7 +240,7 @@
             <div class="card-content">
 
                 <div class="card-value">
-                    {{ summary.averageFamilySize }}
+                    {{ summary.averageFamilySize | number:'1.0-0' }}
                 </div>
 
                 <div class="card-label">
@@ -218,7 +270,10 @@
 
             <div class="chart-container">
 
-                <canvas baseChart [data]="guestPieChartData" [options]="pieChartOptions" [type]="'pie'">
+                <canvas baseChart
+                 [data]="guestPieChartData" 
+                 [options]="pieChartOptions" 
+                 [type]="'pie'">
                 </canvas>
 
             </div>
@@ -229,17 +284,22 @@
 
     <div class="activity-grid">
 
-        <!-- Recent Guests -->
+        
+        <!-- Recent Expenses -->
 
         <div class="activity-card">
+
+            <!-- <div class="activity-header">
+                💰 Recent Expenses
+            </div> -->
 
             <div class="activity-header">
 
                 <span>
-                    👥 Recent Guests
+                    💰 Recent Expenses
                 </span>
 
-                <a routerLink="/guests">
+                <a routerLink="/expenses">
 
                     View All →
 
@@ -247,19 +307,19 @@
 
             </div>
 
-            @for (guest of recentGuests; track guest.id) {
+            @for (expense of recentExpenses; track expense.id) {
 
             <div class="activity-item">
 
                 <div class="item-primary">
-                    {{ guest.name }}
+                    {{ expense.expenseName }}
                 </div>
 
                 <div class="item-secondary">
 
-                    <span class="guest-tag">
+                    <span class="expense-tag">
 
-                        {{ guest.guestCategory || 'General' }}
+                        ₹{{ expense.amount }}
 
                     </span>
 
@@ -271,7 +331,41 @@
 
         </div>
 
-        <div class="progress-card">
+<!-- Recent Guests -->
+
+        <div class="activity-card">
+            <div class="activity-header">
+                <span>
+                    👥 Recent Guests
+                </span>
+                <a routerLink="/guests">
+                    View All →
+                </a>
+            </div>
+
+            @for (guest of recentGuests; track guest.id) {
+
+            <div class="activity-item">
+                <div class="item-primary">
+                    {{ guest.name }}
+                </div>
+                <div class="item-secondary">
+                    <span class="guest-tag">
+                        {{ guest.guestCategory || 'General' }}
+                    </span>
+                </div>
+            </div>
+            }
+            
+        </div>
+
+
+        <!-- Invitation Bar -->
+
+
+    </div>
+    
+        <!-- <div class="progress-card">
 
             <div class="progress-header">
 
@@ -344,56 +438,6 @@
             </div>
 
 
-        </div>
-
-        <!-- Recent Expenses -->
-
-        <div class="activity-card">
-
-            <!-- <div class="activity-header">
-                💰 Recent Expenses
-            </div> -->
-
-            <div class="activity-header">
-
-                <span>
-                    💰 Recent Expenses
-                </span>
-
-                <a routerLink="/expenses">
-
-                    View All →
-
-                </a>
-
-            </div>
-
-            @for (expense of recentExpenses; track expense.id) {
-
-            <div class="activity-item">
-
-                <div class="item-primary">
-                    {{ expense.expenseName }}
-                </div>
-
-                <div class="item-secondary">
-
-                    <span class="expense-tag">
-
-                        ₹{{ expense.amount }}
-
-                    </span>
-
-                </div>
-
-            </div>
-
-            }
-
-        </div>
-
-    </div>
-
-
+        </div> -->
 
 </div>
