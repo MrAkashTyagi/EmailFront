@@ -1,0 +1,399 @@
+<div class="dashboard-page">
+
+    <!-- <div class="dashboard-header">
+
+        <div>
+            <h1>📊 Wedding Dashboard</h1>
+            <p>
+                Complete overview of guests, families,
+                invitations and expenses.
+            </p>
+        </div>
+
+    </div> -->
+
+    <div class="dashboard-hero">
+
+        <div class="hero-content">
+
+            <h1>
+                📊 Wedding Dashboard
+            </h1>
+
+            <p>
+                Complete overview of guests, families,
+                invitations and expenses.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="quick-links">
+
+        <a routerLink="/guest" class="quick-link guest">
+            👥 Guests
+        </a>
+
+        <a routerLink="/family" class="quick-link family">
+            👨‍👩‍👧 Families
+        </a>
+
+        <a routerLink="/expense" class="quick-link expense">
+            💰 Expenses
+        </a>
+
+    </div>
+
+    <!-- Row 1 -->
+
+    <div class="cards-grid">
+
+        <div class="dashboard-card purple">
+
+            <div class="card-icon">👥</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary.totalGuests }}
+                </div>
+
+                <div class="card-label">
+                    Total Guests
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="dashboard-card pink">
+
+            <div class="card-icon">👨‍👩‍👧</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary.totalFamilies }}
+                </div>
+
+                <div class="card-label">
+                    Total Families
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="dashboard-card green">
+
+            <div class="card-icon">💰</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    ₹{{ summary.totalExpense }}
+                </div>
+
+                <div class="card-label">
+                    Total Expenses
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="dashboard-card blue">
+
+            <div class="card-icon">🏠</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary.stayRequired }}
+                </div>
+
+                <div class="card-label">
+                    Stay Required
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Row 2 -->
+
+    <div class="cards-grid">
+
+        <div class="dashboard-card success">
+
+            <div class="card-icon">✅</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary.invitationSent }}
+                </div>
+
+                <div class="card-label">
+                    Invitations Sent
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="dashboard-card warning">
+
+            <div class="card-icon">⏳</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary.pendingInvitations }}
+                </div>
+
+                <div class="card-label">
+                    Pending Invitations
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="dashboard-card teal">
+
+            <div class="card-icon">👨</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary.totalFamilyMembers }}
+                </div>
+
+                <div class="card-label">
+                    Family Members
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="dashboard-card orange">
+
+            <div class="card-icon">📊</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary.averageFamilySize }}
+                </div>
+
+                <div class="card-label">
+                    Average Family Size
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="charts-grid">
+
+        <div class="chart-card">
+
+            <h3>💰 Expense Distribution</h3>
+
+            <canvas baseChart [data]="expensePieChartData" [options]="pieChartOptions" [type]="'pie'">
+            </canvas>
+
+        </div>
+
+        <div class="chart-card">
+
+            <h3>👥 Guest Distribution</h3>
+
+            <div class="chart-container">
+
+                <canvas baseChart [data]="guestPieChartData" [options]="pieChartOptions" [type]="'pie'">
+                </canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="activity-grid">
+
+        <!-- Recent Guests -->
+
+        <div class="activity-card">
+
+            <div class="activity-header">
+
+                <span>
+                    👥 Recent Guests
+                </span>
+
+                <a routerLink="/guests">
+
+                    View All →
+
+                </a>
+
+            </div>
+
+            @for (guest of recentGuests; track guest.id) {
+
+            <div class="activity-item">
+
+                <div class="item-primary">
+                    {{ guest.name }}
+                </div>
+
+                <div class="item-secondary">
+
+                    <span class="guest-tag">
+
+                        {{ guest.guestCategory || 'General' }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            }
+
+        </div>
+
+        <div class="progress-card">
+
+            <div class="progress-header">
+
+                <h3>📨 Invitation Progress</h3>
+
+                <span>
+                    {{ summary.invitationSent + summary.pendingInvitations > 0
+                    ? ((summary.invitationSent * 100) /
+                    (summary.invitationSent + summary.pendingInvitations))
+                    .toFixed(0)
+                    : 0 }}%
+                </span>
+
+            </div>
+
+            <div class="progress-bar">
+
+                <div class="progress-fill" [style.width.%]="
+        (summary.invitationSent * 100) /
+        (summary.invitationSent + summary.pendingInvitations)
+      ">
+                </div>
+
+            </div>
+
+            <div class="progress-stats">
+
+                <div class="sent">
+                    ✅ Sent:
+                    {{ summary.invitationSent }}
+                </div>
+
+                <div class="pending">
+                    ⏳ Pending:
+                    {{ summary.pendingInvitations }}
+                </div>
+
+            </div>
+
+
+            <div class="progress-footer">
+
+                <div>
+                    Completion Rate
+                </div>
+
+                <div>
+
+                    {{
+                    summary.invitationSent +
+                    summary.pendingInvitations > 0
+
+                    ? (
+
+                    summary.invitationSent * 100 /
+
+                    (
+                    summary.invitationSent +
+                    summary.pendingInvitations
+                    )
+
+                    ).toFixed(0)
+
+                    : 0
+
+                    }}%
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+        <!-- Recent Expenses -->
+
+        <div class="activity-card">
+
+            <!-- <div class="activity-header">
+                💰 Recent Expenses
+            </div> -->
+
+            <div class="activity-header">
+
+                <span>
+                    💰 Recent Expenses
+                </span>
+
+                <a routerLink="/expenses">
+
+                    View All →
+
+                </a>
+
+            </div>
+
+            @for (expense of recentExpenses; track expense.id) {
+
+            <div class="activity-item">
+
+                <div class="item-primary">
+                    {{ expense.expenseName }}
+                </div>
+
+                <div class="item-secondary">
+
+                    <span class="expense-tag">
+
+                        ₹{{ expense.amount }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            }
+
+        </div>
+
+    </div>
+
+
+
+</div>
