@@ -7,6 +7,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule, Location } from '@angular/common'; // Location API add kiya jo server safe h
 import { NavbarActionService } from '../../service/navbar-action-service';
 import { effect } from '@angular/core';
+import { MatCardImage } from "@angular/material/card";
 
 @Component({
   selector: 'app-navbar',
@@ -18,8 +19,9 @@ import { effect } from '@angular/core';
     MatIconModule,
     MatMenuModule,
     RouterLink,
-    RouterLinkActive
-  ],
+    RouterLinkActive,
+    MatCardImage
+],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
@@ -99,8 +101,11 @@ export class Navbar {
   }
 
   getCountLabel(): string {
-
     const currentPath = this.location.path();
+
+    if (currentPath.includes('dashboard')) {
+      return 'Wedding Overview';
+    }
 
     if (currentPath.includes('family')) {
       return `Families: ${this.navBarService.totalGuestCount()}`;
@@ -110,7 +115,27 @@ export class Navbar {
       return `Expenses: ${this.navBarService.totalGuestCount()}`;
     }
 
-    return `Guests: ${this.navBarService.totalGuestCount()}`;
+    if (currentPath.includes('guests')) {
+      return `Guests: ${this.navBarService.totalGuestCount()}`;
+    }
+
+    return 'Wedding Management';
   }
+
+  isDashboardPage(): boolean {
+    return this.location.path().includes('dashboard');
+  }
+
+  isGuestPage(): boolean {
+  return this.location.path().includes('guests');
+}
+
+isFamilyPage(): boolean {
+  return this.location.path().includes('family');
+}
+
+isExpensePage(): boolean {
+  return this.location.path().includes('expenses');
+}
 
 }
