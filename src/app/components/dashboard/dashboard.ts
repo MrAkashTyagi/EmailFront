@@ -28,6 +28,10 @@ export class Dashboard implements OnInit {
   private guestService =
     inject(GuestService);
 
+  recentGuests: any[] = [];
+
+  recentExpenses: any[] = [];
+
   summary = {
     totalGuests: 0,
     totalFamilies: 0,
@@ -40,14 +44,12 @@ export class Dashboard implements OnInit {
   };
 
 
-  recentGuests: any[] = [];
 
-  recentExpenses: any[] = [];
 
   ngOnInit() {
 
-    
-console.log('Dashboard Init');
+
+    console.log('Dashboard Init');
 
     this.loadDashboard();
 
@@ -63,18 +65,36 @@ console.log('Dashboard Init');
 
   loadDashboard(): void {
 
+    console.log('Load Dashboard Called');
+
+
     this.dashboardService
       .getSummary()
       .subscribe({
 
+        // next: (response) => {
+
+        //   console.log('Dashboard Response', response);
+
+        //   this.summary = response;
+
+        // },
+
         next: (response) => {
+
+          console.log('Dashboard Response', response);
 
           this.summary = response;
 
-          console.log(
-            'Dashboard Summary =>',
-            response
-          );
+          setTimeout(() => {
+            console.log('Summary After Assign', this.summary);
+          }, 1000);
+
+        },
+
+        error: (err) => {
+
+          console.error('Dashboard Error', err);
 
         }
 
