@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { DashboardService } from '../../service/dashboard-service';
 import { CommonModule } from '@angular/common';
 
@@ -32,7 +32,10 @@ export class Dashboard implements OnInit {
 
   recentExpenses: any[] = [];
 
-  summary = {
+  expenseChartLoaded = false;
+  guestChartLoaded = false;
+
+  summary = signal({
     totalGuests: 0,
     totalFamilies: 0,
     totalFamilyMembers: 0,
@@ -41,9 +44,7 @@ export class Dashboard implements OnInit {
     stayRequired: 0,
     invitationSent: 0,
     pendingInvitations: 0
-  };
-
-
+  });
 
 
   ngOnInit() {
@@ -84,11 +85,8 @@ export class Dashboard implements OnInit {
 
           console.log('Dashboard Response', response);
 
-          this.summary = response;
+          this.summary.set(response);
 
-          setTimeout(() => {
-            console.log('Summary After Assign', this.summary);
-          }, 1000);
 
         },
 
@@ -193,25 +191,16 @@ export class Dashboard implements OnInit {
 
   }
   loadExpenseChart(): void {
-
     this.expenseService
       .getCategorySummary()
       .subscribe({
-
         next: (response) => {
 
           this.expensePieChartData = {
-
-            labels: response.map(
-              (x: any) => x.category
-            ),
-
+            labels: response.map((x: any) => x.category),
             datasets: [
               {
-                data: response.map(
-                  (x: any) => x.totalAmount
-                ),
-
+                data: response.map((x: any) => x.totalAmount),
                 backgroundColor: [
                   '#8b5cf6',
                   '#ec4899',
@@ -221,35 +210,27 @@ export class Dashboard implements OnInit {
                 ]
               }
             ]
-
           };
 
+          this.expenseChartLoaded = true;
+        },
+        error: (err) => {
+          console.error('Expense Chart Error', err);
         }
-
       });
-
   }
 
   loadGuestChart(): void {
-
     this.guestService
       .getGuestCategorySummary()
       .subscribe({
-
         next: (response) => {
 
           this.guestPieChartData = {
-
-            labels: response.map(
-              (x: any) => x.category
-            ),
-
+            labels: response.map((x: any) => x.category),
             datasets: [
               {
-                data: response.map(
-                  (x: any) => x.count
-                ),
-
+                data: response.map((x: any) => x.count),
                 backgroundColor: [
                   '#8b5cf6',
                   '#ec4899',
@@ -258,13 +239,14 @@ export class Dashboard implements OnInit {
                 ]
               }
             ]
-
           };
 
+          this.guestChartLoaded = true;
+        },
+        error: (err) => {
+          console.error('Guest Chart Error', err);
         }
-
       });
-
   }
 
 }

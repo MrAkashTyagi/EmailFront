@@ -91,6 +91,8 @@ export class Expense implements OnInit {
 
   // categorySummary: any[] = [];
 
+  categorySummary = signal<any[]>([]);
+
   summary = signal<any>({
     totalExpense: 0,
     totalExpenses: 0,
@@ -100,11 +102,11 @@ export class Expense implements OnInit {
 
   private expenseService = inject(ExpenseService);
   private navBarService = inject(NavbarActionService);
-  private cdr = inject(ChangeDetectorRef);
+  // private cdr = inject(ChangeDetectorRef);
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
 
-categorySummary: any[] = [];
+// categorySummary: any[] = [];
 
   displayedColumns: string[] = [
     'expenseName',
@@ -150,27 +152,27 @@ categorySummary: any[] = [];
 
     this.navBarService.countLabel.set('Total Expenses');
 
-    this.navBarService.exportClick$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
+    // this.navBarService.exportClick$
+      // .pipe(takeUntilDestroyed(this.destroyRef))
+      // .subscribe(() => {
 
-        this.expenseService.exportExpenses()
-          .subscribe((blob: Blob) => {
+        // this.expenseService.exportExpenses()
+        //   .subscribe((blob: Blob) => {
 
-            const url = window.URL.createObjectURL(blob);
+        //     const url = window.URL.createObjectURL(blob);
 
-            const a = document.createElement('a');
+        //     const a = document.createElement('a');
 
-            a.href = url;
-            a.download = 'Expenses.xlsx';
+        //     a.href = url;
+        //     a.download = 'Expenses.xlsx';
 
-            a.click();
+        //     a.click();
 
-            window.URL.revokeObjectURL(url);
+        //     window.URL.revokeObjectURL(url);
 
-          });
+        //   });
 
-      });
+      // });
 
   }
 
@@ -207,7 +209,9 @@ categorySummary: any[] = [];
 
         next: (response: any[]) => {
 
-  this.categorySummary = response;
+  // this.categorySummary = response;
+
+  this.categorySummary.set(response);
 
   this.pieChartData = {
     labels: response.map(x => x.category),
@@ -399,7 +403,7 @@ public pieChartOptions = {
           'Total Expenses'
         );
 
-        this.cdr.detectChanges();
+        // this.cdr.detectChanges();
       },
 
       error: (err: any) => {
