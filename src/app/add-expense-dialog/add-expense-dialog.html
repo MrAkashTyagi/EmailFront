@@ -44,7 +44,7 @@
         }
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <!-- <mat-form-field appearance="outline">
         <mat-label>Amount</mat-label>
 
         <span matTextPrefix>₹&nbsp;</span>
@@ -64,7 +64,60 @@
         ) {
         <mat-error>Amount must be greater than zero</mat-error>
         }
+      </mat-form-field> -->
+
+
+      <mat-form-field appearance="outline">
+        <mat-label>Total Amount</mat-label>
+
+        <span matTextPrefix>₹&nbsp;</span>
+
+        <input matInput type="number" min="0.01" step="0.01" formControlName="totalAmount" placeholder="0.00" />
+
+        @if (
+        expenseForm.get('totalAmount')?.touched &&
+        expenseForm.get('totalAmount')?.hasError('required')
+        ) {
+        <mat-error>Total Amount is required</mat-error>
+        }
+
       </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Paid Amount</mat-label>
+
+        <span matTextPrefix>₹&nbsp;</span>
+
+        <input matInput type="number" min="0" step="0.01" formControlName="paidAmount" placeholder="0.00" />
+
+        @if (
+        expenseForm.get('paidAmount')?.touched &&
+        expenseForm.get('paidAmount')?.hasError('required')
+        ) {
+        <mat-error>Paid Amount is required</mat-error>
+        }
+        @if (
+        expenseForm.get('paidAmount')?.value >
+        expenseForm.get('totalAmount')?.value
+        ) {
+
+        <div class="validation-warning">
+          ⚠️ Paid Amount cannot be greater than Total Amount
+        </div>
+
+        }
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Pending Amount</mat-label>
+
+        <span matTextPrefix>₹&nbsp;</span>
+
+        <input matInput [value]="pendingAmount" readonly />
+
+      </mat-form-field>
+
       <!-- 
       <mat-form-field appearance="outline">
         <mat-label>Expense Date</mat-label>
