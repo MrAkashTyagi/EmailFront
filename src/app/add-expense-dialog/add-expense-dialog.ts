@@ -78,11 +78,40 @@ export class AddExpenseDialog implements OnInit {
     'Miscellaneous'
   ];
 
+  get pendingAmount(): number {
+
+    const total =
+      Number(
+        this.expenseForm.get(
+          'totalAmount'
+        )?.value || 0
+      );
+
+    const paid =
+      Number(
+        this.expenseForm.get(
+          'paidAmount'
+        )?.value || 0
+      );
+
+    return total - paid;
+  }
+
   expenseForm: FormGroup = this.formBuilder.group({
     expenseName: ['', [Validators.required, Validators.maxLength(100)]],
     category: ['', Validators.required],
     description: ['', Validators.maxLength(500)],
-    amount: [null, [Validators.required, Validators.min(0.01)]],
+
+    totalAmount: [
+      null,
+      [Validators.required, Validators.min(0.01)]
+    ],
+
+    paidAmount: [
+      0,
+      [Validators.required, Validators.min(0)]
+    ],
+
     expenseDate: ['', Validators.required],
     paidBy: ['', [Validators.required, Validators.maxLength(100)]],
     billPath: ['']
@@ -111,7 +140,8 @@ export class AddExpenseDialog implements OnInit {
         expenseName: this.data.expenseName,
         category: this.data.category,
         description: this.data.description,
-        amount: this.data.amount,
+        totalAmount: this.data.totalAmount,
+        paidAmount: this.data.paidAmount,
         expenseDate: this.data.expenseDate,
         paidBy: this.data.paidBy,
         billPath: this.data.billPath
@@ -142,6 +172,25 @@ export class AddExpenseDialog implements OnInit {
 
   saveExpense(): void {
 
+
+    const totalAmount =
+      Number(
+        this.expenseForm.value.totalAmount
+      );
+
+    const paidAmount =
+      Number(
+        this.expenseForm.value.paidAmount
+      );
+
+    if (paidAmount > totalAmount) {
+
+      this.saveError =
+        '⚠️ Paid Amount cannot be greater than Total Amount';
+
+      return;
+    }
+
     if (this.expenseForm.invalid || this.isSaving) {
       this.expenseForm.markAllAsTouched();
       return;
@@ -152,7 +201,14 @@ export class AddExpenseDialog implements OnInit {
 
     const payload = {
       ...this.expenseForm.getRawValue(),
-      amount: Number(this.expenseForm.value.amount)
+
+      totalAmount: Number(
+        this.expenseForm.value.totalAmount
+      ),
+
+      paidAmount: Number(
+        this.expenseForm.value.paidAmount
+      )
     };
 
     // EDIT MODE
