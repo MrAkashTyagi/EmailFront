@@ -50,12 +50,30 @@
 
     <div class="summary-card">
       <div class="value">
+        ₹ {{ summary().totalPaidExpense }}
+      </div>
+      <div class="label">
+        Paid Expense
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="value">
+        ₹ {{ summary().totalPendingExpense }}
+      </div>
+      <div class="label">
+        Pending Expense
+      </div>
+    </div>
+
+    <!-- <div class="summary-card">
+      <div class="value">
         {{ summary().totalExpenses }}
       </div>
       <div class="label">
         Total Expenses
       </div>
-    </div>
+    </div> -->
 
     <div class="summary-card">
       <div class="value">
@@ -66,14 +84,14 @@
       </div>
     </div>
 
-    <div class="summary-card">
+    <!-- <div class="summary-card">
       <div class="value">
         {{ summary().topCategory }}
       </div>
       <div class="label">
         Top Category
       </div>
-    </div>
+    </div> -->
 
   </div>
   <div class="expense-content">
@@ -111,7 +129,7 @@
         </ng-container>
 
         <!-- Amount -->
-        <ng-container matColumnDef="amount">
+        <!-- <ng-container matColumnDef="amount">
 
           <th mat-header-cell *matHeaderCellDef>
             Amount
@@ -121,7 +139,53 @@
             ₹ {{ element.amount }}
           </td>
 
+        </ng-container> -->
+
+        <!-- Total Amount -->
+
+        <ng-container matColumnDef="totalAmount">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Total Amount
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            ₹ {{ element.totalAmount }}
+          </td>
+
         </ng-container>
+
+        <!-- Paid Amount -->
+        <ng-container matColumnDef="paidAmount">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Paid Amount
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            ₹ {{ element.paidAmount }}
+          </td>
+
+        </ng-container>
+
+        <!-- Pending Amount -->
+
+        <ng-container matColumnDef="pendingAmount">
+
+          <th mat-header-cell *matHeaderCellDef>
+            Pending Amount
+          </th>
+
+          <td mat-cell *matCellDef="let element">
+            ₹ {{
+            (element.totalAmount || 0)
+            -
+            (element.paidAmount || 0)
+            }}
+          </td>
+
+        </ng-container>
+
 
         <!-- Paid By -->
         <ng-container matColumnDef="paidBy">
@@ -214,19 +278,6 @@
       <h4>Expense Distribution</h4>
       <canvas baseChart [type]="pieChartType" [data]="pieChartData" [options]="pieChartOptions">
       </canvas>
-      <!-- 
-      <div class="expense-breakdown">
-        @for (item of categorySummary; track item.category) {
-        <div class="breakdown-row">
-          <span class="category-name">
-            {{ item.category }}
-          </span>
-          <span class="category-value">
-            ₹ {{ item.totalAmount }}
-          </span>
-        </div>
-        }
-      </div> -->
 
       @if (categorySummary.length > 0) {
 
@@ -251,6 +302,35 @@
       </div>
 
       }
+
+      <div class="chart-stats">
+
+  <div class="mini-stat">
+
+    <span class="stat-label">
+      Top Category
+    </span>
+
+    <span class="stat-value">
+      {{ summary().topCategory }}
+    </span>
+
+  </div>
+
+  <div class="mini-stat">
+
+    <span class="stat-label">
+      Total Expenses
+    </span>
+
+    <span class="stat-value">
+      {{ summary().totalExpenses }}
+    </span>
+
+  </div>
+
+</div>
+
 
     </div>
 
