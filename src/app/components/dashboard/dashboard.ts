@@ -41,6 +41,10 @@ export class Dashboard implements OnInit {
     totalFamilyMembers: 0,
     averageFamilySize: 0,
     totalExpense: 0,
+
+    totalPaidExpense: 0,
+    totalPendingExpense: 0,
+
     stayRequired: 0,
     invitationSent: 0,
     pendingInvitations: 0
@@ -206,7 +210,10 @@ export class Dashboard implements OnInit {
                   '#ec4899',
                   '#f59e0b',
                   '#10b981',
-                  '#3b82f6'
+                  '#3b82f6',
+                  '#e2e2e2',
+                  '#d52fda',
+                  '#ee0057'
                 ]
               }
             ]
