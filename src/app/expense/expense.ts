@@ -111,7 +111,9 @@ export class Expense implements OnInit {
   displayedColumns: string[] = [
     'expenseName',
     'category',
-    'amount',
+    'totalAmount',
+    'paidAmount',
+    'pendingAmount',
     'paidBy',
     'expenseDate',
     'actions',
@@ -225,7 +227,8 @@ export class Expense implements OnInit {
           '#F59E0B',
           '#EF4444',
           '#8B5CF6',
-          '#06B6D4'
+          '#06B6D4',
+          '#f40df4'
         ]
       }
     ]
