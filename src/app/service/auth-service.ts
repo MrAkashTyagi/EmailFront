@@ -69,10 +69,11 @@ export class AuthService {
     if (typeof window !== 'undefined') {
 
       localStorage.removeItem('user');
+      this.currentUser.set(null);
 
     }
 
-    this.currentUser.set(null);
+    
 
   }
 }
