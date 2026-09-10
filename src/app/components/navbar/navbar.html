@@ -25,23 +25,19 @@
   <!-- Right section -->
   <div class="navbar-right-section">
 
-   @if (currentUser()) {
+    @if (currentUser()) {
 
-<div class="logged-user">
+    <div class="logged-user">
 
-  <img
-    [src]="'icons/user (1).png'"
-    class="user-avatar"
-    alt="User"
-  />
+      <img [src]="'icons/user (1).png'" class="user-avatar" alt="User" />
 
-  <span class="user-name">
-    {{ currentUser()?.name }}
-  </span>
+      <span class="user-name">
+        {{ currentUser()?.name }}
+      </span>
 
-</div>
+    </div>
 
-}
+    }
 
     <!-- Dashboard-specific navigation -->
     @if (isDashboardPage()) {
@@ -75,10 +71,6 @@
     }
 
     @if (isGuestPage()) {
-
-    <mat-icon class="navbar-search-icon">
-      search
-    </mat-icon>
 
     <a routerLink="/dashboard" routerLinkActive="dashboard-nav-active" [routerLinkActiveOptions]="{ exact: true }"
       class="dashboard-nav-link">
@@ -265,10 +257,23 @@
   </button>
 
 
-  <button mat-menu-item routerLink="/register" routerLinkActive="active-menu-item">
-    <mat-icon>login</mat-icon>
+  @if (!authService.isLoggedIn()) {
+
+  <button mat-menu-item routerLink="/register">
+    <mat-icon>person_add</mat-icon>
     <span>Register</span>
   </button>
+
+  }
+
+  @if (authService.isLoggedIn()) {
+
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+
+  }
 
 </mat-menu>
 
