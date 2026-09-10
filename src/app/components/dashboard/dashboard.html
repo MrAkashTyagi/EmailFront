@@ -309,6 +309,49 @@
     </div>
 
     <div class="charts-grid">
+        
+        <div class="dashboard-card green">
+
+            <div class="card-icon">✅</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    ₹ {{ summary().totalPaidExpense }}
+                </div>
+
+                <div class="card-label">
+                    Paid Expense
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card orange">
+
+            <div class="card-icon">⏳</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    ₹ {{ summary().totalPendingExpense }}
+                </div>
+
+                <div class="card-label">
+                    Pending Expense
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    
+
+    <div class="charts-grid">
 
         <div class="chart-card">
 
@@ -412,43 +455,6 @@
                 </div>
             </div>
             }
-
-        </div>
-
-        <div class="dashboard-card green">
-
-            <div class="card-icon">✅</div>
-
-            <div class="card-content">
-
-                <div class="card-value">
-                    ₹ {{ summary().totalPaidExpense }}
-                </div>
-
-                <div class="card-label">
-                    Paid Expense
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="dashboard-card orange">
-
-            <div class="card-icon">⏳</div>
-
-            <div class="card-content">
-
-                <div class="card-value">
-                    ₹ {{ summary().totalPendingExpense }}
-                </div>
-
-                <div class="card-label">
-                    Pending Expense
-                </div>
-
-            </div>
 
         </div>
 
