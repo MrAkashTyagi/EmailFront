@@ -1,0 +1,128 @@
+<div class="register-page">
+
+    <div class="register-card">
+
+        <div class="logo-section">
+
+            <div class="logo-icon">
+                💒
+            </div>
+
+            <h1>
+                Shadi Portal
+            </h1>
+
+            <p>
+                Create your account and start managing your wedding effortlessly.
+            </p>
+
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="register()">
+
+            <div class="form-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <input type="text" formControlName="name" placeholder="Enter your name">
+
+                @if (
+                registerForm.get('name')?.touched &&
+                registerForm.get('name')?.invalid
+                ) {
+                <span class="error">
+                    Name is required
+                </span>
+                }
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Email
+                </label>
+
+                <input type="email" formControlName="email" placeholder="Enter your email">
+
+                @if (
+                registerForm.get('email')?.touched &&
+                registerForm.get('email')?.invalid
+                ) {
+                <span class="error">
+                    Valid email is required
+                </span>
+                }
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Password
+                </label>
+
+                <input type="password" formControlName="password" placeholder="Enter password">
+
+                @if (
+                registerForm.get('password')?.touched &&
+                registerForm.get('password')?.invalid
+                ) {
+                <span class="error">
+                    Minimum 6 characters required
+                </span>
+                }
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    About
+                </label>
+
+                <textarea rows="3" formControlName="about" placeholder="Tell us about yourself"></textarea>
+
+            </div>
+
+            @if (successMessage()) {
+
+            <div class="success-message">
+
+                {{ successMessage() }}
+
+            </div>
+
+            }
+
+            @if (errorMessage()) {
+
+            <div class="error-message">
+
+                {{ errorMessage() }}
+
+            </div>
+
+            }
+
+            <button type="submit" class="register-btn">
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="login-link">
+
+            Already have an account?
+
+            <a routerLink="/login">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
