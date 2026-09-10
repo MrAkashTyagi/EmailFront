@@ -3,11 +3,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule, Location } from '@angular/common'; // Location API add kiya jo server safe h
 import { NavbarActionService } from '../../service/navbar-action-service';
 import { effect } from '@angular/core';
 import { MatCardImage } from "@angular/material/card";
+import { AuthService } from '../../service/auth-service';
 
 @Component({
   selector: 'app-navbar',
@@ -21,7 +22,7 @@ import { MatCardImage } from "@angular/material/card";
     RouterLink,
     RouterLinkActive,
     MatCardImage
-],
+  ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
@@ -32,10 +33,39 @@ export class Navbar {
   public navBarService = inject(NavbarActionService);
 
   searchText = '';
+  public authService = inject(AuthService);
+  private router = inject(Router);
+
+  currentUser =
+    this.authService.currentUser;
+
+
+  // ngOnInit(): void {
+
+  //   if (
+  //     typeof window !== 'undefined'
+  //   ) {
+
+  //     const user =
+  //       localStorage.getItem('user');
+
+  //     if (user) {
+
+  //       this.currentUser =
+  //         JSON.parse(user);
+
+  //     }
+
+  //   }
+
+  // }
 
   constructor() {
 
+      this.authService.loadUser();
+
     effect(() => {
+
 
       this.searchText =
         this.navBarService.searchQuery();
@@ -71,15 +101,15 @@ export class Navbar {
     const currentPath = this.location.path();
 
     if (currentPath.includes('family')) {
-      return 'Add Family';
+      return ' Family';
     }
 
     if (currentPath.includes('guests')) {
-      return 'Add Guest';
+      return ' Guest';
     }
 
     if (currentPath.includes('expenses')) {
-      return 'Add Expense';
+      return ' Expense';
     }
 
     return 'Add New';
@@ -127,15 +157,41 @@ export class Navbar {
   }
 
   isGuestPage(): boolean {
-  return this.location.path().includes('guests');
-}
+    return this.location.path().includes('guests');
+  }
 
-isFamilyPage(): boolean {
-  return this.location.path().includes('family');
-}
+  isFamilyPage(): boolean {
+    return this.location.path().includes('family');
+  }
 
-isExpensePage(): boolean {
-  return this.location.path().includes('expenses');
+  isExpensePage(): boolean {
+    return this.location.path().includes('expenses');
+  }
+
+  // logout(): void {
+
+  //   if (
+  //     typeof window !== 'undefined'
+  //   ) {
+
+  //     localStorage.removeItem('user');
+
+  //   }
+
+  //   this.router.navigate([
+  //     '/login'
+  //   ]);
+
+  // }
+
+  logout(): void {
+
+  this.authService.logout();
+
+  this.router.navigate([
+    '/login'
+  ]);
+
 }
 
 }
