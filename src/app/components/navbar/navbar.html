@@ -210,6 +210,8 @@
 
     }
 
+    @if (currentUser()) {
+
     <button mat-icon-button type="button" class="logout-icon-btn" (click)="logout()" matTooltip="Logout">
 
       <mat-icon>
@@ -217,6 +219,7 @@
       </mat-icon>
 
     </button>
+  }
 
   </div>
 
@@ -225,6 +228,22 @@
 
 <!-- Navigation menu -->
 <mat-menu #appMenu="matMenu" panelClass="custom-premium-menu">
+
+  @if (currentUser()) {
+
+  <button mat-menu-item disabled>
+
+    <mat-icon>
+      account_circle
+    </mat-icon>
+
+    <span>
+      {{ currentUser()?.name }}
+    </span>
+
+  </button>
+
+  }
 
   <button mat-menu-item routerLink="/" routerLinkActive="active-menu-item" [routerLinkActiveOptions]="{ exact: true }">
     <mat-icon>home</mat-icon>
