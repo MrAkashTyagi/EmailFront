@@ -321,7 +321,7 @@
                 </div>
 
                 <div class="card-label">
-                    Paid Expense
+                    Amount Paid
                 </div>
 
             </div>
@@ -340,7 +340,7 @@
                 </div>
 
                 <div class="card-label">
-                    Pending Expense
+                    Amount Pending
                 </div>
 
             </div>
@@ -418,7 +418,7 @@
 
                     <span class="expense-tag">
 
-                        ₹{{ expense.amount }}
+                        ₹{{ expense.totalAmount || 0}}
 
                     </span>
 
