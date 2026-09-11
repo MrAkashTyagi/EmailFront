@@ -13,30 +13,30 @@ export class ExpenseService {
   constructor(private http: HttpClient) { }
 
   getExpensesPaged(
-  page: number,
-  size: number,
-  search: string,
-  category: string
-): Observable<any> {
+    page: number,
+    size: number,
+    search: string,
+    category: string
+  ): Observable<any> {
 
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
 
-  const userId = currentUser?.id;
+    const userId = currentUser?.id;
 
-  const params = new HttpParams()
-    .set('page', page.toString())
-    .set('size', size.toString())
-    .set('search', search)
-    .set('category', category)
-    .set('userId', userId.toString());
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('search', search)
+      .set('category', category)
+      .set('userId', userId.toString());
 
-  return this.http.get<any>(
-    `${this.baseUrl}/expenses`,
-    { params }
-  );
-}
+    return this.http.get<any>(
+      `${this.baseUrl}/expenses`,
+      { params }
+    );
+  }
 
   // createExpense(
   //   expense: any,
@@ -64,50 +64,50 @@ export class ExpenseService {
 
   // }
 
-createExpense(
-  expense: any,
-  bill: File | null
-): Observable<any> {
+  createExpense(
+    expense: any,
+    bill: File | null
+  ): Observable<any> {
 
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
-
-  const userId = currentUser?.id;
-
-  if (!userId) {
-    throw new Error(
-      'Logged-in user not found'
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
     );
-  }
 
-  const formData = new FormData();
+    const userId = currentUser?.id;
 
-  formData.append(
-    'expense',
-    JSON.stringify(expense)
-  );
+    if (!userId) {
+      throw new Error(
+        'Logged-in user not found'
+      );
+    }
 
-  if (bill) {
+    const formData = new FormData();
 
     formData.append(
-      'bill',
-      bill
+      'expense',
+      JSON.stringify(expense)
+    );
+
+    if (bill) {
+
+      formData.append(
+        'bill',
+        bill
+      );
+    }
+
+    const params = new HttpParams()
+      .set(
+        'userId',
+        userId.toString()
+      );
+
+    return this.http.post<any>(
+      `${this.baseUrl}/expenses`,
+      formData,
+      { params }
     );
   }
-
-  const params = new HttpParams()
-    .set(
-      'userId',
-      userId.toString()
-    );
-
-  return this.http.post<any>(
-    `${this.baseUrl}/expenses`,
-    formData,
-    { params }
-  );
-}
 
 
   getExpenseById(id: number): Observable<any> {
@@ -116,17 +116,17 @@ createExpense(
     );
   }
 
-updateExpense(
-  id: number,
-  formData: FormData
-): Observable<any> {
+  updateExpense(
+    id: number,
+    formData: FormData
+  ): Observable<any> {
 
-  return this.http.put<any>(
-    `${this.baseUrl}/expenses/${id}`,
-    formData
-  );
+    return this.http.put<any>(
+      `${this.baseUrl}/expenses/${id}`,
+      formData
+    );
 
-}
+  }
 
   deleteExpense(id: number): Observable<any> {
     return this.http.delete(
@@ -136,32 +136,51 @@ updateExpense(
 
   exportExpenses(): Observable<Blob> {
 
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
+
+    const userId = currentUser?.id;
+
+    if (!userId) {
+      throw new Error(
+        'Logged-in user not found'
+      );
+    }
+
+    const params = new HttpParams()
+      .set(
+        'userId',
+        userId.toString()
+      );
+
     return this.http.get(
       `${this.baseUrl}/expenses/export`,
       {
+        params,
         responseType: 'blob'
       }
     );
-
   }
+
 
   getExpenseSummary(): Observable<any> {
 
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
 
-  const userId = currentUser?.id;
+    const userId = currentUser?.id;
 
-  const params = new HttpParams()
-    .set('userId', userId.toString());
+    const params = new HttpParams()
+      .set('userId', userId.toString());
 
-  return this.http.get(
-    `${this.baseUrl}/expenses/summary`,
-    { params }
-  );
+    return this.http.get(
+      `${this.baseUrl}/expenses/summary`,
+      { params }
+    );
 
-}
+  }
 
   getCategorySummary(): Observable<any[]> {
 
@@ -169,6 +188,36 @@ updateExpense(
       `${this.baseUrl}/expenses/category-summary`
     );
 
+  }
+
+  importExpenseDump(
+    file: File
+  ): Observable<any> {
+
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
+
+    const userId = currentUser.id;
+
+    const formData = new FormData();
+
+    formData.append(
+      'file',
+      file
+    );
+
+    const params = new HttpParams()
+      .set(
+        'userId',
+        userId.toString()
+      );
+
+    return this.http.post(
+      `${this.baseUrl}/expense-dump/upload`,
+      formData,
+      { params }
+    );
   }
 
 }
