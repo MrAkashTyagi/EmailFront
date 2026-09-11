@@ -13,23 +13,30 @@ export class ExpenseService {
   constructor(private http: HttpClient) { }
 
   getExpensesPaged(
-    page: number,
-    size: number,
-    search: string,
-    category: string
-  ): Observable<any> {
+  page: number,
+  size: number,
+  search: string,
+  category: string
+): Observable<any> {
 
-    const params = new HttpParams()
-      .set('page', page)
-      .set('size', size)
-      .set('search', search)
-      .set('category', category);
+  const currentUser = JSON.parse(
+    localStorage.getItem('user') || '{}'
+  );
 
-    return this.http.get<any>(
-      `${this.baseUrl}/expenses`,
-      { params }
-    );
-  }
+  const userId = currentUser?.id;
+
+  const params = new HttpParams()
+    .set('page', page.toString())
+    .set('size', size.toString())
+    .set('search', search)
+    .set('category', category)
+    .set('userId', userId.toString());
+
+  return this.http.get<any>(
+    `${this.baseUrl}/expenses`,
+    { params }
+  );
+}
 
   createExpense(
     expense: any,
@@ -93,10 +100,22 @@ updateExpense(
   }
 
   getExpenseSummary(): Observable<any> {
-    return this.http.get<any>(
-      `${this.baseUrl}/expenses/summary`
-    );
-  }
+
+  const currentUser = JSON.parse(
+    localStorage.getItem('user') || '{}'
+  );
+
+  const userId = currentUser?.id;
+
+  const params = new HttpParams()
+    .set('userId', userId.toString());
+
+  return this.http.get(
+    `${this.baseUrl}/expenses/summary`,
+    { params }
+  );
+
+}
 
   getCategorySummary(): Observable<any[]> {
 
