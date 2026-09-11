@@ -38,31 +38,77 @@ export class ExpenseService {
   );
 }
 
-  createExpense(
-    expense: any,
-    bill: File | null
-  ): Observable<any> {
+  // createExpense(
+  //   expense: any,
+  //   bill: File | null
+  // ): Observable<any> {
 
-    const formData = new FormData();
+  //   const formData = new FormData();
+
+  //   formData.append(
+  //     'expense',
+  //     JSON.stringify(expense)
+  //   );
+
+  //   if (bill) {
+  //     formData.append(
+  //       'bill',
+  //       bill
+  //     );
+  //   }
+
+  //   return this.http.post<any>(
+  //     `${this.baseUrl}/expenses`,
+  //     formData
+  //   );
+
+  // }
+
+createExpense(
+  expense: any,
+  bill: File | null
+): Observable<any> {
+
+  const currentUser = JSON.parse(
+    localStorage.getItem('user') || '{}'
+  );
+
+  const userId = currentUser?.id;
+
+  if (!userId) {
+    throw new Error(
+      'Logged-in user not found'
+    );
+  }
+
+  const formData = new FormData();
+
+  formData.append(
+    'expense',
+    JSON.stringify(expense)
+  );
+
+  if (bill) {
 
     formData.append(
-      'expense',
-      JSON.stringify(expense)
+      'bill',
+      bill
     );
-
-    if (bill) {
-      formData.append(
-        'bill',
-        bill
-      );
-    }
-
-    return this.http.post<any>(
-      `${this.baseUrl}/expenses`,
-      formData
-    );
-
   }
+
+  const params = new HttpParams()
+    .set(
+      'userId',
+      userId.toString()
+    );
+
+  return this.http.post<any>(
+    `${this.baseUrl}/expenses`,
+    formData,
+    { params }
+  );
+}
+
 
   getExpenseById(id: number): Observable<any> {
     return this.http.get<any>(
