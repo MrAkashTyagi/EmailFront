@@ -18,10 +18,10 @@ export class Familyservice {
   // }
 
   getData(): Observable<any> {
-  return this.http.get<any>(
-    `${this.baseUrl}/family`
-  );
-}
+    return this.http.get<any>(
+      `${this.baseUrl}/family`
+    );
+  }
 
   saveFamily(familyData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/family`, familyData);
@@ -34,58 +34,89 @@ export class Familyservice {
   }
 
 
-  updateFamily(familyData: any):Observable<any>{
+  updateFamily(familyData: any): Observable<any> {
     console.log("Service se API call ja rahi hai update ke liye:", familyData);
-    return this.http.put<any>(`${this.baseUrl}/family/${familyData.id}`,familyData);
+    return this.http.put<any>(`${this.baseUrl}/family/${familyData.id}`, familyData);
   }
 
-// get paginated family
+  // get paginated family
 
-// getFamilyPaginated(page: number, size: number, search: string): Observable<any> {
-// const params = new HttpParams()
-// .set('page', page.toString())
-// .set('size', size.toString())
-// .set('search', search)
+  // getFamilyPaginated(page: number, size: number, search: string): Observable<any> {
+  // const params = new HttpParams()
+  // .set('page', page.toString())
+  // .set('size', size.toString())
+  // .set('search', search)
 
-// return this.http.get<any>(`${this.baseUrl}/family`, {params});  
-// }
+  // return this.http.get<any>(`${this.baseUrl}/family`, {params});  
+  // }
 
-getFamilyPaginated(
-  page: number,
-  size: number,
-  search: string
-) {
+  getFamilyPaginated(
+    page: number,
+    size: number,
+    search: string
+  ) {
 
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
 
-  const userId = currentUser?.id;
+    const userId = currentUser?.id;
 
 
 
-console.log('Current User', currentUser);
-console.log('Current User ID', currentUser?.id);
+    console.log('Current User', currentUser);
+    console.log('Current User ID', currentUser?.id);
 
-  const params = new HttpParams()
+    const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('search', search)
       .set('userId', userId.toString());
 
-  return this.http.get(
+    return this.http.get(
       `${this.baseUrl}/family`,
       { params }
-  );
+    );
 
-}
+  }
 
-getAllFamiliesForDropdown(): Observable<any> {
+  getAllFamiliesForDropdown(): Observable<any> {
 
-  return this.http.get<any>(
-    `${this.baseUrl}/family/getAll`
-  );
+    return this.http.get<any>(
+      `${this.baseUrl}/family/getAll`
+    );
 
-}
+  }
+
+  importFamilyDump(
+    file: File
+  ): Observable<any> {
+
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
+
+    const userId = currentUser.id;
+
+    const formData = new FormData();
+
+    formData.append(
+      'file',
+      file
+    );
+
+    const params =
+      new HttpParams()
+        .set(
+          'userId',
+          userId.toString()
+        );
+
+    return this.http.post(
+      `${this.baseUrl}/dataDump/upload`,
+      formData,
+      { params }
+    );
+  }
 
 }
