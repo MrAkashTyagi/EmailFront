@@ -70,6 +70,8 @@
 
     }
 
+    <!-- Guest Page -->
+
     @if (isGuestPage()) {
 
     <a routerLink="/dashboard" routerLinkActive="dashboard-nav-active" [routerLinkActiveOptions]="{ exact: true }"
@@ -91,8 +93,6 @@
 
     <div class="navbar-search-wrapper">
 
-
-
       <input type="text" class="navbar-search-input" [placeholder]="getPlaceholderText()" [value]="searchText"
         (input)="onSearch($event)" aria-label="Search records" />
 
@@ -109,8 +109,18 @@
       <img [src]="'icons/excel.png'" class="export-icon" alt="Export" />
     </button>
 
+    <!-- Import Guest Dump -->
+
+    <input #guestDumpInput type="file" accept=".xlsx,.xls" hidden (change)="onGuestDumpSelected($event)">
+
+    <button type="button" class="navbar-import-button" aria-label="Import Guest Dump" title="Import Guest Dump"
+      (click)="guestDumpInput.click()">
+      <mat-icon>upload_file</mat-icon>
+    </button>
 
     }
+
+    <!-- expense page navbar settings -->
 
     @if (isExpensePage()) {
 
@@ -158,8 +168,20 @@
       <img [src]="'icons/excel.png'" class="export-icon" alt="Export" />
     </button>
 
+<!-- expense data dump -->
+
+    <input #expenseDumpInput type="file" accept=".xlsx,.xls" hidden (change)="onExpenseDumpSelected($event)">
+
+    <button type="button" class="navbar-import-button" aria-label="Import Expense Dump" title="Import Expense Dump"
+      (click)="expenseDumpInput.click()">
+      <mat-icon>upload_file</mat-icon>
+    </button>
+
+
 
     }
+
+    <!-- family page settings in navbar -->
 
     @if (isFamilyPage()) {
 
@@ -208,6 +230,15 @@
       <img [src]="'icons/excel.png'" class="export-icon" alt="Export" />
     </button>
 
+    <!-- import family dump -->
+
+    <input #familyDumpInput type="file" accept=".xlsx,.xls" hidden (change)="onFamilyDumpSelected($event)">
+
+    <button type="button" class="navbar-import-button" aria-label="Import Family Dump" title="Import Family Dump"
+      (click)="familyDumpInput.click()">
+      <mat-icon>upload_file</mat-icon>
+    </button>
+
     }
 
     @if (currentUser()) {
@@ -219,7 +250,7 @@
       </mat-icon>
 
     </button>
-  }
+    }
 
   </div>
 
