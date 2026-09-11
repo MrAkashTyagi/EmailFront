@@ -99,32 +99,82 @@ export class GuestService {
   }
 
   downloadGuests(
-    gender: string,
-    adultOrchild: string,
-    gift: string,
-    cash: string,
-    guestCategory: string,
-    stay: string,
-    invitationSent: string
-  ) {
+  gender: string,
+  adultOrchild: string,
+  gift: string,
+  cash: string,
+  guestCategory: string,
+  stay: string,
+  invitationSent: string,
+  search: string = ''
+): Observable<Blob> {
 
-    const params = new HttpParams()
-      .set('gender', gender || '')
-      .set('adultOrchild', adultOrchild || '')
-      .set('gift', gift || '')
-      .set('cash', cash || '')
-      .set('guestCategory', guestCategory || '')
-      .set('stay', stay || '')
-      .set('invitationSent', invitationSent || '');
+  const currentUser = JSON.parse(
+    localStorage.getItem('user') || '{}'
+  );
 
-    return this.http.get(
-      `${this.baseUrl}/guests/download`,
-      {
-        params,
-        responseType: 'blob'
-      }
+  const userId = currentUser?.id;
+
+  if (!userId) {
+    throw new Error(
+      'Logged-in user not found'
     );
   }
+
+  let params = new HttpParams()
+    .set(
+      'userId',
+      userId.toString()
+    )
+    .set(
+      'search',
+      search || ''
+    )
+    .set(
+      'gender',
+      gender || ''
+    )
+    .set(
+      'adultOrchild',
+      adultOrchild || ''
+    )
+    .set(
+      'gift',
+      gift || ''
+    )
+    .set(
+      'cash',
+      cash || ''
+    )
+    .set(
+      'guestCategory',
+      guestCategory || ''
+    )
+    .set(
+      'stay',
+      stay || ''
+    );
+
+  if (
+    invitationSent !== null &&
+    invitationSent !== undefined &&
+    invitationSent !== ''
+  ) {
+
+    params = params.set(
+      'invitationSent',
+      invitationSent
+    );
+  }
+
+  return this.http.get(
+    `${this.baseUrl}/guests/download`,
+    {
+      params,
+      responseType: 'blob'
+    }
+  );
+}
 
   getGuestSummary(): Observable<any> {
 
@@ -152,5 +202,37 @@ export class GuestService {
       `${this.baseUrl}/guests/category-summary`
     );
   }
+
+// upload guest data
+
+importGuestDump(
+  file: File
+): Observable<any> {
+
+  const currentUser = JSON.parse(
+    localStorage.getItem('user') || '{}'
+  );
+
+  const userId = currentUser?.id;
+
+  const formData = new FormData();
+
+  formData.append(
+    'file',
+    file
+  );
+
+  const params = new HttpParams()
+    .set(
+      'userId',
+      userId.toString()
+    );
+
+  return this.http.post(
+    `${this.baseUrl}/datadump/upload`,
+    formData,
+    { params }
+  );
+}
 
 }
