@@ -9,6 +9,9 @@ import { NavbarActionService } from '../../service/navbar-action-service';
 import { effect } from '@angular/core';
 import { MatCardImage } from "@angular/material/card";
 import { AuthService } from '../../service/auth-service';
+import { GuestService } from '../../service/guest-service';
+import { Familyservice } from '../../service/familyservice';
+import { ExpenseService } from '../../expense-service';
 
 @Component({
   selector: 'app-navbar',
@@ -31,6 +34,12 @@ export class Navbar {
   private location = inject(Location); // SSR Safe location identifier
 
   public navBarService = inject(NavbarActionService);
+
+  public guestService = inject(GuestService);
+
+  public familyService = inject(Familyservice);
+
+  public expenseService = inject(ExpenseService);
 
   searchText = '';
   public authService = inject(AuthService);
@@ -62,7 +71,7 @@ export class Navbar {
 
   constructor() {
 
-      this.authService.loadUser();
+    this.authService.loadUser();
 
     effect(() => {
 
@@ -186,12 +195,147 @@ export class Navbar {
 
   logout(): void {
 
-  this.authService.logout();
+    this.authService.logout();
 
-  this.router.navigate([
-    '/login'
-  ]);
+    this.router.navigate([
+      '/login'
+    ]);
 
+  }
+
+
+  // upload dump 
+
+  onGuestDumpSelected(event: any): void {
+
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.guestService
+      .importGuestDump(file)
+      .subscribe({
+
+        next: (response) => {
+
+          console.log(response);
+
+          alert(
+            'Guest dump imported successfully'
+          );
+        },
+
+        error: (error) => {
+
+          console.error(error);
+
+          alert(
+            'Guest dump import failed'
+          );
+        }
+      });
+  }
+
+
+  onFamilyDumpSelected(
+    event: any
+  ): void {
+
+    const file =
+      event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.familyService
+      .importFamilyDump(file)
+      .subscribe({
+        next: () => {
+
+          alert(
+            'Family dump imported successfully'
+          );
+
+        },
+        error: (error) => {
+
+          console.error(error);
+
+          alert(
+            'Family dump import failed'
+          );
+        }
+      });
+  }
+
+  onExpenseDumpSelected(
+  event: any
+): void {
+
+  const file =
+    event.target.files?.[0];
+
+  if (!file) {
+    return;
+  }
+
+  this.expenseService
+      .importExpenseDump(file)
+      .subscribe({
+
+        next: () => {
+
+          alert(
+            'Expense dump imported successfully'
+          );
+        },
+
+        error: (error) => {
+
+          console.error(error);
+
+          alert(
+            'Expense dump import failed'
+          );
+        }
+      });
 }
+
+
+  // uploadDump(): void {
+
+  //   if (!this.selectedFile) {
+
+  //     alert('Please select an Excel file');
+
+  //     return;
+  //   }
+
+  //   this.guestService
+  //       .importGuestDump(this.selectedFile)
+  //       .subscribe({
+
+  //         next: (response) => {
+
+  //           console.log(response);
+
+  //           alert('Guest dump imported successfully');
+
+  //           this.loadAllGuests();
+
+  //           this.loadGuestSummary();
+  //         },
+
+  //         error: (error) => {
+
+  //           console.error(error);
+
+  //           alert('Import failed');
+  //         }
+  //       });
+  // }
 
 }
