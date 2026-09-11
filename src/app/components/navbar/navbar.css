@@ -600,3 +600,51 @@
     max-width: 100px;
 } */
 
+.navbar-import-button {
+
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.navbar-import-button mat-icon {
+
+  width: 24px !important;
+  height: 24px !important;
+
+  color: #2563eb !important;
+
+  font-size: 24px !important;
+  line-height: 24px !important;
+}
+
+.navbar-import-button:hover {
+
+  border-color: #93c5fd;
+
+  background: #eff6ff;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 12px rgba(
+      15,
+      23,
+      42,
+      0.14
+    );
+}
