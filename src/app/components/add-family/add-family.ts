@@ -52,41 +52,135 @@ ngOnInit(): void {
     }
   }
 
+
+
   save(): void {
-    console.log("Form submitted data : ", this.family);
 
-      // 4. Agar EDIT mode hai toh Update API call hogi
-    if (this.isEditMode) {
-      // Yahan hum assumed name 'updateFamily' use kar rahe hain, aap apni service ke mutabik change kar sakte hain
-      this.familyService.updateFamily(this.family).subscribe({
-        next: (updatedFamilyFromBackend) => {
-          console.log("Success ! Database me update hogya ", updatedFamilyFromBackend);
-          this.dialogRef.close(updatedFamilyFromBackend);
-        },
-        error: (error) => {
-          console.error("Backend update error trace : ", error);
-          alert("Family update nahi ho payi ! Server console check kro.");
-        }
-      });
-    } 
+  const currentUser = JSON.parse(
+    localStorage.getItem('user') || '{}'
+  );
 
-
-
-
-    // Agle step me service call lagayenge, abhi sirf dialog close karke data pass kar rhe hain
-
-    this.familyService.saveFamily(this.family).subscribe({
-      next: (savedFamilyFromBackend) => {
-        console.log("Success ! Database me save hogya ", savedFamilyFromBackend);
-        this.dialogRef.close(savedFamilyFromBackend);
-      }, error: (error) => {
-        console.error("Backend save error trace : ", error);
-        alert("Family save nhi ho payi ! Server console check kro.");
-      }
-    });
-
-
-    // this.dialogRef.close(this.family);
+  if (!currentUser?.id) {
+    alert('Logged-in user not found. Please login again.');
+    return;
   }
+
+  const payload = {
+    ...this.family,
+    userId: currentUser.id
+  };
+
+  console.log(
+    'Family request payload:',
+    payload
+  );
+
+  if (this.isEditMode) {
+
+    this.familyService
+      .updateFamily(payload)
+      .subscribe({
+
+        next: (updatedFamilyFromBackend) => {
+
+          console.log(
+            'Family updated successfully:',
+            updatedFamilyFromBackend
+          );
+
+          this.dialogRef.close(
+            updatedFamilyFromBackend
+          );
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Backend update error:',
+            error
+          );
+
+          alert(
+            error?.error?.message ||
+            error?.error ||
+            'Family update nahi ho payi.'
+          );
+        }
+
+      });
+
+    return;
+  }
+
+  this.familyService
+    .saveFamily(payload)
+    .subscribe({
+
+      next: (savedFamilyFromBackend) => {
+
+        console.log(
+          'Family saved successfully:',
+          savedFamilyFromBackend
+        );
+
+        this.dialogRef.close(
+          savedFamilyFromBackend
+        );
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Backend save error:',
+          error
+        );
+
+        alert(
+          error?.error?.message ||
+          error?.error ||
+          'Family save nahi ho payi.'
+        );
+      }
+
+    });
+}
+
+
+
+
+  // save(): void {
+  //   console.log("Form submitted data : ", this.family);
+    
+
+  //     // 4. Agar EDIT mode hai toh Update API call hogi
+  //   if (this.isEditMode) {
+  //     // Yahan hum assumed name 'updateFamily' use kar rahe hain, aap apni service ke mutabik change kar sakte hain
+  //     this.familyService.updateFamily(this.family).subscribe({
+  //       next: (updatedFamilyFromBackend) => {
+  //         console.log("Success ! Database me update hogya ", updatedFamilyFromBackend);
+  //         this.dialogRef.close(updatedFamilyFromBackend);
+  //       },
+  //       error: (error) => {
+  //         console.error("Backend update error trace : ", error);
+  //         alert("Family update nahi ho payi ! Server console check kro.");
+  //       }
+  //     });
+  //   } 
+
+  //   // Agle step me service call lagayenge, abhi sirf dialog close karke data pass kar rhe hain
+
+  //   this.familyService.saveFamily(this.family).subscribe({
+  //     next: (savedFamilyFromBackend) => {
+  //       console.log("Success ! Database me save hogya ", savedFamilyFromBackend);
+  //       this.dialogRef.close(savedFamilyFromBackend);
+  //     }, error: (error) => {
+  //       console.error("Backend save error trace : ", error);
+  //       alert("Family save nhi ho payi ! Server console check kro.");
+  //     }
+  //   });
+
+
+  //   // this.dialogRef.close(this.family);
+  // }
 
 }
