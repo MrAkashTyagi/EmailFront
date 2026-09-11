@@ -7,28 +7,61 @@ import { Observable } from 'rxjs';
 })
 export class GuestService {
 
-  constructor(private http: HttpClient) { }
+  private baseUrl = 'http://localhost:8090';
 
+  constructor(
+    private http: HttpClient
+  ) { }
 
-  private baseUrl: string = "http://localhost:8090";
+  save(data: any): Observable<any> {
 
-  save(data: any) {
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
 
-    return this.http.post(`${this.baseUrl}/guests`, data)
+    const userId = currentUser?.id;
 
+    if (!userId) {
+      throw new Error(
+        'Logged-in user not found'
+      );
+    }
+
+    const params = new HttpParams()
+      .set(
+        'userId',
+        userId.toString()
+      );
+
+    return this.http.post<any>(
+      `${this.baseUrl}/guests`,
+      data,
+      { params }
+    );
   }
 
-  deleteGuest(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/guests/${id}`);
+  deleteGuest(
+    id: number
+  ): Observable<any> {
+
+    return this.http.delete<any>(
+      `${this.baseUrl}/guests/${id}`
+    );
   }
 
-  updateGuest(id: number, guestData: any): Observable<any> {
-    // Yeh URL generate karega: http://localhost:8090/guests/4
-    return this.http.put<any>(`${this.baseUrl}/guests/${id}`, guestData);
+  updateGuest(
+    id: number,
+    guestData: any
+  ): Observable<any> {
+
+    return this.http.put<any>(
+      `${this.baseUrl}/guests/${id}`,
+      guestData
+    );
   }
 
-  // get paginated guests
-  getGuestsPaged(page: number,
+  getGuestsPaged(
+    page: number,
     size: number,
     search: string = '',
     gender: string = '',
@@ -37,7 +70,15 @@ export class GuestService {
     gift: string,
     stay: string,
     cash: string,
-    invitationSent: string): Observable<any> {
+    invitationSent: string
+  ): Observable<any> {
+
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
+
+    const userId = currentUser?.id;
+
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
@@ -48,9 +89,13 @@ export class GuestService {
       .set('gift', gift)
       .set('stay', stay)
       .set('cash', cash)
-      .set('invitationSent', invitationSent);
+      .set('invitationSent', invitationSent)
+      .set('userId', userId.toString());
 
-    return this.http.get<any>(`${this.baseUrl}/guests/guest`, { params });
+    return this.http.get<any>(
+      `${this.baseUrl}/guests/guest`,
+      { params }
+    );
   }
 
   downloadGuests(
@@ -63,7 +108,7 @@ export class GuestService {
     invitationSent: string
   ) {
 
-    let params = new HttpParams()
+    const params = new HttpParams()
       .set('gender', gender || '')
       .set('adultOrchild', adultOrchild || '')
       .set('gift', gift || '')
@@ -81,19 +126,28 @@ export class GuestService {
     );
   }
 
-  // // Payload me sirf family name jayega, aur ID path variable (URL) ke zariye server controller ko pass hogi
-  // saveGuestWithFamily(familyId: number, guestPayload: any): Observable<any> {
-  //   // Final URL path format: http://localhost:8090/guests/family/4
-  //   return this.http.put<any>(`${this.baseUrl}/guest/${familyId}`, guestPayload);
-  // }
+  getGuestSummary(): Observable<any> {
 
-  getGuestSummary() {
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
+
+    const userId = currentUser?.id;
+
+    const params = new HttpParams()
+      .set(
+        'userId',
+        userId.toString()
+      );
+
     return this.http.get<any>(
-      `${this.baseUrl}/guests/summary`
+      `${this.baseUrl}/guests/summary`,
+      { params }
     );
   }
 
-  getGuestCategorySummary() {
+  getGuestCategorySummary(): Observable<any[]> {
+
     return this.http.get<any[]>(
       `${this.baseUrl}/guests/category-summary`
     );
