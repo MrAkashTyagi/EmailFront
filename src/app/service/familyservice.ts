@@ -41,13 +41,43 @@ export class Familyservice {
 
 // get paginated family
 
-getFamilyPaginated(page: number, size: number, search: string): Observable<any> {
-const params = new HttpParams()
-.set('page', page.toString())
-.set('size', size.toString())
-.set('search', search)
+// getFamilyPaginated(page: number, size: number, search: string): Observable<any> {
+// const params = new HttpParams()
+// .set('page', page.toString())
+// .set('size', size.toString())
+// .set('search', search)
 
-return this.http.get<any>(`${this.baseUrl}/family`, {params});  
+// return this.http.get<any>(`${this.baseUrl}/family`, {params});  
+// }
+
+getFamilyPaginated(
+  page: number,
+  size: number,
+  search: string
+) {
+
+  const currentUser = JSON.parse(
+    localStorage.getItem('user') || '{}'
+  );
+
+  const userId = currentUser?.id;
+
+
+
+console.log('Current User', currentUser);
+console.log('Current User ID', currentUser?.id);
+
+  const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('search', search)
+      .set('userId', userId.toString());
+
+  return this.http.get(
+      `${this.baseUrl}/family`,
+      { params }
+  );
+
 }
 
 getAllFamiliesForDropdown(): Observable<any> {
