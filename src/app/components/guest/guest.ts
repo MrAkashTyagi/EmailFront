@@ -95,6 +95,9 @@ export class GuestComponent implements OnInit, OnDestroy {
 
   guestCategorySummary = signal<any[]>([]);
 
+  selectedFile: File | null = null;
+  
+
 guestPieChartData: any = {
   labels: [],
   datasets: [{
@@ -472,6 +475,15 @@ loadGuestSummary(): void {
         }
       });
   }
+
+onFileSelected(event: any): void {
+
+  const file = event.target.files[0];
+
+  if (file) {
+    this.selectedFile = file;
+  }
+}
 
 
   
