@@ -119,4 +119,34 @@ export class Familyservice {
     );
   }
 
+downloadFamilies(): Observable<Blob> {
+
+  const currentUser = JSON.parse(
+    localStorage.getItem('user') || '{}'
+  );
+
+  const userId = currentUser?.id;
+
+  if (!userId) {
+
+    throw new Error(
+      'Logged-in user not found'
+    );
+  }
+
+  const params = new HttpParams()
+    .set(
+      'userId',
+      userId.toString()
+    );
+
+  return this.http.get(
+    `${this.baseUrl}/dataDump/download`,
+    {
+      params,
+      responseType: 'blob'
+    }
+  );
+}
+
 }
