@@ -88,8 +88,26 @@ export class Family implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+
     this.navBarService.searchQuery.set('');
     this.fetchPaginatedFamily();
+
+    this.navBarService.exportClick$
+      .subscribe(() => {
+
+        console.log("Export button clicked !! ");
+        console.log(window.location.pathname);
+
+        if (
+          window.location.pathname.includes(
+            'family'
+          )
+        ) {
+
+          this.downloadExcel();
+        }
+
+      });
 
     // FIX FIXED: Variable spelling alignment matching 'navBarAddSubscription' pointer reference
     this.navBarAddSubscription = this.navBarService.addClick$.subscribe(() => {
@@ -179,19 +197,19 @@ export class Family implements OnInit, OnDestroy {
 
       next: (response: any) => {
 
-  this.rawFamilies.set(response.content || []);
+        this.rawFamilies.set(response.content || []);
 
-  this.totalElements.set(
-    response.totalElements || 0
-  );
+        this.totalElements.set(
+          response.totalElements || 0
+        );
 
-  this.cdr.detectChanges();
+        this.cdr.detectChanges();
 
-  this.navBarService.totalGuestCount.set(
-  response.totalElements
-);
+        this.navBarService.totalGuestCount.set(
+          response.totalElements
+        );
 
-},
+      },
       error: (err) => {
         console.error("Pagination data fetch error: ", err);
       }
@@ -232,4 +250,61 @@ export class Family implements OnInit, OnDestroy {
 
     });
   }
+
+  downloadExcel(): void {
+
+    console.log("Export button clicked here ..")
+
+    this.familyService
+      .downloadFamilies()
+      .subscribe({
+
+        next: (response: Blob) => {
+
+          const blob = new Blob(
+            [response],
+            {
+              type:
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }
+          );
+
+          const url =
+            window.URL.createObjectURL(
+              blob
+            );
+
+          const link =
+            document.createElement('a');
+
+          link.href = url;
+
+          link.download =
+            'Families.xlsx';
+
+          document.body.appendChild(
+            link
+          );
+
+          link.click();
+
+          document.body.removeChild(
+            link
+          );
+
+          window.URL.revokeObjectURL(
+            url
+          );
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Family export failed',
+            error
+          );
+        }
+      });
+  }
+
 }
