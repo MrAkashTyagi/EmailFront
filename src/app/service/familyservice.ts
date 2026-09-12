@@ -80,13 +80,20 @@ export class Familyservice {
 
   }
 
-  getAllFamiliesForDropdown(): Observable<any> {
+getAllFamiliesForDropdown(): Observable<any> {
 
-    return this.http.get<any>(
-      `${this.baseUrl}/family/getAll`
-    );
+  const currentUser = JSON.parse(
+    localStorage.getItem('user') || '{}'
+  );
 
-  }
+  const params = new HttpParams()
+    .set('userId', currentUser.id);
+
+  return this.http.get<any>(
+    `${this.baseUrl}/family/getAll`,
+    { params }
+  );
+}
 
   importFamilyDump(
     file: File
