@@ -99,82 +99,82 @@ export class GuestService {
   }
 
   downloadGuests(
-  gender: string,
-  adultOrchild: string,
-  gift: string,
-  cash: string,
-  guestCategory: string,
-  stay: string,
-  invitationSent: string,
-  search: string = ''
-): Observable<Blob> {
+    gender: string,
+    adultOrchild: string,
+    gift: string,
+    cash: string,
+    guestCategory: string,
+    stay: string,
+    invitationSent: string,
+    search: string = ''
+  ): Observable<Blob> {
 
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
-
-  const userId = currentUser?.id;
-
-  if (!userId) {
-    throw new Error(
-      'Logged-in user not found'
-    );
-  }
-
-  let params = new HttpParams()
-    .set(
-      'userId',
-      userId.toString()
-    )
-    .set(
-      'search',
-      search || ''
-    )
-    .set(
-      'gender',
-      gender || ''
-    )
-    .set(
-      'adultOrchild',
-      adultOrchild || ''
-    )
-    .set(
-      'gift',
-      gift || ''
-    )
-    .set(
-      'cash',
-      cash || ''
-    )
-    .set(
-      'guestCategory',
-      guestCategory || ''
-    )
-    .set(
-      'stay',
-      stay || ''
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
     );
 
-  if (
-    invitationSent !== null &&
-    invitationSent !== undefined &&
-    invitationSent !== ''
-  ) {
+    const userId = currentUser?.id;
 
-    params = params.set(
-      'invitationSent',
-      invitationSent
-    );
-  }
-
-  return this.http.get(
-    `${this.baseUrl}/guests/download`,
-    {
-      params,
-      responseType: 'blob'
+    if (!userId) {
+      throw new Error(
+        'Logged-in user not found'
+      );
     }
-  );
-}
+
+    let params = new HttpParams()
+      .set(
+        'userId',
+        userId.toString()
+      )
+      .set(
+        'search',
+        search || ''
+      )
+      .set(
+        'gender',
+        gender || ''
+      )
+      .set(
+        'adultOrchild',
+        adultOrchild || ''
+      )
+      .set(
+        'gift',
+        gift || ''
+      )
+      .set(
+        'cash',
+        cash || ''
+      )
+      .set(
+        'guestCategory',
+        guestCategory || ''
+      )
+      .set(
+        'stay',
+        stay || ''
+      );
+
+    if (
+      invitationSent !== null &&
+      invitationSent !== undefined &&
+      invitationSent !== ''
+    ) {
+
+      params = params.set(
+        'invitationSent',
+        invitationSent
+      );
+    }
+
+    return this.http.get(
+      `${this.baseUrl}/guests/download`,
+      {
+        params,
+        responseType: 'blob'
+      }
+    );
+  }
 
   getGuestSummary(): Observable<any> {
 
@@ -203,36 +203,56 @@ export class GuestService {
     );
   }
 
-// upload guest data
+  // upload guest data
 
-importGuestDump(
-  file: File
-): Observable<any> {
+  importGuestDump(
+    file: File
+  ): Observable<any> {
 
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
-
-  const userId = currentUser?.id;
-
-  const formData = new FormData();
-
-  formData.append(
-    'file',
-    file
-  );
-
-  const params = new HttpParams()
-    .set(
-      'userId',
-      userId.toString()
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
     );
 
-  return this.http.post(
-    `${this.baseUrl}/datadump/upload`,
-    formData,
-    { params }
-  );
-}
+    const userId = currentUser?.id;
+
+    const formData = new FormData();
+
+    formData.append(
+      'file',
+      file
+    );
+
+    const params = new HttpParams()
+      .set(
+        'userId',
+        userId.toString()
+      );
+
+    return this.http.post(
+      `${this.baseUrl}/datadump/upload`,
+      formData,
+      { params }
+    );
+  }
+
+  getGiftSummary(): Observable<any[]> {
+
+    const currentUser = JSON.parse(
+      localStorage.getItem('user') || '{}'
+    );
+
+    const userId = currentUser?.id;
+
+    const params = new HttpParams()
+      .set(
+        'userId',
+        userId.toString()
+      );
+
+    return this.http.get<any[]>(
+      `${this.baseUrl}/guests/gift-summary`,
+      { params }
+    );
+  }
 
 }
