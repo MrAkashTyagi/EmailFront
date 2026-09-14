@@ -1,101 +1,121 @@
 <div class="guest-page">
-  <!-- <div class="quick-summary">
-    <div class="summary-item">
-      <div class="summary-left">
-        👥 <strong>Total Guests:</strong> {{ totalElements() }}
+
+  <div class="summary-cards">
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        👥
       </div>
-      <button mat-flat-button type="button" class="export-btn" (click)="downloadExcel()">
-        <span class="button-icon">⇩</span>
-        Export Excel
-      </button>
+
+      <div>
+
+        <div class="summary-value">
+          {{ summary().totalGuests }}
+        </div>
+
+        <div class="summary-label">
+          Total Guests
+        </div>
+
+      </div>
+
     </div>
-  </div> -->
 
-<div class="summary-cards">
+    <div class="summary-card">
 
-  <div class="summary-card">
+      <div class="summary-icon">
+        ✅
+      </div>
 
-    <div class="summary-icon">
-      👥
+      <div>
+
+        <div class="summary-value">
+          {{ summary().invitationSent }}
+        </div>
+
+        <div class="summary-label">
+          Invitations Sent
+        </div>
+
+      </div>
+
     </div>
 
-    <div>
+    <div class="summary-card">
 
-      <div class="summary-value">
-        {{ summary().totalGuests }}
+      <div class="summary-icon">
+        ⏳
       </div>
 
-      <div class="summary-label">
-        Total Guests
+      <div>
+
+        <div class="summary-value">
+          {{ summary().invitationPending }}
+        </div>
+
+        <div class="summary-label">
+          Pending Invitations
+        </div>
+
       </div>
+
+    </div>
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        🏠
+      </div>
+
+      <div>
+
+        <div class="summary-value">
+          {{ summary().stayRequired }}
+        </div>
+
+        <div class="summary-label">
+          Stay Required
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+  </div>
+
+
+  @if (giftSummary().length > 0) {
+
+  <div class="gift-summary-bar">
+
+    <div class="gift-summary-title">
+
+      🎁 Gift Planning
+
+    </div>
+
+    <div class="gift-summary-list">
+
+      @for (
+      item of giftSummary();
+      track item.giftName
+      ) {
+      <span class="gift-summary-chip">
+        {{ item.giftName }}: {{ item.total }}
+      </span>
+
+      }
 
     </div>
 
   </div>
 
-  <div class="summary-card">
+  }
 
-    <div class="summary-icon">
-      ✅
-    </div>
-
-    <div>
-
-      <div class="summary-value">
-        {{ summary().invitationSent }}
-      </div>
-
-      <div class="summary-label">
-        Invitations Sent
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="summary-card">
-
-    <div class="summary-icon">
-      ⏳
-    </div>
-
-    <div>
-
-      <div class="summary-value">
-        {{ summary().invitationPending }}
-      </div>
-
-      <div class="summary-label">
-        Pending Invitations
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="summary-card">
-
-    <div class="summary-icon">
-      🏠
-    </div>
-
-    <div>
-
-      <div class="summary-value">
-        {{ summary().stayRequired }}
-      </div>
-
-      <div class="summary-label">
-        Stay Required
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-<!-- <div class="guest-chart-card">
+  <!-- <div class="guest-chart-card">
 
   <div class="chart-header">
 
@@ -174,6 +194,7 @@
               <mat-option value="Sagai">Sagai</mat-option>
               <mat-option value="Shadi">Shadi</mat-option>
               <mat-option value="Both">Both</mat-option>
+              <mat-option value="None">None</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -189,6 +210,8 @@
               <mat-option value="Joda">Joda</mat-option>
               <mat-option value="Comforter">Comforter</mat-option>
               <mat-option value="Cash">Cash</mat-option>
+              <mat-option value="Kurta_Payjama">Kurta Payjama</mat-option>
+              <mat-option value="Suit">Suit</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -435,7 +458,8 @@
           <td mat-cell *matCellDef="let element" class="column-category">
             <span class="data-chip" [class.category-sagai]="element.guestCategory === 'Sagai'"
               [class.category-shadi]="element.guestCategory === 'Shadi'"
-              [class.category-both]="element.guestCategory === 'Both'" [class.empty-chip]="!element.guestCategory">
+              [class.category-both]="element.guestCategory === 'Both'"
+              [class.category-none]="element.guestCategory === 'None'" [class.empty-chip]="!element.guestCategory">
               {{ element.guestCategory || 'Not set' }}
             </span>
           </td>
@@ -475,10 +499,15 @@
           </th>
 
           <td mat-cell *matCellDef="let element" class="column-gift">
+
             <span class="data-chip gift-chip" [class.empty-chip]="!element.gift">
-              {{ element.gift || 'Not set' }}
+
+              {{ element.gift?.replaceAll(',', ' + ') || 'Not set' }}
+
             </span>
+
           </td>
+
         </ng-container>
 
         <!-- Cash Column -->
