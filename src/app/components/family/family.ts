@@ -147,7 +147,7 @@ export class Family implements OnInit, OnDestroy {
   }
 
   deleteFamilyRecord(id: number): void {
-    if (confirm("Kya aap sach me is family ko delete karna chahte hain?")) {
+    if (confirm("Do you want to delete the record? Deleting the family will leads to deletion of all the guests related to this family !!")) {
       this.familyService.deleteFamily(id).subscribe({
         next: () => {
           console.log(`Family ID ${id} successfully delete ho gayi!`);
