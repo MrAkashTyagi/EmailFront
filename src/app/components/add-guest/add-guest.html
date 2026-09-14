@@ -52,6 +52,7 @@
             <mat-option value="Sagai">Sagai</mat-option>
             <mat-option value="Shadi">Shadi</mat-option>
             <mat-option value="Both">Both</mat-option>
+            <mat-option value="None">None</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -74,13 +75,23 @@
 
         <!-- Row 4 -->
         <mat-form-field appearance="outline">
+
           <mat-label>Gift</mat-label>
-          <mat-select [(ngModel)]="guest.gift" name="gift">
-            <mat-option value="Saree">Saree</mat-option>
-            <mat-option value="Joda">Joda</mat-option>
-            <mat-option value="Comforter">Comforter</mat-option>
-            <mat-option value="Cash">Cash</mat-option>
+
+          <mat-select multiple [(ngModel)]="selectedGifts" name="gift">
+
+            @for (gift of giftOptions; track gift) {
+
+            <mat-option [value]="gift">
+
+              {{ gift }}
+
+            </mat-option>
+
+            }
+
           </mat-select>
+
         </mat-form-field>
 
         <mat-form-field appearance="outline">
