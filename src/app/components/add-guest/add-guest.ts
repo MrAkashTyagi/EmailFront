@@ -61,6 +61,20 @@ export class AddGuestComponent implements OnInit {
     }
   };
 
+
+  giftOptions = [
+    'Saree',
+    'Joda',
+    'Comforter',
+    'Cash',
+    'Kurta_Payjama',
+    'Suit',
+    'Other',
+    'None'
+  ];
+
+  selectedGifts: string[] = [];
+
   ngOnInit(): void {
 
     if (this.editData) {
@@ -71,6 +85,15 @@ export class AddGuestComponent implements OnInit {
         ...this.guest,
         ...this.editData
       };
+
+      if (this.guest.gift) {
+
+        this.selectedGifts =
+          this.guest.gift
+            .split(',')
+            .map(gift => gift.trim());
+
+      }
 
       this.guest.family = this.editData.family || {
         id: undefined,
@@ -123,6 +146,10 @@ export class AddGuestComponent implements OnInit {
   }
 
   save(): void {
+
+    this.guest.gift =
+      this.selectedGifts.join(',');
+
     if (!this.guest.whatsapp_Number) {
       this.guest.whatsapp_Number = this.guest.phoneNumber;
     }
