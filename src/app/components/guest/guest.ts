@@ -29,7 +29,7 @@ import {
 import { ChartOptions } from 'chart.js';
 
 
- Chart.register(
+Chart.register(
   PieController,
   ArcElement,
   Tooltip,
@@ -54,7 +54,7 @@ import { ChartOptions } from 'chart.js';
     MatCard,
     MatIcon,
     BaseChartDirective
-],
+  ],
   templateUrl: './guest.html',
   styleUrls: ['./guest.css']
 })
@@ -63,6 +63,8 @@ export class GuestComponent implements OnInit, OnDestroy {
   private guestService = inject(GuestService);
   private navBarService = inject(NavbarActionService); // Navbar Service Inject Ki
   private navBarAddSubscription!: Subscription; // Unsubscribe track handle karne ke liye variable
+
+  giftSummary = signal<any[]>([]);
 
   displayedColumns: string[] = [
     'name',
@@ -96,67 +98,85 @@ export class GuestComponent implements OnInit, OnDestroy {
   guestCategorySummary = signal<any[]>([]);
 
   selectedFile: File | null = null;
-  
 
-guestPieChartData: any = {
-  labels: [],
-  datasets: [{
-    data: [],
-    backgroundColor: [
-      '#8b5cf6',
-      '#ec4899',
-      '#f59e0b',
-      '#10b981'
-    ]
-  }]
-};
 
-guestPieChartOptions: ChartOptions<'pie'> = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'bottom'
-    }
-  }
-};
+  guestPieChartData: any = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: [
+        '#8b5cf6',
+        '#ec4899',
+        '#f59e0b',
+        '#10b981'
+      ]
+    }]
+  };
 
-loadGuestCategorySummary(): void {
-
-  this.guestService
-    .getGuestCategorySummary()
-    .subscribe({
-
-      next: (response) => {
-
-        this.guestCategorySummary.set(response);
-
-        this.guestPieChartData = {
-
-          labels: response.map(
-            (x: any) => x.category
-          ),
-
-          datasets: [{
-            data: response.map(
-              (x: any) => x.count
-            ),
-            backgroundColor: [
-              '#8b5cf6',
-              '#ec4899',
-              '#f59e0b',
-              '#10b981'
-            ]
-          }]
-
-        };
-
+  guestPieChartOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom'
       }
+    }
+  };
 
-    });
+  loadGiftSummary(): void {
 
-}
+    this.guestService
+      .getGiftSummary()
+      .subscribe({
 
- 
+        next: (response) => {
+
+          this.giftSummary.set(
+            response || []
+          );
+
+        }
+
+      });
+
+  }
+
+  loadGuestCategorySummary(): void {
+
+    this.guestService
+      .getGuestCategorySummary()
+      .subscribe({
+
+        next: (response) => {
+
+          this.guestCategorySummary.set(response);
+
+          this.guestPieChartData = {
+
+            labels: response.map(
+              (x: any) => x.category
+            ),
+
+            datasets: [{
+              data: response.map(
+                (x: any) => x.count
+              ),
+              backgroundColor: [
+                '#8b5cf6',
+                '#ec4899',
+                '#f59e0b',
+                '#10b981'
+              ]
+            }]
+
+          };
+
+        }
+
+      });
+
+  }
+
+
 
   pagedGuests = computed(() => {
     return this.filteredGuests();
@@ -165,34 +185,34 @@ loadGuestCategorySummary(): void {
   filteredGuests = computed(() => {
     return this.rawGuests();
   });
-  
+
 
   onGenderChange(gender: string): void {
     this.selectedGender.set(gender);
     this.currentPage.set(0);
     this.fetchPaginatedGuests();
   }
-  
+
   summary = signal({
-  totalGuests: 0,
-  invitationSent: 0,
-  invitationPending: 0,
-  stayRequired: 0
-});
+    totalGuests: 0,
+    invitationSent: 0,
+    invitationPending: 0,
+    stayRequired: 0
+  });
 
-loadGuestSummary(): void {
+  loadGuestSummary(): void {
 
-  this.guestService
-    .getGuestSummary()
-    .subscribe({
+    this.guestService
+      .getGuestSummary()
+      .subscribe({
 
-      next: (data) => {
-        this.summary.set(data);
-      }
+        next: (data) => {
+          this.summary.set(data);
+        }
 
-    });
+      });
 
-}
+  }
 
   onInvitationStatusChange(status: string): void {
     console.log('Invitation Filter =>', status);
@@ -254,6 +274,7 @@ loadGuestSummary(): void {
   ngOnInit(): void {
     this.loadGuestSummary();
     this.loadGuestCategorySummary();
+    this.loadGiftSummary();
 
     this.navBarService.searchQuery.set('');
     // Initial content array stream grid load
@@ -297,7 +318,9 @@ loadGuestSummary(): void {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.clearFilters();
         this.loadGuestSummary();
+        this.loadGiftSummary();
         console.log("Database se save hoke aaya live object:", result);
         Promise.resolve().then(() => {
           // Naya record smoothly array ke sabse aakhiri kone (end) me append hoga
@@ -339,13 +362,15 @@ loadGuestSummary(): void {
   }
 
   deleteGuestRecord(id: number): void {
-    if (confirm("Kya aap sach me is guest ko delete karna<li>hante hain?")) {
+    if (confirm("Do you want to delete the record?")) {
       this.guestService.deleteGuest(id).subscribe({
         next: () => {
           console.log(`Guest ID ${id} database se delete ho gaya!`);
           const filteredList = this.rawGuests().filter(guest => guest.id !== id);
           this.rawGuests.set(filteredList);
           this.loadGuestSummary();
+          this.loadGiftSummary();
+          this.fetchPaginatedGuests();
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -355,6 +380,8 @@ loadGuestSummary(): void {
       });
     }
   }
+
+// edit guest
 
   openEditGuestDialog(guestData: any): void {
     const dialogRef = this.dialog.open(AddGuestComponent, {
@@ -367,7 +394,10 @@ loadGuestSummary(): void {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        // this.clearFilters();
         this.loadGuestSummary();
+        this.loadGiftSummary();
+        this.fetchPaginatedGuests();
         console.log("Database se update hokar aaya live object:", result);
         setTimeout(() => {
           const updatedList = this.rawGuests().map(guest =>
@@ -375,7 +405,7 @@ loadGuestSummary(): void {
           );
           this.rawGuests.set(updatedList);
           this.cdr.detectChanges();
-          
+
         });
       }
     });
@@ -459,6 +489,7 @@ loadGuestSummary(): void {
 
           this.loadGuestSummary();
 
+
           this.rawGuests.set(response.content || []);
 
           this.totalElements.set(response.totalElements || 0);
@@ -476,15 +507,15 @@ loadGuestSummary(): void {
       });
   }
 
-onFileSelected(event: any): void {
+  onFileSelected(event: any): void {
 
-  const file = event.target.files[0];
+    const file = event.target.files[0];
 
-  if (file) {
-    this.selectedFile = file;
+    if (file) {
+      this.selectedFile = file;
+    }
   }
-}
 
 
-  
+
 }
