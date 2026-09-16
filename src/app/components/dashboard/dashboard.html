@@ -234,82 +234,6 @@
 
     <div class="cards-grid">
 
-        <div class="dashboard-card success">
-
-            <div class="card-icon">✅</div>
-
-            <div class="card-content">
-
-                <div class="card-value">
-                    {{ summary().invitationSent }}
-                </div>
-
-                <div class="card-label">
-                    Invitations Sent
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="dashboard-card warning">
-
-            <div class="card-icon">⏳</div>
-
-            <div class="card-content">
-
-                <div class="card-value">
-                    {{ summary().pendingInvitations }}
-                </div>
-
-                <div class="card-label">
-                    Pending Invitations
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="dashboard-card teal">
-
-            <div class="card-icon">👨</div>
-
-            <div class="card-content">
-
-                <div class="card-value">
-                    {{ summary().totalFamilyMembers }}
-                </div>
-
-                <div class="card-label">
-                    Family Members
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="dashboard-card orange">
-
-            <div class="card-icon">📊</div>
-
-            <div class="card-content">
-
-                <div class="card-value">
-                    {{ summary().averageFamilySize | number:'1.0-0' }}
-                </div>
-
-                <div class="card-label">
-                    Average Family Size
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="charts-grid">
-        
         <div class="dashboard-card green">
 
             <div class="card-icon">✅</div>
@@ -347,10 +271,119 @@
 
         </div>
 
+
+        <!-- <div class="dashboard-card success">
+
+            <div class="card-icon">✅</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary().invitationSent }}
+                </div>
+
+                <div class="card-label">
+                    Invitations Sent
+                </div>
+
+            </div>
+
+        </div> -->
+
+        <!-- Pending Invitations -->
+
+        <div class="dashboard-card warning">
+
+            <div class="card-icon">⏳</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary().pendingInvitations }}
+                </div>
+
+                <div class="card-label">
+                    Pending Invitations
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Total Family members -->
+        <!-- <div class="dashboard-card teal">
+
+            <div class="card-icon">👨</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary().totalFamilyMembers }}
+                </div>
+
+                <div class="card-label">
+                    Family Members
+                </div>
+
+            </div>
+
+        </div> -->
+
+        <!-- average family size -->
+
+        <div class="dashboard-card orange">
+
+            <div class="card-icon">📊</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary().averageFamilySize | number:'1.0-0' }}
+                </div>
+
+                <div class="card-label">
+                    Average Family Size
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    
+    <!-- Gift pallning summary bar -->
 
+    @if (giftSummary().length > 0) {
+
+    <div class="gift-summary-bar">
+
+        <span class="gift-summary-title">
+            🎁 Gift Planning
+        </span>
+
+        <div class="gift-summary-list">
+
+            @for (
+            item of giftSummary();
+            track item.giftName
+            ) {
+
+            <span class="gift-summary-chip">
+
+                {{ item.giftName }}: {{ item.total }}
+
+            </span>
+
+            }
+
+        </div>
+
+    </div>
+
+    }
+
+
+    <!-- Expense Distribuition -->
     <div class="charts-grid">
 
         <div class="chart-card">
@@ -458,84 +491,6 @@
 
         </div>
 
-        <!-- Invitation Bar -->
-
-
     </div>
-
-    <!-- <div class="progress-card">
-
-            <div class="progress-header">
-
-                <h3>📨 Invitation Progress</h3>
-
-                <span>
-                    {{ summary.invitationSent + summary.pendingInvitations > 0
-                    ? ((summary.invitationSent * 100) /
-                    (summary.invitationSent + summary.pendingInvitations))
-                    .toFixed(0)
-                    : 0 }}%
-                </span>
-
-            </div>
-
-            <div class="progress-bar">
-
-                <div class="progress-fill" [style.width.%]="
-        (summary.invitationSent * 100) /
-        (summary.invitationSent + summary.pendingInvitations)
-      ">
-                </div>
-
-            </div>
-
-            <div class="progress-stats">
-
-                <div class="sent">
-                    ✅ Sent:
-                    {{ summary.invitationSent }}
-                </div>
-
-                <div class="pending">
-                    ⏳ Pending:
-                    {{ summary.pendingInvitations }}
-                </div>
-
-            </div>
-
-
-            <div class="progress-footer">
-
-                <div>
-                    Completion Rate
-                </div>
-
-                <div>
-
-                    {{
-                    summary.invitationSent +
-                    summary.pendingInvitations > 0
-
-                    ? (
-
-                    summary.invitationSent * 100 /
-
-                    (
-                    summary.invitationSent +
-                    summary.pendingInvitations
-                    )
-
-                    ).toFixed(0)
-
-                    : 0
-
-                    }}%
-
-                </div>
-
-            </div>
-
-
-        </div> -->
 
 </div>
