@@ -69,6 +69,7 @@ export class AddGuestComponent implements OnInit {
     'Cash',
     'Kurta_Payjama',
     'Suit',
+    'Dabba',
     'Other',
     'None'
   ];
