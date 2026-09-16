@@ -70,7 +70,14 @@
                 </div>
 
                 <!-- Section 2: Badges Group Block (25% Width Allocation) -->
-                <div style="flex: 0 0 25%; display: flex; gap: 8px; align-items: center; flex-wrap: nowrap;">
+                <div style="
+    flex: 0 0 30%;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+">
+
                   <!-- Adult/Child Badge with dual casing safe checkpoint -->
                   @let status = guest.adultOrchild || guest.adultOrChild;
                   <span [style.background-color]="status === 'Adult' ? '#e0f2fe' : '#fef3c7'"
@@ -92,17 +99,28 @@
                     {{ guest.guestCategory }}
                   </span>
                   }
+
+
+                  <!-- Gift Badge -->
+                  @if (guest.gift) {
+                  <span
+                    style="font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 600; background-color: #e0e7ff; color: #3730a3; white-space: nowrap;">
+                    {{ guest.gift }}
+                  </span>
+                  }
+
+
                 </div>
 
                 <!-- Section 3: Communication Phone Block (22% Width Allocation) -->
                 <div
-                  style="flex: 0 0 22%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+                  style="flex: 0 0 18%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
                   <span>📞</span> <span><b style="color: #64748b;">Phone:</b> {{ guest.phoneNumber || 'N/A' }}</span>
                 </div>
 
                 <!-- Section 4: Communication WhatsApp Block (22% Width Allocation) -->
                 <div
-                  style="flex: 0 0 22%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+                  style="flex: 0 0 18%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
                   <span style="color: #25d366;">💬</span> <span><b style="color: #64748b;">WhatsApp:</b> {{
                     guest.whatsapp_Number || guest.whatsappNumber || 'N/A' }}</span>
                 </div>
@@ -118,12 +136,12 @@
          gap:10px;
          justify-content:flex-end;
          min-width:140px;">
-
+<!-- 
                   <span style="color:#94a3b8;
            font-size:13px;
            font-weight:500;">
                     ID: {{ guest.id }}
-                  </span>
+                  </span> -->
 
                   <button mat-flat-button color="primary"
                     (click)="openEditGuestDialog(guest, element); $event.stopPropagation()">
