@@ -37,16 +37,42 @@ export class AuthService {
 
   currentUser = signal<any>(null);
 
-  setUser(user: any): void {
+  // setUser(user: any): void {
 
-    localStorage.setItem(
-      'user',
-      JSON.stringify(user)
-    );
+  //   localStorage.setItem(
+  //     'user',
+  //     JSON.stringify(user)
+  //   );
 
-    this.currentUser.set(user);
+  //   this.currentUser.set(user);
 
-  }
+  // }
+
+  setUser(response: any): void {
+
+  localStorage.setItem(
+    'token',
+    response.token
+  );
+
+  localStorage.setItem(
+    'user',
+    JSON.stringify({
+      id: response.id,
+      name: response.name,
+      email: response.email,
+      role: response.role
+    })
+  );
+
+  this.currentUser.set({
+    id: response.id,
+    name: response.name,
+    email: response.email,
+    role: response.role
+  });
+
+}
 
 
   loadUser(): void {
@@ -64,16 +90,34 @@ export class AuthService {
 
   }
 
-  logout(): void {
+  // logout(): void {
 
-    if (typeof window !== 'undefined') {
+  //   if (typeof window !== 'undefined') {
 
-      localStorage.removeItem('user');
-      this.currentUser.set(null);
+  //     localStorage.removeItem('user');
+  //     this.currentUser.set(null);
 
-    }
+  //   }
 
     
 
+  // }
+
+  // logout method
+
+
+  logout(): void {
+
+  if (typeof window !== 'undefined') {
+
+    localStorage.removeItem('user');
+
+    localStorage.removeItem('token');
+
+    this.currentUser.set(null);
+
   }
+
+}
+
 }
