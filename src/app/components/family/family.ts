@@ -46,6 +46,7 @@ export class Family implements OnInit, OnDestroy {
   private navBarAddSubscription!: Subscription;
 
   private dialog = inject(MatDialog);
+  
 
   displayedColumns: string[] = [
     'name',
@@ -219,37 +220,118 @@ export class Family implements OnInit, OnDestroy {
 
 
   openEditGuestDialog(
-    guestData: any,
-    familyData: any
-  ): void {
+  guestData: any,
+  familyData: any
+): void {
 
-    const guestToEdit = {
-      ...guestData,
-      family: {
-        id: familyData.id,
-        familyName: familyData.familyName
-      }
-    };
+  const guestToEdit = {
+    ...guestData,
+    family: {
+      id: familyData.id,
+      familyName: familyData.familyName
+    }
+  };
 
-    console.log("Guest Data =", guestToEdit);
+  const dialogRef = this.dialog.open(
+    AddGuestComponent,
+    {
+      width: '950px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      autoFocus: false,
+      disableClose: false,
+      data: guestToEdit
+    }
+  );
 
-    const dialogRef = this.dialog.open(
-      AddGuestComponent,
-      {
-        width: '500px',
-        disableClose: false,
-        data: guestToEdit
-      }
-    );
+  dialogRef.afterClosed().subscribe(result => {
 
-    dialogRef.afterClosed().subscribe(result => {
+    if (!result) {
+      return;
+    }
 
-      if (result) {
-        this.fetchPaginatedFamily();
-      }
+    const updatedFamilies =
+      this.rawFamilies().map(family => {
 
-    });
-  }
+        if (family.id !== familyData.id) {
+          return family;
+        }
+
+        const updatedGuestList =
+          (family.guestList || []).map(
+            (guest: any) =>
+              guest.id === result.id
+                ? {
+                    ...guest,
+                    ...result
+                  }
+                : guest
+          );
+
+        return {
+          ...family,
+          guestList: updatedGuestList
+        };
+      });
+
+    this.rawFamilies.set(updatedFamilies);
+
+    /*
+     * Signal update ke baad expandedElement ko
+     * updated family object ka reference dena zaroori hai.
+     */
+    this.expandedElement =
+      updatedFamilies.find(
+        family => family.id === familyData.id
+      ) || null;
+
+    this.cdr.detectChanges();
+  });
+}
+
+
+// Edit Guest dialog 
+
+  // openEditGuestDialog(
+  //   guestData: any,
+  //   familyData: any
+  // ): void {
+
+  //   const expandedFamilyId =
+  //   this.expandedElement?.id;
+
+  //   const guestToEdit = {
+  //     ...guestData,
+  //     family: {
+  //       id: familyData.id,
+  //       familyName: familyData.familyName
+  //     }
+  //   };
+
+  //   console.log("Guest Data =", guestToEdit);
+
+  //   const dialogRef = this.dialog.open(
+  //     AddGuestComponent,
+  //     {
+  //       width: '950px',
+  //       maxWidth: '95vw',
+  //       maxHeight: '90vh',
+  //       autoFocus: false,
+  //       disableClose: false,
+  //       data: guestToEdit
+  //     }
+  //   );
+
+  //   dialogRef.afterClosed().subscribe(result => {
+
+  //     if (result) {
+  //       this.fetchPaginatedFamily();
+  //     }
+
+  //   });
+  // }
+
+  // Download Excel
 
   downloadExcel(): void {
 
