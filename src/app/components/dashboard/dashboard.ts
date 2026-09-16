@@ -32,6 +32,9 @@ export class Dashboard implements OnInit {
 
   recentExpenses: any[] = [];
 
+
+  giftSummary = signal<any[]>([]);
+
   expenseChartLoaded = false;
   guestChartLoaded = false;
 
@@ -57,6 +60,8 @@ export class Dashboard implements OnInit {
     console.log('Dashboard Init');
 
     this.loadDashboard();
+
+    this.loadGiftSummary();
 
     this.loadExpenseChart();
 
@@ -103,6 +108,26 @@ export class Dashboard implements OnInit {
       });
 
   }
+
+
+    loadGiftSummary(): void {
+
+    this.guestService
+      .getGiftSummary()
+      .subscribe({
+
+        next: (response) => {
+
+          this.giftSummary.set(
+            response || []
+          );
+
+        }
+
+      });
+
+  }
+
 
   expensePieChartData: any = {
     labels: [],
