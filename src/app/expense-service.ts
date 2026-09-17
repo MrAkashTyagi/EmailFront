@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AuthService } from './service/auth-service';
 
 
 @Injectable({
@@ -9,6 +10,10 @@ import { Observable } from 'rxjs';
 export class ExpenseService {
 
   private baseUrl = 'http://localhost:8090';
+
+  private authService =
+    inject(AuthService);
+
 
   constructor(private http: HttpClient) { }
 
@@ -19,18 +24,12 @@ export class ExpenseService {
     category: string
   ): Observable<any> {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
-
-    const userId = currentUser?.id;
 
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('search', search)
-      .set('category', category)
-      .set('userId', userId.toString());
+      .set('category', category);
 
     return this.http.get<any>(
       `${this.baseUrl}/expenses`,
@@ -38,48 +37,12 @@ export class ExpenseService {
     );
   }
 
-  // createExpense(
-  //   expense: any,
-  //   bill: File | null
-  // ): Observable<any> {
-
-  //   const formData = new FormData();
-
-  //   formData.append(
-  //     'expense',
-  //     JSON.stringify(expense)
-  //   );
-
-  //   if (bill) {
-  //     formData.append(
-  //       'bill',
-  //       bill
-  //     );
-  //   }
-
-  //   return this.http.post<any>(
-  //     `${this.baseUrl}/expenses`,
-  //     formData
-  //   );
-
-  // }
 
   createExpense(
     expense: any,
     bill: File | null
   ): Observable<any> {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
-
-    const userId = currentUser?.id;
-
-    if (!userId) {
-      throw new Error(
-        'Logged-in user not found'
-      );
-    }
 
     const formData = new FormData();
 
@@ -96,16 +59,9 @@ export class ExpenseService {
       );
     }
 
-    const params = new HttpParams()
-      .set(
-        'userId',
-        userId.toString()
-      );
-
     return this.http.post<any>(
       `${this.baseUrl}/expenses`,
-      formData,
-      { params }
+      formData
     );
   }
 
@@ -136,28 +92,10 @@ export class ExpenseService {
 
   exportExpenses(): Observable<Blob> {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
-
-    const userId = currentUser?.id;
-
-    if (!userId) {
-      throw new Error(
-        'Logged-in user not found'
-      );
-    }
-
-    const params = new HttpParams()
-      .set(
-        'userId',
-        userId.toString()
-      );
 
     return this.http.get(
       `${this.baseUrl}/expenses/export`,
       {
-        params,
         responseType: 'blob'
       }
     );
@@ -165,19 +103,8 @@ export class ExpenseService {
 
 
   getExpenseSummary(): Observable<any> {
-
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
-
-    const userId = currentUser?.id;
-
-    const params = new HttpParams()
-      .set('userId', userId.toString());
-
     return this.http.get(
-      `${this.baseUrl}/expenses/summary`,
-      { params }
+      `${this.baseUrl}/expenses/summary`
     );
 
   }
@@ -190,34 +117,40 @@ export class ExpenseService {
 
   }
 
+  // import expense from excel
+
   importExpenseDump(
     file: File
   ): Observable<any> {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
+    const userId =
+      this.authService
+        .currentUser()
+        ?.id
+        ?.toString()
+      ?? '';
 
-    const userId = currentUser.id;
-
-    const formData = new FormData();
+    const formData =
+      new FormData();
 
     formData.append(
       'file',
       file
     );
 
-    const params = new HttpParams()
-      .set(
-        'userId',
-        userId.toString()
-      );
+    const params =
+      new HttpParams()
+        .set(
+          'userId',
+          userId
+        );
 
     return this.http.post(
       `${this.baseUrl}/expense-dump/upload`,
       formData,
       { params }
     );
+
   }
 
 }
