@@ -10,7 +10,7 @@ import {
 import { inject } from '@angular/core';
 import { AuthService } from '../../service/auth-service';
 
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -28,11 +28,8 @@ export class Register {
   readonly errorMessage = signal('');
   readonly successMessage = signal('');
 
-
-
-  // constructor(
-  //   private fb: FormBuilder
-  // ) {}
+  private router =
+    inject(Router);
 
   constructor() {
 
@@ -84,24 +81,17 @@ export class Register {
       )
       .subscribe({
 
-        next: (response) => {
-
-          console.log('User Registered', response);
+        next: () => {
 
           this.successMessage.set(
             'Registration Successful'
           );
 
-          setTimeout(() => {
-            this.successMessage.set('');
-          }, 3000);
+          this.registerForm.reset();
 
-          this.registerForm.reset({
-            name: '',
-            email: '',
-            password: '',
-            about: ''
-          });
+          this.router.navigateByUrl(
+            '/login'
+          );
 
         },
 
