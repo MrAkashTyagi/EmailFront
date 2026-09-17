@@ -16,6 +16,14 @@ import { NavbarActionService } from '../../service/navbar-action-service';
 import { Subscription } from 'rxjs';
 import { AddGuestComponent } from '../add-guest/add-guest';
 
+import {
+  PLATFORM_ID
+} from '@angular/core';
+
+import {
+  isPlatformBrowser
+} from '@angular/common';
+
 @Component({
   selector: 'app-family',
   standalone: true,
@@ -46,7 +54,11 @@ export class Family implements OnInit, OnDestroy {
   private navBarAddSubscription!: Subscription;
 
   private dialog = inject(MatDialog);
-  
+
+  private exportSubscription!: Subscription;
+
+  private platformId =
+    inject(PLATFORM_ID);
 
   displayedColumns: string[] = [
     'name',
@@ -74,60 +86,87 @@ export class Family implements OnInit, OnDestroy {
   });
 
 
-  constructor(private familyService: Familyservice, private cdr: ChangeDetectorRef) {
-    // Angular Signal effect hook listens globally to Navbar query emissions
+  constructor(
+    private familyService: Familyservice,
+    private cdr: ChangeDetectorRef
+  ) {
+
     effect(() => {
-      const query = this.navBarService.searchQuery();
-      console.log('Navbar action signal se live search text aaya:', query);
+
+      const query =
+        this.navBarService.searchQuery();
+
       untracked(() => {
+
         this.familySearchQuery.set(query);
-        this.currentPage.set(0); // Sirf search badalne par hi page 0 hoga
-        this.fetchPaginatedFamily();
+
+        if (this.isBrowser()) {
+
+          this.currentPage.set(0);
+
+          this.fetchPaginatedFamily();
+
+        }
+
       });
+
     });
+
   }
 
 
   ngOnInit(): void {
 
-    this.navBarService.searchQuery.set('');
-    this.fetchPaginatedFamily();
+    // this.fetchPaginatedFamily();
 
-    this.navBarService.exportClick$
-      .subscribe(() => {
+    this.exportSubscription =
+      this.navBarService.exportClick$
+        .subscribe(() => {
 
-        console.log("Export button clicked !! ");
-        console.log(window.location.pathname);
+          if (this.isBrowser()) {
 
-        if (
-          window.location.pathname.includes(
-            'family'
-          )
-        ) {
+            this.downloadExcel();
 
-          this.downloadExcel();
-        }
+          }
 
-      });
+        });
 
-    // FIX FIXED: Variable spelling alignment matching 'navBarAddSubscription' pointer reference
-    this.navBarAddSubscription = this.navBarService.addClick$.subscribe(() => {
-      if (window.location.pathname.includes('family')) {
-        console.log('Navbar header click sequence se family popup trigger fire hua!');
-        this.openAddFamilyDialog();
-      }
-    });
+    this.navBarAddSubscription =
+      this.navBarService.addClick$
+        .subscribe(() => {
+
+          this.openAddFamilyDialog();
+
+        });
+
   }
 
   // FIX FIXED: Explicitly added OnDestroy engine declaration to tear down subscription variables
   ngOnDestroy(): void {
+
     if (this.navBarAddSubscription) {
       this.navBarAddSubscription.unsubscribe();
     }
+
+    if (this.exportSubscription) {
+      this.exportSubscription.unsubscribe();
+    }
+
+
   }
 
+
+  private isBrowser(): boolean {
+
+    return isPlatformBrowser(
+      this.platformId
+    );
+
+  }
+
+  // family edit dialog
   openAddFamilyDialog(): void {
-    console.log("Add Family Button Clicked!");
+
     const dialogRef = this.dialog.open(AddFamily, {
       width: '500px',
       disableClose: true
@@ -135,7 +174,7 @@ export class Family implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log("Database se save hoke aaya live object:", result);
+
 
         setTimeout(() => {
           Promise.resolve().then(() => {
@@ -151,7 +190,7 @@ export class Family implements OnInit, OnDestroy {
     if (confirm("Do you want to delete the record? Deleting the family will leads to deletion of all the guests related to this family !!")) {
       this.familyService.deleteFamily(id).subscribe({
         next: () => {
-          console.log(`Family ID ${id} successfully delete ho gayi!`);
+
           this.fetchPaginatedFamily();
           this.cdr.detectChanges();
         },
@@ -164,7 +203,7 @@ export class Family implements OnInit, OnDestroy {
   }
 
   openEditFamilyDialog(familyData: any): void {
-    console.log("Clicked edit button", familyData);
+
     const dialogRef = this.dialog.open(AddFamily, {
       width: '500px',
       disableClose: true,
@@ -173,10 +212,7 @@ export class Family implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(
-          "Database se aaya hua updated object:",
-          result
-        );
+
         this.fetchPaginatedFamily();
       }
     });
@@ -220,122 +256,80 @@ export class Family implements OnInit, OnDestroy {
 
 
   openEditGuestDialog(
-  guestData: any,
-  familyData: any
-): void {
+    guestData: any,
+    familyData: any
+  ): void {
 
-  const guestToEdit = {
-    ...guestData,
-    family: {
-      id: familyData.id,
-      familyName: familyData.familyName
-    }
-  };
+    const guestToEdit = {
+      ...guestData,
+      family: {
+        id: familyData.id,
+        familyName: familyData.familyName
+      }
+    };
 
-  const dialogRef = this.dialog.open(
-    AddGuestComponent,
-    {
-      width: '950px',
-      maxWidth: '95vw',
-      maxHeight: '90vh',
-      autoFocus: false,
-      disableClose: false,
-      data: guestToEdit
-    }
-  );
+    const dialogRef = this.dialog.open(
+      AddGuestComponent,
+      {
+        width: '950px',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+        autoFocus: false,
+        disableClose: false,
+        data: guestToEdit
+      }
+    );
 
-  dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(result => {
 
-    if (!result) {
-      return;
-    }
+      if (!result) {
+        return;
+      }
 
-    const updatedFamilies =
-      this.rawFamilies().map(family => {
+      const updatedFamilies =
+        this.rawFamilies().map(family => {
 
-        if (family.id !== familyData.id) {
-          return family;
-        }
+          if (family.id !== familyData.id) {
+            return family;
+          }
 
-        const updatedGuestList =
-          (family.guestList || []).map(
-            (guest: any) =>
-              guest.id === result.id
-                ? {
+          const updatedGuestList =
+            (family.guestList || []).map(
+              (guest: any) =>
+                guest.id === result.id
+                  ? {
                     ...guest,
                     ...result
                   }
-                : guest
-          );
+                  : guest
+            );
 
-        return {
-          ...family,
-          guestList: updatedGuestList
-        };
-      });
+          return {
+            ...family,
+            guestList: updatedGuestList
+          };
+        });
 
-    this.rawFamilies.set(updatedFamilies);
+      this.rawFamilies.set(updatedFamilies);
 
-    /*
-     * Signal update ke baad expandedElement ko
-     * updated family object ka reference dena zaroori hai.
-     */
-    this.expandedElement =
-      updatedFamilies.find(
-        family => family.id === familyData.id
-      ) || null;
+      /*
+       * Signal update ke baad expandedElement ko
+       * updated family object ka reference dena zaroori hai.
+       */
+      this.expandedElement =
+        updatedFamilies.find(
+          family => family.id === familyData.id
+        ) || null;
 
-    this.cdr.detectChanges();
-  });
-}
+      this.cdr.detectChanges();
+    });
+  }
 
 
-// Edit Guest dialog 
-
-  // openEditGuestDialog(
-  //   guestData: any,
-  //   familyData: any
-  // ): void {
-
-  //   const expandedFamilyId =
-  //   this.expandedElement?.id;
-
-  //   const guestToEdit = {
-  //     ...guestData,
-  //     family: {
-  //       id: familyData.id,
-  //       familyName: familyData.familyName
-  //     }
-  //   };
-
-  //   console.log("Guest Data =", guestToEdit);
-
-  //   const dialogRef = this.dialog.open(
-  //     AddGuestComponent,
-  //     {
-  //       width: '950px',
-  //       maxWidth: '95vw',
-  //       maxHeight: '90vh',
-  //       autoFocus: false,
-  //       disableClose: false,
-  //       data: guestToEdit
-  //     }
-  //   );
-
-  //   dialogRef.afterClosed().subscribe(result => {
-
-  //     if (result) {
-  //       this.fetchPaginatedFamily();
-  //     }
-
-  //   });
-  // }
 
   // Download Excel
 
   downloadExcel(): void {
-
-    console.log("Export button clicked here ..")
 
     this.familyService
       .downloadFamilies()
