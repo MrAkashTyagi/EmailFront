@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -9,61 +9,32 @@ export class DashboardService {
 
   private apiUrl = 'http://localhost:8090/dashboard';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+
+  }
 
   getSummary(): Observable<any> {
 
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
+    return this.http.get<any>(
+      `${this.apiUrl}/summary`
+    );
 
-  const userId = currentUser?.id;
+  }
 
-  const params = new HttpParams()
-    .set('userId', userId.toString());
+  getRecentGuests(): Observable<any> {
 
-  return this.http.get<any>(
-    `${this.apiUrl}/summary`,
-    { params }
-  );
+    return this.http.get<any>(
+      `${this.apiUrl}/recent-guests`
+    );
 
-}
+  }
 
-getRecentGuests(): Observable<any> {
+  getRecentExpenses(): Observable<any> {
 
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
+    return this.http.get<any>(
+      `${this.apiUrl}/recent-expenses`
+    );
 
-  const userId = currentUser?.id;
-
-  const params = new HttpParams()
-    .set('userId', userId.toString());
-
-  return this.http.get<any>(
-    `${this.apiUrl}/recent-guests`,
-    { params }
-  );
-
-}
-
-getRecentExpenses(): Observable<any> {
-
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
-
-  const userId = currentUser?.id;
-
-  const params = new HttpParams()
-    .set('userId', userId.toString());
-
-  return this.http.get<any>(
-    `${this.apiUrl}/recent-expenses`,
-    { params }
-  );
-
-}
-
+  }
 
 }
