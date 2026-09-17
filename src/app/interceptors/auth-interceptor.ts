@@ -2,36 +2,49 @@ import {
   HttpInterceptorFn
 } from '@angular/common/http';
 
+import {
+  inject,
+  PLATFORM_ID
+} from '@angular/core';
+
+import {
+  isPlatformBrowser
+} from '@angular/common';
+
 export const authInterceptor: HttpInterceptorFn = (
-  req,
+  request,
   next
 ) => {
 
+  const platformId =
+    inject(PLATFORM_ID);
+
+  /*
+   * SSR ke time localStorage available nahi hota.
+   * Server request ko token ke bina continue karo.
+   */
+  if (!isPlatformBrowser(platformId)) {
+
+    return next(request);
+  }
+
   const token =
-    localStorage.getItem(
-      'token'
-    );
+    localStorage.getItem('token');
 
   if (!token) {
 
-    return next(req);
-
+    return next(request);
   }
 
-  const clonedRequest =
-    req.clone({
-
+  const authenticatedRequest =
+    request.clone({
       setHeaders: {
-
         Authorization:
           `Bearer ${token}`
-
       }
-
     });
 
   return next(
-    clonedRequest
+    authenticatedRequest
   );
-
 };
