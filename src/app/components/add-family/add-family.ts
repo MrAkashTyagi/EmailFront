@@ -48,7 +48,7 @@ ngOnInit(): void {
       this.isEditMode = true;
       // Purane pure data ki copy bana li aur input box me naam dikha diya
       this.family = { ...this.passData }; 
-      console.log("Edit mode activated for:", this.family);
+      
     }
   }
 
@@ -56,24 +56,10 @@ ngOnInit(): void {
 
   save(): void {
 
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
-
-  if (!currentUser?.id) {
-    alert('Logged-in user not found. Please login again.');
-    return;
-  }
-
   const payload = {
-    ...this.family,
-    userId: currentUser.id
-  };
+  ...this.family
+};
 
-  console.log(
-    'Family request payload:',
-    payload
-  );
 
   if (this.isEditMode) {
 
@@ -145,42 +131,5 @@ ngOnInit(): void {
     });
 }
 
-
-
-
-  // save(): void {
-  //   console.log("Form submitted data : ", this.family);
-    
-
-  //     // 4. Agar EDIT mode hai toh Update API call hogi
-  //   if (this.isEditMode) {
-  //     // Yahan hum assumed name 'updateFamily' use kar rahe hain, aap apni service ke mutabik change kar sakte hain
-  //     this.familyService.updateFamily(this.family).subscribe({
-  //       next: (updatedFamilyFromBackend) => {
-  //         console.log("Success ! Database me update hogya ", updatedFamilyFromBackend);
-  //         this.dialogRef.close(updatedFamilyFromBackend);
-  //       },
-  //       error: (error) => {
-  //         console.error("Backend update error trace : ", error);
-  //         alert("Family update nahi ho payi ! Server console check kro.");
-  //       }
-  //     });
-  //   } 
-
-  //   // Agle step me service call lagayenge, abhi sirf dialog close karke data pass kar rhe hain
-
-  //   this.familyService.saveFamily(this.family).subscribe({
-  //     next: (savedFamilyFromBackend) => {
-  //       console.log("Success ! Database me save hogya ", savedFamilyFromBackend);
-  //       this.dialogRef.close(savedFamilyFromBackend);
-  //     }, error: (error) => {
-  //       console.error("Backend save error trace : ", error);
-  //       alert("Family save nhi ho payi ! Server console check kro.");
-  //     }
-  //   });
-
-
-  //   // this.dialogRef.close(this.family);
-  // }
 
 }
