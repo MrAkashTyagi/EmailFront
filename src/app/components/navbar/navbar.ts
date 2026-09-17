@@ -48,27 +48,6 @@ export class Navbar {
   currentUser =
     this.authService.currentUser;
 
-
-  // ngOnInit(): void {
-
-  //   if (
-  //     typeof window !== 'undefined'
-  //   ) {
-
-  //     const user =
-  //       localStorage.getItem('user');
-
-  //     if (user) {
-
-  //       this.currentUser =
-  //         JSON.parse(user);
-
-  //     }
-
-  //   }
-
-  // }
-
   constructor() {
 
     this.authService.loadUser();
@@ -176,22 +155,6 @@ export class Navbar {
   isExpensePage(): boolean {
     return this.location.path().includes('expenses');
   }
-
-  // logout(): void {
-
-  //   if (
-  //     typeof window !== 'undefined'
-  //   ) {
-
-  //     localStorage.removeItem('user');
-
-  //   }
-
-  //   this.router.navigate([
-  //     '/login'
-  //   ]);
-
-  // }
 
   logout(): void {
 
