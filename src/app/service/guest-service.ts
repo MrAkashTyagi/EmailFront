@@ -15,30 +15,12 @@ export class GuestService {
 
   save(data: any): Observable<any> {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
+  return this.http.post<any>(
+    `${this.baseUrl}/guests`,
+    data
+  );
 
-    const userId = currentUser?.id;
-
-    if (!userId) {
-      throw new Error(
-        'Logged-in user not found'
-      );
-    }
-
-    const params = new HttpParams()
-      .set(
-        'userId',
-        userId.toString()
-      );
-
-    return this.http.post<any>(
-      `${this.baseUrl}/guests`,
-      data,
-      { params }
-    );
-  }
+}
 
   deleteGuest(
     id: number
@@ -73,12 +55,6 @@ export class GuestService {
     invitationSent: string
   ): Observable<any> {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
-
-    const userId = currentUser?.id;
-
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
@@ -89,8 +65,7 @@ export class GuestService {
       .set('gift', gift)
       .set('stay', stay)
       .set('cash', cash)
-      .set('invitationSent', invitationSent)
-      .set('userId', userId.toString());
+      .set('invitationSent', invitationSent);
 
     return this.http.get<any>(
       `${this.baseUrl}/guests/guest`,
@@ -99,101 +74,52 @@ export class GuestService {
   }
 
   downloadGuests(
-    gender: string,
-    adultOrchild: string,
-    gift: string,
-    cash: string,
-    guestCategory: string,
-    stay: string,
-    invitationSent: string,
-    search: string = ''
-  ): Observable<Blob> {
+  gender: string,
+  adultOrchild: string,
+  gift: string,
+  cash: string,
+  guestCategory: string,
+  stay: string,
+  invitationSent: string,
+  search: string = ''
+): Observable<Blob> {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
+  let params = new HttpParams()
+    .set('search', search || '')
+    .set('gender', gender || '')
+    .set('adultOrchild', adultOrchild || '')
+    .set('gift', gift || '')
+    .set('cash', cash || '')
+    .set('guestCategory', guestCategory || '')
+    .set('stay', stay || '');
 
-    const userId = currentUser?.id;
+  if (
+    invitationSent !== null &&
+    invitationSent !== undefined &&
+    invitationSent !== ''
+  ) {
 
-    if (!userId) {
-      throw new Error(
-        'Logged-in user not found'
-      );
-    }
-
-    let params = new HttpParams()
-      .set(
-        'userId',
-        userId.toString()
-      )
-      .set(
-        'search',
-        search || ''
-      )
-      .set(
-        'gender',
-        gender || ''
-      )
-      .set(
-        'adultOrchild',
-        adultOrchild || ''
-      )
-      .set(
-        'gift',
-        gift || ''
-      )
-      .set(
-        'cash',
-        cash || ''
-      )
-      .set(
-        'guestCategory',
-        guestCategory || ''
-      )
-      .set(
-        'stay',
-        stay || ''
-      );
-
-    if (
-      invitationSent !== null &&
-      invitationSent !== undefined &&
-      invitationSent !== ''
-    ) {
-
-      params = params.set(
-        'invitationSent',
-        invitationSent
-      );
-    }
-
-    return this.http.get(
-      `${this.baseUrl}/guests/download`,
-      {
-        params,
-        responseType: 'blob'
-      }
+    params = params.set(
+      'invitationSent',
+      invitationSent
     );
   }
 
+  return this.http.get(
+    `${this.baseUrl}/guests/download`,
+    {
+      params,
+      responseType: 'blob'
+    }
+  );
+}
+
   getGuestSummary(): Observable<any> {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
-
-    const userId = currentUser?.id;
-
-    const params = new HttpParams()
-      .set(
-        'userId',
-        userId.toString()
-      );
-
     return this.http.get<any>(
-      `${this.baseUrl}/guests/summary`,
-      { params }
+      `${this.baseUrl}/guests/summary`
     );
+
   }
 
   getGuestCategorySummary(): Observable<any[]> {
@@ -205,54 +131,30 @@ export class GuestService {
 
   // upload guest data
 
-  importGuestDump(
-    file: File
-  ): Observable<any> {
+importGuestDump(
+  file: File
+): Observable<any> {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
+  const formData = new FormData();
 
-    const userId = currentUser?.id;
+  formData.append(
+    'file',
+    file
+  );
 
-    const formData = new FormData();
+  return this.http.post(
+    `${this.baseUrl}/datadump/upload`,
+    formData
+  );
 
-    formData.append(
-      'file',
-      file
-    );
-
-    const params = new HttpParams()
-      .set(
-        'userId',
-        userId.toString()
-      );
-
-    return this.http.post(
-      `${this.baseUrl}/datadump/upload`,
-      formData,
-      { params }
-    );
-  }
+}
 
   getGiftSummary(): Observable<any[]> {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
-
-    const userId = currentUser?.id;
-
-    const params = new HttpParams()
-      .set(
-        'userId',
-        userId.toString()
-      );
-
     return this.http.get<any[]>(
-      `${this.baseUrl}/guests/gift-summary`,
-      { params }
+      `${this.baseUrl}/guests/gift-summary`
     );
+
   }
 
 }
