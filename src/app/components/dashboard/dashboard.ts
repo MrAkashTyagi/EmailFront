@@ -55,42 +55,25 @@ export class Dashboard implements OnInit {
 
 
   ngOnInit() {
-
-
-    console.log('Dashboard Init');
-
     this.loadDashboard();
-
     this.loadGiftSummary();
-
     this.loadExpenseChart();
-
     this.loadGuestChart();
-
     this.loadRecentGuests();
-
     this.loadRecentExpenses();
 
   }
 
+
   loadDashboard(): void {
-
-    console.log('Load Dashboard Called');
-
 
     this.dashboardService
       .getSummary()
       .subscribe({
 
-        // next: (response) => {
-
-        //   console.log('Dashboard Response', response);
-
-        //   this.summary = response;
-
-        // },
-
         next: (response) => {
+
+          console.log('Summary Done');
 
           console.log('Dashboard Response', response);
 
@@ -110,7 +93,7 @@ export class Dashboard implements OnInit {
   }
 
 
-    loadGiftSummary(): void {
+  loadGiftSummary(): void {
 
     this.guestService
       .getGiftSummary()
@@ -172,11 +155,15 @@ export class Dashboard implements OnInit {
 
   loadRecentGuests(): void {
 
+    console.log('Recent Guests Start');
+
     this.dashboardService
       .getRecentGuests()
       .subscribe({
 
         next: (response) => {
+
+          console.log('Recent guest Done');
 
           this.recentGuests = response;
 
@@ -197,11 +184,16 @@ export class Dashboard implements OnInit {
 
   loadRecentExpenses(): void {
 
+    console.log('Recent Expenses Start');
+
     this.dashboardService
       .getRecentExpenses()
       .subscribe({
 
         next: (response) => {
+
+
+          console.log('Recent expenses Done');
 
           this.recentExpenses = response;
 
