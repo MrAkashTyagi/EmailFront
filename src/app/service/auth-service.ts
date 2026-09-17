@@ -1,18 +1,39 @@
 import { HttpClient } from '@angular/common/http';
+
 import {
   Injectable,
   inject,
+  PLATFORM_ID,
   signal
 } from '@angular/core';
+
+import {
+  isPlatformBrowser
+} from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private http = inject(HttpClient);
+  private http =
+    inject(HttpClient);
+
+  private platformId =
+    inject(PLATFORM_ID);
+
+  currentUser =
+    signal<any>(null);
+
+  private isBrowser(): boolean {
+
+    return isPlatformBrowser(
+      this.platformId
+    );
+  }
 
   register(payload: any) {
+
     return this.http.post(
       'http://localhost:8090/auth/register',
       payload
@@ -20,6 +41,7 @@ export class AuthService {
   }
 
   login(payload: any) {
+
     return this.http.post(
       'http://localhost:8090/auth/login',
       payload
@@ -28,56 +50,47 @@ export class AuthService {
 
   isLoggedIn(): boolean {
 
+    if (!this.isBrowser()) {
+      return false;
+    }
+
     return !!localStorage.getItem(
-      'user'
+      'token'
     );
-
   }
-
-
-  currentUser = signal<any>(null);
-
-  // setUser(user: any): void {
-
-  //   localStorage.setItem(
-  //     'user',
-  //     JSON.stringify(user)
-  //   );
-
-  //   this.currentUser.set(user);
-
-  // }
 
   setUser(response: any): void {
 
-  localStorage.setItem(
-    'token',
-    response.token
-  );
-
-  localStorage.setItem(
-    'user',
-    JSON.stringify({
+    const user = {
       id: response.id,
       name: response.name,
       email: response.email,
       role: response.role
-    })
-  );
+    };
 
-  this.currentUser.set({
-    id: response.id,
-    name: response.name,
-    email: response.email,
-    role: response.role
-  });
+    this.currentUser.set(user);
 
-}
+    if (!this.isBrowser()) {
+      return;
+    }
 
+    localStorage.setItem(
+      'token',
+      response.token
+    );
+
+    localStorage.setItem(
+      'user',
+      JSON.stringify(user)
+    );
+  }
 
   loadUser(): void {
 
-    if (typeof window === 'undefined') {
+    if (!this.isBrowser()) {
+
+      this.currentUser.set(null);
+
       return;
     }
 
@@ -85,39 +98,21 @@ export class AuthService {
       localStorage.getItem('user');
 
     this.currentUser.set(
-      user ? JSON.parse(user) : null
+      user
+        ? JSON.parse(user)
+        : null
     );
-
   }
-
-  // logout(): void {
-
-  //   if (typeof window !== 'undefined') {
-
-  //     localStorage.removeItem('user');
-  //     this.currentUser.set(null);
-
-  //   }
-
-    
-
-  // }
-
-  // logout method
-
 
   logout(): void {
 
-  if (typeof window !== 'undefined') {
-
-    localStorage.removeItem('user');
-
-    localStorage.removeItem('token');
-
     this.currentUser.set(null);
 
+    if (!this.isBrowser()) {
+      return;
+    }
+
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
   }
-
-}
-
 }
