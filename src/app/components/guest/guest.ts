@@ -64,6 +64,8 @@ export class GuestComponent implements OnInit, OnDestroy {
   private navBarService = inject(NavbarActionService); // Navbar Service Inject Ki
   private navBarAddSubscription!: Subscription; // Unsubscribe track handle karne ke liye variable
 
+  private exportSubscription!: Subscription;
+
   giftSummary = signal<any[]>([]);
 
   displayedColumns: string[] = [
@@ -201,7 +203,6 @@ export class GuestComponent implements OnInit, OnDestroy {
   });
 
   loadGuestSummary(): void {
-
     this.guestService
       .getGuestSummary()
       .subscribe({
@@ -215,7 +216,7 @@ export class GuestComponent implements OnInit, OnDestroy {
   }
 
   onInvitationStatusChange(status: string): void {
-    console.log('Invitation Filter =>', status);
+
     this.selectedInvitationStatus.set(status);
     this.currentPage.set(0);
     this.fetchPaginatedGuests();
@@ -255,47 +256,63 @@ export class GuestComponent implements OnInit, OnDestroy {
     private emailService: EmailService,
     private cdr: ChangeDetectorRef
   ) {
-    // FIX FIXED: Angular Signal effect globally listens to central navbar search emissions
-    effect(() => {
-      const query = this.navBarService.searchQuery();
-      console.log('Navbar action signal se live guest search text aaya:', query);
 
-      // Navbar input query ko standard computed signal me map kar diya layout refresh ke liye
-      // 2. Untracked block ke andar page reset aur fetch karein taaki loop na bane
+
+    effect(() => {
+
+      const query =
+        this.navBarService.searchQuery();
+
       untracked(() => {
+
         this.guestSearchQuery.set(query);
-        this.currentPage.set(0); // Sirf search badalne par hi page 0 hoga
-        this.fetchPaginatedGuests();
+
+        if (
+          window.location.pathname.includes(
+            'guests'
+          )
+        ) {
+
+          this.currentPage.set(0);
+
+          this.fetchPaginatedGuests();
+
+        }
+
       });
+
     });
   }
 
 
   ngOnInit(): void {
+
+
+
     this.loadGuestSummary();
     this.loadGuestCategorySummary();
     this.loadGiftSummary();
 
-    this.navBarService.searchQuery.set('');
+    // this.navBarService.searchQuery.set('');
     // Initial content array stream grid load
 
-    this.navBarService.exportClick$
-      .subscribe(() => {
+    this.exportSubscription =
+      this.navBarService.exportClick$
+        .subscribe(() => {
 
-        if (
-          window.location.pathname.includes('guests')
-        ) {
-          this.downloadExcel();
-        }
+          if (
+            window.location.pathname.includes('guests')
+          ) {
+            this.downloadExcel();
+          }
 
-      });
+        });
 
     this.fetchPaginatedGuests();
 
     // FIX FIXED: Top dynamic navbar button subscription trigger setup
     this.navBarAddSubscription = this.navBarService.addClick$.subscribe(() => {
       if (window.location.pathname.includes('guests')) {
-        console.log('Navbar header click sequence se guest popup trigger fire hua!');
         this.openAddGuestDialog();
       }
     });
@@ -303,9 +320,15 @@ export class GuestComponent implements OnInit, OnDestroy {
 
   // FIX FIXED: Explicitly added component destroy hook to tear down references
   ngOnDestroy(): void {
+
     if (this.navBarAddSubscription) {
       this.navBarAddSubscription.unsubscribe();
     }
+
+    if (this.exportSubscription) {
+      this.exportSubscription.unsubscribe();
+    }
+
   }
 
   openAddGuestDialog(): void {
@@ -321,7 +344,7 @@ export class GuestComponent implements OnInit, OnDestroy {
         this.clearFilters();
         this.loadGuestSummary();
         this.loadGiftSummary();
-        console.log("Database se save hoke aaya live object:", result);
+
         Promise.resolve().then(() => {
           // Naya record smoothly array ke sabse aakhiri kone (end) me append hoga
           this.rawGuests.set([...this.rawGuests(), result]);
@@ -365,7 +388,7 @@ export class GuestComponent implements OnInit, OnDestroy {
     if (confirm("Do you want to delete the record?")) {
       this.guestService.deleteGuest(id).subscribe({
         next: () => {
-          console.log(`Guest ID ${id} database se delete ho gaya!`);
+
           const filteredList = this.rawGuests().filter(guest => guest.id !== id);
           this.rawGuests.set(filteredList);
           this.loadGuestSummary();
@@ -381,7 +404,7 @@ export class GuestComponent implements OnInit, OnDestroy {
     }
   }
 
-// edit guest
+  // edit guest
 
   openEditGuestDialog(guestData: any): void {
     const dialogRef = this.dialog.open(AddGuestComponent, {
@@ -398,7 +421,7 @@ export class GuestComponent implements OnInit, OnDestroy {
         this.loadGuestSummary();
         this.loadGiftSummary();
         this.fetchPaginatedGuests();
-        console.log("Database se update hokar aaya live object:", result);
+
         setTimeout(() => {
           const updatedList = this.rawGuests().map(guest =>
             guest.id === result.id ? result : guest
@@ -412,7 +435,6 @@ export class GuestComponent implements OnInit, OnDestroy {
   }
 
   downloadExcel(): void {
-
     this.guestService.downloadGuests(
       this.selectedGender(),
       this.selectedType(),
@@ -450,10 +472,20 @@ export class GuestComponent implements OnInit, OnDestroy {
     });
   }
 
+  // guest filter
   applyGuestFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.guestSearchQuery.set(filterValue);
+
+    const filterValue =
+      (event.target as HTMLInputElement).value;
+
+    this.guestSearchQuery.set(
+      filterValue
+    );
+
     this.currentPage.set(0);
+
+    this.fetchPaginatedGuests();
+
   }
 
   // Naya method jo har baar fresh paginated data layega
@@ -484,10 +516,7 @@ export class GuestComponent implements OnInit, OnDestroy {
       invitationSent).subscribe({
         next: (response: any) => {
 
-          console.log("Sahi Array Length:", response);
-
-
-          this.loadGuestSummary();
+          // this.loadGuestSummary();
 
 
           this.rawGuests.set(response.content || []);
