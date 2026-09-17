@@ -125,15 +125,9 @@ export class AddExpenseDialog implements OnInit {
 
     if (this.data) {
 
-      console.log('Edit Data => ', this.data);
-
       if (this.data?.billPath) {
         this.existingBillName =
           this.data.billPath.split(/[\\/]/).pop() || '';
-        console.log(
-          'Existing Bill =>',
-          this.existingBillName
-        );
       }
 
       this.expenseForm.patchValue({
