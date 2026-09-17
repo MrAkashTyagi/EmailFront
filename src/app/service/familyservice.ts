@@ -56,22 +56,12 @@ export class Familyservice {
     search: string
   ) {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
-
-    const userId = currentUser?.id;
-
-
-
-    console.log('Current User', currentUser);
-    console.log('Current User ID', currentUser?.id);
 
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('search', search)
-      .set('userId', userId.toString());
+
 
     return this.http.get(
       `${this.baseUrl}/family`,
@@ -80,30 +70,17 @@ export class Familyservice {
 
   }
 
-getAllFamiliesForDropdown(): Observable<any> {
+  getAllFamiliesForDropdown(): Observable<any> {
 
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
-
-  const params = new HttpParams()
-    .set('userId', currentUser.id);
-
-  return this.http.get<any>(
-    `${this.baseUrl}/family/getAll`,
-    { params }
-  );
-}
+    return this.http.get<any>(
+      `${this.baseUrl}/family/getAll`
+    );
+  }
 
   importFamilyDump(
     file: File
   ): Observable<any> {
 
-    const currentUser = JSON.parse(
-      localStorage.getItem('user') || '{}'
-    );
-
-    const userId = currentUser.id;
 
     const formData = new FormData();
 
@@ -112,48 +89,19 @@ getAllFamiliesForDropdown(): Observable<any> {
       file
     );
 
-    const params =
-      new HttpParams()
-        .set(
-          'userId',
-          userId.toString()
-        );
-
     return this.http.post(
       `${this.baseUrl}/dataDump/upload`,
-      formData,
-      { params }
+      formData
     );
   }
 
-downloadFamilies(): Observable<Blob> {
-
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  );
-
-  const userId = currentUser?.id;
-
-  if (!userId) {
-
-    throw new Error(
-      'Logged-in user not found'
+  downloadFamilies(): Observable<Blob> {
+    return this.http.get(
+      `${this.baseUrl}/dataDump/download`,
+      {
+        responseType: 'blob'
+      }
     );
   }
-
-  const params = new HttpParams()
-    .set(
-      'userId',
-      userId.toString()
-    );
-
-  return this.http.get(
-    `${this.baseUrl}/dataDump/download`,
-    {
-      params,
-      responseType: 'blob'
-    }
-  );
-}
 
 }
