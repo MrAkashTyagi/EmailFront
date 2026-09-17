@@ -106,7 +106,7 @@ export class Expense implements OnInit {
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
 
-// categorySummary: any[] = [];
+  // categorySummary: any[] = [];
 
   displayedColumns: string[] = [
     'expenseName',
@@ -121,10 +121,10 @@ export class Expense implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.navBarService.searchQuery.set('');
+    // this.navBarService.searchQuery.set('');
     this.loadCategoryChart();
     this.loadSummary();
-    this.navBarService.searchQuery.set('');
+    // this.navBarService.searchQuery.set('');
     this.navBarService.countLabel.set('Total Expenses');
 
     this.fetchPaginatedExpenses();
@@ -154,28 +154,6 @@ export class Expense implements OnInit {
 
     this.navBarService.countLabel.set('Total Expenses');
 
-    // this.navBarService.exportClick$
-      // .pipe(takeUntilDestroyed(this.destroyRef))
-      // .subscribe(() => {
-
-        // this.expenseService.exportExpenses()
-        //   .subscribe((blob: Blob) => {
-
-        //     const url = window.URL.createObjectURL(blob);
-
-        //     const a = document.createElement('a');
-
-        //     a.href = url;
-        //     a.download = 'Expenses.xlsx';
-
-        //     a.click();
-
-        //     window.URL.revokeObjectURL(url);
-
-        //   });
-
-      // });
-
   }
 
   constructor() {
@@ -186,14 +164,16 @@ export class Expense implements OnInit {
       )
       .subscribe(searchText => {
 
-        console.log(
-          'Expense received search => ',
-          searchText
-        );
+        const query =
+          searchText?.trim() || '';
 
-        this.expenseSearchQuery.set(
-          searchText?.trim() || ''
-        );
+        if (
+          query === this.expenseSearchQuery()
+        ) {
+          return;
+        }
+
+        this.expenseSearchQuery.set(query);
 
         this.currentPage.set(0);
 
@@ -211,71 +191,43 @@ export class Expense implements OnInit {
 
         next: (response: any[]) => {
 
-  // this.categorySummary = response;
+          // this.categorySummary = response;
 
-  this.categorySummary.set(response);
+          this.categorySummary.set(response);
 
-  this.pieChartData = {
-    labels: response.map(x => x.category),
+          this.pieChartData = {
+            labels: response.map(x => x.category),
 
-    datasets: [
-      {
-        data: response.map(x => x.totalAmount),
-        backgroundColor: [
-          '#6366F1',
-          '#10B981',
-          '#F59E0B',
-          '#EF4444',
-          '#8B5CF6',
-          '#06B6D4',
-          '#f40df4'
-        ]
-      }
-    ]
-  };
+            datasets: [
+              {
+                data: response.map(x => x.totalAmount),
+                backgroundColor: [
+                  '#6366F1',
+                  '#10B981',
+                  '#F59E0B',
+                  '#EF4444',
+                  '#8B5CF6',
+                  '#06B6D4',
+                  '#f40df4'
+                ]
+              }
+            ]
+          };
 
-}
-
-        // next: (response: any[]) => {
-
-        //   this.pieChartData = {
-        //     labels: response.map(
-        //       item => item.category
-        //     ),
-
-        //     datasets: [
-        //       {
-        //         data: response.map(
-        //           item => item.totalAmount
-        //         ),
-        //         backgroundColor: [
-        //           '#6366F1',
-        //           '#10B981',
-        //           '#F59E0B',
-        //           '#EF4444',
-        //           '#8B5CF6',
-        //           '#06B6D4',
-        //           '#84CC16',
-        //           '#F97316'
-        //         ]
-        //       }
-        //     ]
-        //   };
-
-        // }
+        }
 
       });
 
   }
 
-public pieChartOptions = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'bottom' as const
+  public pieChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom' as const
+      }
     }
-  }
-};
+  };
 
 
   loadSummary(): void {
@@ -298,19 +250,19 @@ public pieChartOptions = {
 
   viewBill(expense: any): void {
 
-  this.dialog.open(
-    BillPreviewDialog,
-    {
-      width: '90vw',
-      maxWidth: '1200px',
-      maxHeight: '90vh',
-      data: {
-        url: `http://localhost:8090/expenses/bill/${expense.id}`
+    this.dialog.open(
+      BillPreviewDialog,
+      {
+        width: '90vw',
+        maxWidth: '1200px',
+        maxHeight: '90vh',
+        data: {
+          url: `http://localhost:8090/expenses/bill/${expense.id}`
+        }
       }
-    }
-  );
+    );
 
-}
+  }
 
 
   downloadBill(expense: any): void {
@@ -375,12 +327,6 @@ public pieChartOptions = {
 
   fetchPaginatedExpenses(): void {
 
-    console.log(
-      'API CALLED =>',
-      this.expenseSearchQuery()
-    );
-
-
     const page = this.currentPage();
     const size = this.pageSize();
     const search = this.expenseSearchQuery();
@@ -393,7 +339,6 @@ public pieChartOptions = {
       category
     ).subscribe({
       next: (response: any) => {
-        console.log('Expenses Loaded:', response);
 
         this.rawExpenses.set(response.content || []);
         this.totalElements.set(response.totalElements || 0);
