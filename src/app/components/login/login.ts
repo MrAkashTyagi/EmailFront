@@ -67,30 +67,7 @@ export class Login {
       )
       .subscribe({
 
-        // next: (response: any) => {
-
-        //   this.loading.set(false);
-
-        //   localStorage.setItem(
-        //     'user',
-        //     JSON.stringify(response)
-        //   );
-
-        //   this.successMessage.set(
-        //     'Login Successful'
-        //   );
-
-        //   this.router.navigate([
-        //     '/dashboard'
-        //   ]);
-
-        // }
         next: (response: any) => {
-
-          // localStorage.setItem(
-          //   'user',
-          //   JSON.stringify(response)
-          // );
 
           this.authService.setUser(
             response
