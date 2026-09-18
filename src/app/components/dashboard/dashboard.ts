@@ -32,13 +32,12 @@ export class Dashboard implements OnInit {
 
   recentExpenses: any[] = [];
 
-
-  giftSummary = signal<any[]>([]);
+  readonly giftSummary = signal<any[]>([]);
 
   expenseChartLoaded = false;
   guestChartLoaded = false;
 
-  summary = signal({
+  readonly summary = signal({
     totalGuests: 0,
     totalFamilies: 0,
     totalFamilyMembers: 0,
@@ -61,40 +60,26 @@ export class Dashboard implements OnInit {
     this.loadGuestChart();
     this.loadRecentGuests();
     this.loadRecentExpenses();
-
   }
 
-
   loadDashboard(): void {
-
     this.dashboardService
       .getSummary()
       .subscribe({
 
         next: (response) => {
-
-          console.log('Summary Done');
-
-          console.log('Dashboard Response', response);
-
           this.summary.set(response);
-
-
         },
 
         error: (err) => {
-
           console.error('Dashboard Error', err);
-
         }
-
       });
-
   }
 
 
   loadGiftSummary(): void {
-
+    
     this.guestService
       .getGiftSummary()
       .subscribe({
@@ -155,52 +140,35 @@ export class Dashboard implements OnInit {
 
   loadRecentGuests(): void {
 
-    console.log('Recent Guests Start');
-
     this.dashboardService
       .getRecentGuests()
       .subscribe({
 
         next: (response) => {
-
-          console.log('Recent guest Done');
-
           this.recentGuests = response;
-
         },
 
         error: (error) => {
-
           console.error(
             'Recent Guests Error',
             error
           );
 
         }
-
       });
-
   }
 
   loadRecentExpenses(): void {
-
-    console.log('Recent Expenses Start');
 
     this.dashboardService
       .getRecentExpenses()
       .subscribe({
 
         next: (response) => {
-
-
-          console.log('Recent expenses Done');
-
           this.recentExpenses = response;
-
         },
 
         error: (error) => {
-
           console.error(
             'Recent Expenses Error',
             error
@@ -211,6 +179,7 @@ export class Dashboard implements OnInit {
       });
 
   }
+
   loadExpenseChart(): void {
     this.expenseService
       .getCategorySummary()
