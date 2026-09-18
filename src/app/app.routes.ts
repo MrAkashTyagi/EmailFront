@@ -29,31 +29,31 @@ export const routes: Routes = [
         path: "guests",
         component: GuestComponent,
         pathMatch: "full",
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
     },
     {
         path: "addguest",
         component: AddGuestComponent,
         pathMatch: "full",
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
     },
     {
         path: "family",
         component: Family,
         pathMatch: "full",
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
     },
     {
         path: "expenses",
         component: Expense,
         pathMatch: "full",
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
     },
     {
         path: "dashboard",
         component: Dashboard,
         pathMatch: "full",
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
     },
     {
         path: "register",
