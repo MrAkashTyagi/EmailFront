@@ -20,17 +20,17 @@ export class BillPreviewDialog {
 
   data = inject(MAT_DIALOG_DATA);
 
-private dialogRef =
-  inject(MatDialogRef<BillPreviewDialog>);
+  private dialogRef =
+    inject(MatDialogRef<BillPreviewDialog>);
 
   close(): void {
-  this.dialogRef.close();
-}
+    this.dialogRef.close();
+  }
 
   get isPdf(): boolean {
-    return this.data.url
-      ?.toLowerCase()
-      .endsWith('.pdf');
+
+    return this.data.contentType ===
+      'application/pdf';
   }
 
 }
