@@ -22,8 +22,11 @@ export class AuthService {
   private platformId =
     inject(PLATFORM_ID);
 
-  currentUser =
+  readonly currentUser =
     signal<any>(null);
+
+  private readonly baseUrl =
+    'http://localhost:8090/auth';
 
   private isBrowser(): boolean {
 
@@ -35,7 +38,7 @@ export class AuthService {
   register(payload: any) {
 
     return this.http.post(
-      'http://localhost:8090/auth/register',
+      `${this.baseUrl}/register`,
       payload
     );
   }
@@ -43,7 +46,7 @@ export class AuthService {
   login(payload: any) {
 
     return this.http.post(
-      'http://localhost:8090/auth/login',
+      `${this.baseUrl}/login`,
       payload
     );
   }
