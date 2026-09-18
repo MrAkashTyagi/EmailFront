@@ -6,13 +6,9 @@ import { Subject } from "rxjs";
 })
 export class NavbarActionService {
 
-  searchQuery = signal<string>('');
-
-  totalGuestCount = signal<number>(0);
-
-  // totalGuestCount = signal<number>(0);
-
-countLabel = signal<string>('Total Guests');
+readonly searchQuery = signal<string>('');
+readonly totalGuestCount = signal<number>(0);
+readonly countLabel = signal<string>('Total Guests');
 
 
   private addClickSubject = new Subject<void>();
