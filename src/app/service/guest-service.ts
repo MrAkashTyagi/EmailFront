@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,20 +7,21 @@ import { Observable } from 'rxjs';
 })
 export class GuestService {
 
-  private baseUrl = 'http://localhost:8090';
+  private http =
+    inject(HttpClient);
 
-  constructor(
-    private http: HttpClient
-  ) { }
+  private readonly baseUrl = 'http://localhost:8090';
 
-  save(data: any): Observable<any> {
+  save(
+    data: any
+  ): Observable<any> {
 
-  return this.http.post<any>(
-    `${this.baseUrl}/guests`,
-    data
-  );
+    return this.http.post<any>(
+      `${this.baseUrl}/guests`,
+      data
+    );
 
-}
+  }
 
   deleteGuest(
     id: number
@@ -48,11 +49,11 @@ export class GuestService {
     search: string = '',
     gender: string = '',
     type: string = '',
-    category: string,
-    gift: string,
-    stay: string,
-    cash: string,
-    invitationSent: string
+    category: string = '',
+    gift: string = '',
+    stay: string = '',
+    cash: string = '',
+    invitationSent: string = ''
   ): Observable<any> {
 
     const params = new HttpParams()
@@ -74,45 +75,45 @@ export class GuestService {
   }
 
   downloadGuests(
-  gender: string,
-  adultOrchild: string,
-  gift: string,
-  cash: string,
-  guestCategory: string,
-  stay: string,
-  invitationSent: string,
-  search: string = ''
-): Observable<Blob> {
+    gender: string = '',
+    adultOrchild: string = '',
+    gift: string = '',
+    cash: string = '',
+    guestCategory: string = '',
+    stay: string = '',
+    invitationSent: string = '',
+    search: string = ''
+  ): Observable<Blob> {
 
-  let params = new HttpParams()
-    .set('search', search || '')
-    .set('gender', gender || '')
-    .set('adultOrchild', adultOrchild || '')
-    .set('gift', gift || '')
-    .set('cash', cash || '')
-    .set('guestCategory', guestCategory || '')
-    .set('stay', stay || '');
+    let params = new HttpParams()
+      .set('search', search || '')
+      .set('gender', gender || '')
+      .set('adultOrchild', adultOrchild || '')
+      .set('gift', gift || '')
+      .set('cash', cash || '')
+      .set('guestCategory', guestCategory || '')
+      .set('stay', stay || '');
 
-  if (
-    invitationSent !== null &&
-    invitationSent !== undefined &&
-    invitationSent !== ''
-  ) {
+    if (
+      invitationSent !== null &&
+      invitationSent !== undefined &&
+      invitationSent !== ''
+    ) {
 
-    params = params.set(
-      'invitationSent',
-      invitationSent
+      params = params.set(
+        'invitationSent',
+        invitationSent
+      );
+    }
+
+    return this.http.get(
+      `${this.baseUrl}/guests/download`,
+      {
+        params,
+        responseType: 'blob'
+      }
     );
   }
-
-  return this.http.get(
-    `${this.baseUrl}/guests/download`,
-    {
-      params,
-      responseType: 'blob'
-    }
-  );
-}
 
   getGuestSummary(): Observable<any> {
 
@@ -131,23 +132,23 @@ export class GuestService {
 
   // upload guest data
 
-importGuestDump(
-  file: File
-): Observable<any> {
+  importGuestDump(
+    file: File
+  ): Observable<any> {
 
-  const formData = new FormData();
+    const formData = new FormData();
 
-  formData.append(
-    'file',
-    file
-  );
+    formData.append(
+      'file',
+      file
+    );
 
-  return this.http.post(
-    `${this.baseUrl}/datadump/upload`,
-    formData
-  );
+    return this.http.post(
+      `${this.baseUrl}/datadump/upload`,
+      formData
+    );
 
-}
+  }
 
   getGiftSummary(): Observable<any[]> {
 
