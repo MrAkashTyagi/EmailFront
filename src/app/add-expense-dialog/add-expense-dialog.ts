@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
-  FormGroup,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
@@ -17,18 +16,13 @@ import {
 } from '@angular/material/dialog';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-
-import {
-  provideNativeDateAdapter
-} from '@angular/material/core';
-
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ExpenseService } from '../expense-service';
 import { MatIconModule } from '@angular/material/icon';
+import { NotificationService } from '../service/notification-service';
 
 @Component({
   selector: 'app-add-expense-dialog',
@@ -52,18 +46,22 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class AddExpenseDialog implements OnInit {
 
-  private formBuilder = inject(FormBuilder);
-  private expenseService = inject(ExpenseService);
-  private dialogRef = inject(MatDialogRef<AddExpenseDialog>);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly expenseService = inject(ExpenseService);
+  private readonly dialogRef = inject(MatDialogRef<AddExpenseDialog>);
+
+  private readonly notificationService =
+    inject(NotificationService);
+
 
   isSaving = false;
   saveError = '';
   existingBillName = '';
   selectedBill: File | null = null;
 
-  today = new Date();
+  readonly today = new Date();
 
-  readonly categories: string[] = [
+  readonly categories = [
     'Food',
     'Decoration',
     'Venue',
@@ -77,6 +75,26 @@ export class AddExpenseDialog implements OnInit {
     'Jewellery',
     'Miscellaneous'
   ];
+
+  get isPaidAmountInvalid(): boolean {
+
+    const paid =
+      Number(
+        this.expenseForm.get(
+          'paidAmount'
+        )?.value ?? 0
+      );
+
+    const total =
+      Number(
+        this.expenseForm.get(
+          'totalAmount'
+        )?.value ?? 0
+      );
+
+    return paid > total;
+
+  }
 
   get pendingAmount(): number {
 
@@ -97,7 +115,7 @@ export class AddExpenseDialog implements OnInit {
     return total - paid;
   }
 
-  expenseForm: FormGroup = this.formBuilder.group({
+  readonly expenseForm = this.formBuilder.group({
     expenseName: ['', [Validators.required, Validators.maxLength(100)]],
     category: ['', Validators.required],
     description: ['', Validators.maxLength(500)],
@@ -117,41 +135,49 @@ export class AddExpenseDialog implements OnInit {
     billPath: ['']
   });
 
-  public data = inject(MAT_DIALOG_DATA, {
+  readonly data = inject(MAT_DIALOG_DATA, {
     optional: true
   });
 
   ngOnInit(): void {
 
-    if (this.data) {
-
-      if (this.data?.billPath) {
-        this.existingBillName =
-          this.data.billPath.split(/[\\/]/).pop() || '';
-      }
-
-      this.expenseForm.patchValue({
-        expenseName: this.data.expenseName,
-        category: this.data.category,
-        description: this.data.description,
-        totalAmount: this.data.totalAmount,
-        paidAmount: this.data.paidAmount,
-        expenseDate: this.data.expenseDate,
-        paidBy: this.data.paidBy,
-        billPath: this.data.billPath
-      });
-
-      if (this.data?.billPath) {
-        this.existingBillName =
-          this.data.billPath.split(/[\\/]/).pop() || '';
-        console.log(
-          'Existing Bill =>',
-          this.existingBillName
-        );
-      }
-
+    if (!this.data) {
+      return;
     }
 
+    this.existingBillName =
+      this.extractFileName(
+        this.data.billPath
+      );
+
+    this.expenseForm.patchValue({
+      expenseName:
+        this.data.expenseName,
+      category:
+        this.data.category,
+      description:
+        this.data.description,
+      totalAmount:
+        this.data.totalAmount,
+      paidAmount:
+        this.data.paidAmount,
+      expenseDate:
+        this.data.expenseDate,
+      paidBy:
+        this.data.paidBy,
+      billPath:
+        this.data.billPath
+    });
+  }
+
+  private extractFileName(
+    billPath?: string
+  ): string {
+
+    return billPath
+      ?.split(/[\\/]/)
+      .pop()
+      || '';
   }
 
   onBillSelected(event: Event): void {
@@ -163,18 +189,30 @@ export class AddExpenseDialog implements OnInit {
     }
 
   }
-
   saveExpense(): void {
 
+    if (
+      this.expenseForm.invalid ||
+      this.isSaving
+    ) {
+
+      this.expenseForm
+        .markAllAsTouched();
+
+      return;
+    }
+
+    const formValue =
+      this.expenseForm.getRawValue();
 
     const totalAmount =
       Number(
-        this.expenseForm.value.totalAmount
+        formValue.totalAmount
       );
 
     const paidAmount =
       Number(
-        this.expenseForm.value.paidAmount
+        formValue.paidAmount
       );
 
     if (paidAmount > totalAmount) {
@@ -185,34 +223,17 @@ export class AddExpenseDialog implements OnInit {
       return;
     }
 
-    if (this.expenseForm.invalid || this.isSaving) {
-      this.expenseForm.markAllAsTouched();
-      return;
-    }
-
     this.isSaving = true;
     this.saveError = '';
 
     const payload = {
-      ...this.expenseForm.getRawValue(),
-
-      totalAmount: Number(
-        this.expenseForm.value.totalAmount
-      ),
-
-      paidAmount: Number(
-        this.expenseForm.value.paidAmount
-      )
+      ...formValue,
+      totalAmount,
+      paidAmount
     };
 
+
     // EDIT MODE
-
-    if (this.data?.billPath) {
-
-      this.existingBillName =
-        this.data.billPath.split(/[\\/]/).pop() || '';
-
-    }
 
     if (this.data?.id) {
 
@@ -238,18 +259,31 @@ export class AddExpenseDialog implements OnInit {
       ).subscribe({
         next: (updatedExpense: any) => {
 
-          setTimeout(() => {
-            this.isSaving = false;
-            this.dialogRef.close(updatedExpense);
-          });
+          this.isSaving = false;
+
+          this.notificationService.success(
+            'Expense updated successfully.'
+          );
+
+          this.dialogRef.close(
+            updatedExpense
+          );
 
         },
 
         error: (error: any) => {
-          console.error('Update expense error:', error);
+
+          console.error(
+            'Update expense error:',
+            error
+          );
+
           this.isSaving = false;
-          this.saveError =
-            'Unable to update the expense. Please try again.';
+
+          this.notificationService.error(
+            'Unable to update the expense.'
+          );
+
         }
 
       });
@@ -263,13 +297,17 @@ export class AddExpenseDialog implements OnInit {
         payload,
         this.selectedBill
       ).subscribe({
-
         next: (createdExpense: any) => {
 
-          setTimeout(() => {
-            this.isSaving = false;
-            this.dialogRef.close(createdExpense);
-          });
+          this.isSaving = false;
+
+          this.notificationService.success(
+            'Expense saved successfully.'
+          );
+
+          this.dialogRef.close(
+            createdExpense
+          );
 
         },
 
@@ -277,8 +315,9 @@ export class AddExpenseDialog implements OnInit {
         error: (error: any) => {
           console.error('Create expense error:', error);
           this.isSaving = false;
-          this.saveError =
-            'Unable to save the expense. Please try again.';
+          this.notificationService.error(
+            'Unable to save the expense.'
+          );
         }
 
       });
