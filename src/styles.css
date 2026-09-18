@@ -39,3 +39,27 @@ html, body, .main-container, .card-wrapper {
   min-height: auto !important;
   height: auto !important;
 }
+
+.success-snackbar {
+  --mdc-snackbar-container-color: #2af734;
+  --mat-snack-bar-button-color: white;
+  color: white;
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: #d32f2f;
+  --mat-snack-bar-button-color: white;
+  color: white;
+}
+
+.warning-snackbar {
+  --mdc-snackbar-container-color: #ed6c02;
+  --mat-snack-bar-button-color: white;
+  color: white;
+}
+
+.info-snackbar {
+  --mdc-snackbar-container-color: #0288d1;
+  --mat-snack-bar-button-color: white;
+  color: white;
+}
