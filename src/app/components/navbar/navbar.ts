@@ -235,17 +235,17 @@ export class Navbar {
   }
 
   onExpenseDumpSelected(
-  event: any
-): void {
+    event: any
+  ): void {
 
-  const file =
-    event.target.files?.[0];
+    const file =
+      event.target.files?.[0];
 
-  if (!file) {
-    return;
-  }
+    if (!file) {
+      return;
+    }
 
-  this.expenseService
+    this.expenseService
       .importExpenseDump(file)
       .subscribe({
 
@@ -265,40 +265,6 @@ export class Navbar {
           );
         }
       });
-}
-
-
-  // uploadDump(): void {
-
-  //   if (!this.selectedFile) {
-
-  //     alert('Please select an Excel file');
-
-  //     return;
-  //   }
-
-  //   this.guestService
-  //       .importGuestDump(this.selectedFile)
-  //       .subscribe({
-
-  //         next: (response) => {
-
-  //           console.log(response);
-
-  //           alert('Guest dump imported successfully');
-
-  //           this.loadAllGuests();
-
-  //           this.loadGuestSummary();
-  //         },
-
-  //         error: (error) => {
-
-  //           console.error(error);
-
-  //           alert('Import failed');
-  //         }
-  //       });
-  // }
+  }
 
 }
