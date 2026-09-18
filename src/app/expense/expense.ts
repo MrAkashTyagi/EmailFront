@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   DestroyRef,
   inject,
@@ -46,6 +45,7 @@ import {
 
 import { BaseChartDirective } from 'ng2-charts';
 import { BillPreviewDialog } from '../bill-preview-dialog/bill-preview-dialog';
+import { NotificationService } from '../service/notification-service';
 
 @Component({
   selector: 'app-expense',
@@ -71,44 +71,7 @@ import { BillPreviewDialog } from '../bill-preview-dialog/bill-preview-dialog';
 })
 export class Expense implements OnInit {
 
-  rawExpenses = signal<any[]>([]);
-  expenseSearchQuery = signal<string>('');
-  selectedCategory = signal<string>('');
-  pageSize = signal<number>(10);
-  currentPage = signal<number>(0);
-  totalElements = signal<number>(0);
-
-  pieChartType: ChartType = 'pie';
-
-  pieChartData: ChartConfiguration<'pie'>['data'] = {
-    labels: [],
-    datasets: [
-      {
-        data: []
-      }
-    ]
-  };
-
-  // categorySummary: any[] = [];
-
-  categorySummary = signal<any[]>([]);
-
-  summary = signal<any>({
-    totalExpense: 0,
-    totalExpenses: 0,
-    highestExpense: 0,
-    topCategory: '-'
-  });
-
-  private expenseService = inject(ExpenseService);
-  private navBarService = inject(NavbarActionService);
-  // private cdr = inject(ChangeDetectorRef);
-  private dialog = inject(MatDialog);
-  private destroyRef = inject(DestroyRef);
-
-  // categorySummary: any[] = [];
-
-  displayedColumns: string[] = [
+  readonly displayedColumns = [
     'expenseName',
     'category',
     'totalAmount',
@@ -120,15 +83,45 @@ export class Expense implements OnInit {
     'bill'
   ];
 
+  readonly rawExpenses = signal<any[]>([]);
+  readonly expenseSearchQuery = signal<string>('');
+  readonly selectedCategory = signal<string>('');
+  readonly pageSize = signal<number>(10);
+  readonly currentPage = signal<number>(0);
+  readonly totalElements = signal<number>(0);
+  readonly categorySummary = signal<any[]>([]);
+  readonly summary = signal<any>({
+    totalExpense: 0,
+    totalExpenses: 0,
+    highestExpense: 0,
+    topCategory: '-'
+  });
+
+  private expenseService = inject(ExpenseService);
+  private navBarService = inject(NavbarActionService);
+  private dialog = inject(MatDialog);
+  private destroyRef = inject(DestroyRef);
+
+  private readonly notificationService =
+    inject(NotificationService);
+
+  readonly pieChartType: ChartType = 'pie';
+
+  pieChartData: ChartConfiguration<'pie'>['data'] = {
+    labels: [],
+    datasets: [
+      {
+        data: []
+      }
+    ]
+  };
+
+
   ngOnInit(): void {
-    // this.navBarService.searchQuery.set('');
     this.loadCategoryChart();
     this.loadSummary();
-    // this.navBarService.searchQuery.set('');
     this.navBarService.countLabel.set('Total Expenses');
-
     this.fetchPaginatedExpenses();
-
     this.navBarService.addClick$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
@@ -138,21 +131,42 @@ export class Expense implements OnInit {
     this.navBarService.exportClick$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.expenseService.exportExpenses()
-          .subscribe((blob: Blob) => {
-            const url = window.URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
+        this.expenseService
+          .exportExpenses(
+            this.expenseSearchQuery(),
+            this.selectedCategory()
+          )
+          .subscribe({
+            next: (blob: Blob) => {
 
-            anchor.href = url;
-            anchor.download = 'Expenses.xlsx';
-            anchor.click();
+              const url =
+                window.URL.createObjectURL(blob);
 
-            window.URL.revokeObjectURL(url);
+              const anchor =
+                document.createElement('a');
+
+              anchor.href = url;
+              anchor.download =
+                'Expenses.xlsx';
+
+              anchor.click();
+
+              window.URL.revokeObjectURL(url);
+            },
+
+            error: (error) => {
+
+              console.error(
+                'Expense export failed:',
+                error
+              );
+
+              this.notificationService.error(
+                'Expenses export nahi ho paya.'
+              );
+            }
           });
       });
-
-
-    this.navBarService.countLabel.set('Total Expenses');
 
   }
 
@@ -191,8 +205,6 @@ export class Expense implements OnInit {
 
         next: (response: any[]) => {
 
-          // this.categorySummary = response;
-
           this.categorySummary.set(response);
 
           this.pieChartData = {
@@ -220,7 +232,7 @@ export class Expense implements OnInit {
 
   }
 
-  public pieChartOptions = {
+  readonly pieChartOptions = {
     responsive: true,
     plugins: {
       legend: {
@@ -248,30 +260,115 @@ export class Expense implements OnInit {
 
   }
 
-  viewBill(expense: any): void {
+  private extractBillName(
+    billPath?: string
+  ): string {
 
-    this.dialog.open(
-      BillPreviewDialog,
-      {
-        width: '90vw',
-        maxWidth: '1200px',
-        maxHeight: '90vh',
-        data: {
-          url: `http://localhost:8090/expenses/bill/${expense.id}`
-        }
-      }
-    );
-
+    return billPath
+      ?.split(/[\\/]/)
+      .pop()
+      || 'bill';
   }
 
+  viewBill(
+    expense: any
+  ): void {
 
-  downloadBill(expense: any): void {
+    this.expenseService
+      .getBill(expense.id)
+      .subscribe({
+        next: (blob: Blob) => {
 
-    window.open(
-      `http://localhost:8090/expenses/bill/download/${expense.id}`,
-      '_blank'
-    );
+          const objectUrl =
+            URL.createObjectURL(blob);
 
+          const dialogRef =
+            this.dialog.open(
+              BillPreviewDialog,
+              {
+                width: '90vw',
+                maxWidth: '1200px',
+                maxHeight: '90vh',
+                data: {
+                  url: objectUrl,
+                  contentType: blob.type,
+                  fileName:
+                    this.extractBillName(
+                      expense.billPath
+                    )
+                }
+              }
+            );
+
+          dialogRef
+            .afterClosed()
+            .subscribe(() => {
+
+              URL.revokeObjectURL(
+                objectUrl
+              );
+
+            });
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Bill preview failed:',
+            error
+          );
+
+          this.notificationService.error(
+            'Bill preview nahi ho paya.'
+          );
+        }
+      });
+  }
+
+  downloadBill(
+    expense: any
+  ): void {
+
+    this.expenseService
+      .downloadBill(expense.id)
+      .subscribe({
+        next: (blob: Blob) => {
+
+          const url =
+            URL.createObjectURL(blob);
+
+          const link =
+            document.createElement('a');
+
+          link.href = url;
+
+          link.download =
+            this.extractBillName(
+              expense.billPath
+            );
+
+          document.body.appendChild(
+            link
+          );
+
+          link.click();
+          link.remove();
+
+          URL.revokeObjectURL(url);
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Bill download failed:',
+            error
+          );
+
+          this.notificationService.error(
+            'Bill download nahi ho paya.'
+          );
+        }
+      });
   }
 
   openAddExpenseDialog(): void {
@@ -350,8 +447,6 @@ export class Expense implements OnInit {
         this.navBarService.countLabel.set(
           'Total Expenses'
         );
-
-        // this.cdr.detectChanges();
       },
 
       error: (err: any) => {
@@ -375,7 +470,6 @@ export class Expense implements OnInit {
 
   deleteExpense(expense: any): void {
 
-    console.log("deleting");
     const confirmed = confirm(
       `Are you sure you want to delete "${expense.expenseName}" ?`
     );
