@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject, OnInit, Optional } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Familyservice } from '../../service/familyservice';
-import { error } from 'console';
+import { NotificationService } from '../../service/notification-service';
 
 @Component({
   selector: 'app-add-family',
@@ -16,12 +16,11 @@ import { error } from 'console';
     FormsModule,
     MatCardModule,
     MatFormField,
-    MatCardModule,
     MatDialogModule,
     CommonModule,
     MatButtonModule,
     MatLabel,
-    MatInputModule    
+    MatInputModule
 
   ],
   templateUrl: './add-family.html',
@@ -29,12 +28,22 @@ import { error } from 'console';
 })
 export class AddFamily implements OnInit {
 
-  private familyService = inject(Familyservice)
+  private readonly notificationService =
+    inject(NotificationService);
 
-  private dialogRef = inject(MatDialogRef<AddFamily>);
+
+  private readonly familyService =
+    inject(Familyservice);
+
+  private readonly dialogRef =
+    inject(MatDialogRef<AddFamily>);
 
 
-  public passData = inject(MAT_DIALOG_DATA, { optional: true });
+  readonly passData =
+    inject(
+      MAT_DIALOG_DATA,
+      { optional: true }
+    );
 
   family = {
     familyName: ''
@@ -42,13 +51,11 @@ export class AddFamily implements OnInit {
 
   isEditMode: boolean = false;
 
-ngOnInit(): void {
-    // 3. Agar data aaya hai, iska matlab edit button se aaye hain
+  ngOnInit(): void {
     if (this.passData) {
       this.isEditMode = true;
-      // Purane pure data ki copy bana li aur input box me naam dikha diya
-      this.family = { ...this.passData }; 
-      
+      this.family = { ...this.passData };
+
     }
   }
 
@@ -56,80 +63,78 @@ ngOnInit(): void {
 
   save(): void {
 
-  const payload = {
-  ...this.family
-};
+    const payload = this.family;
+
+    if (this.isEditMode) {
+
+      this.familyService
+        .updateFamily(payload)
+        .subscribe({
+
+          next: (updatedFamilyFromBackend) => {
+
+            this.notificationService.success(
+              'Family updated successfully.'
+            );
+
+            this.dialogRef?.close(
+              updatedFamilyFromBackend
+            );
+
+          },
 
 
-  if (this.isEditMode) {
+          error: (error) => {
+
+            console.error(
+              'Backend update error:',
+              error
+            );
+
+            this.notificationService.error(
+              error?.error?.message ||
+              error?.error ||
+              'Family save nahi ho payi.'
+            );
+          }
+
+        });
+
+      return;
+    }
 
     this.familyService
-      .updateFamily(payload)
+      .saveFamily(payload)
       .subscribe({
 
-        next: (updatedFamilyFromBackend) => {
+        next: (savedFamilyFromBackend) => {
 
-          console.log(
-            'Family updated successfully:',
-            updatedFamilyFromBackend
+          this.notificationService.success(
+            'Family saved successfully.'
           );
 
-          this.dialogRef.close(
-            updatedFamilyFromBackend
+          this.dialogRef?.close(
+            savedFamilyFromBackend
           );
+
         },
 
         error: (error) => {
 
           console.error(
-            'Backend update error:',
+            'Backend save error:',
             error
           );
 
-          alert(
+          this.notificationService.error(
             error?.error?.message ||
             error?.error ||
-            'Family update nahi ho payi.'
+            'Family save nahi ho payi.'
           );
         }
 
       });
-
-    return;
   }
-
-  this.familyService
-    .saveFamily(payload)
-    .subscribe({
-
-      next: (savedFamilyFromBackend) => {
-
-        console.log(
-          'Family saved successfully:',
-          savedFamilyFromBackend
-        );
-
-        this.dialogRef.close(
-          savedFamilyFromBackend
-        );
-      },
-
-      error: (error) => {
-
-        console.error(
-          'Backend save error:',
-          error
-        );
-
-        alert(
-          error?.error?.message ||
-          error?.error ||
-          'Family save nahi ho payi.'
-        );
-      }
-
-    });
-}
 
 
 }
