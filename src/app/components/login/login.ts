@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../service/auth-service';
+import { NotificationService } from '../../service/notification-service';
 
 @Component({
   selector: 'app-login',
@@ -28,6 +29,10 @@ export class Login {
   readonly loading = signal(false);
   readonly errorMessage = signal('');
   readonly successMessage = signal('');
+
+  private readonly notificationService =
+    inject(NotificationService);
+
 
   readonly loginForm = this.fb.nonNullable.group({
 
@@ -73,6 +78,9 @@ export class Login {
             response
           );
 
+          this.notificationService.success(
+            'Login successful.'
+          );
 
           this.router.navigate([
             '/dashboard'
@@ -84,9 +92,16 @@ export class Login {
 
           this.loading.set(false);
 
-          this.errorMessage.set(
+          const message =
             error?.error ||
-            'Login Failed'
+            'Login Failed';
+
+          this.errorMessage.set(
+            message
+          );
+
+          this.notificationService.error(
+            message
           );
 
         }
