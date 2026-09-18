@@ -1,15 +1,13 @@
-import { Component, OnInit, OnDestroy, signal, computed, ChangeDetectorRef, inject, effect, untracked } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { EmailService } from '../../service/emailService';
+import { Component, OnInit, OnDestroy, signal, computed, ChangeDetectorRef, inject, effect, untracked, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { AddGuestComponent } from '../add-guest/add-guest';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { GuestService } from '../../service/guest-service';
-import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { NavbarActionService } from '../../service/navbar-action-service'; // Sahi path inject kiya
+import { NavbarActionService } from '../../service/navbar-action-service';
 import { Subscription } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -46,7 +44,6 @@ Chart.register(
     AddGuestComponent,
     MatButtonModule,
     MatDialogModule,
-    MatFormField,
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -59,16 +56,14 @@ Chart.register(
   styleUrls: ['./guest.css']
 })
 export class GuestComponent implements OnInit, OnDestroy {
+
   private dialog = inject(MatDialog);
   private guestService = inject(GuestService);
-  private navBarService = inject(NavbarActionService); // Navbar Service Inject Ki
-  private navBarAddSubscription!: Subscription; // Unsubscribe track handle karne ke liye variable
-
+  private navBarService = inject(NavbarActionService); 
+  private navBarAddSubscription!: Subscription;
   private exportSubscription!: Subscription;
 
-  giftSummary = signal<any[]>([]);
-
-  displayedColumns: string[] = [
+  readonly displayedColumns = [
     'name',
     'gender',
     'adultOrChild',
@@ -84,22 +79,33 @@ export class GuestComponent implements OnInit, OnDestroy {
     'actions'
   ];
 
-  rawGuests = signal<any[]>([]);
-  guestSearchQuery = signal<string>('');
-  pageSize = signal<number>(10);
-  currentPage = signal<number>(0);
-  totalElements = signal<number>(0);
-  selectedGender = signal<string>('');
-  selectedType = signal<string>('');
-  selectedCategory = signal<string>('');
-  selectedGift = signal<string>('');
-  selectedStay = signal<string>('');
-  selectedCash = signal<string>('');
-  selectedInvitationStatus = signal<string>('');
-
-  guestCategorySummary = signal<any[]>([]);
+  readonly rawGuests = signal<any[]>([]);
+  readonly guestSearchQuery = signal<string>('');
+  readonly pageSize = signal<number>(10);
+  readonly currentPage = signal<number>(0);
+  readonly totalElements = signal<number>(0);
+  readonly selectedGender = signal<string>('');
+  readonly selectedType = signal<string>('');
+  readonly selectedCategory = signal<string>('');
+  readonly selectedGift = signal<string>('');
+  readonly selectedStay = signal<string>('');
+  readonly selectedCash = signal<string>('');
+  readonly selectedInvitationStatus = signal<string>('');
+  readonly guestCategorySummary = signal<any[]>([]);
+  readonly giftSummary = signal<any[]>([]);
 
   selectedFile: File | null = null;
+
+  private platformId =
+    inject(PLATFORM_ID);
+
+  private isBrowser(): boolean {
+
+    return isPlatformBrowser(
+      this.platformId
+    );
+
+  }
 
 
   guestPieChartData: any = {
@@ -178,16 +184,9 @@ export class GuestComponent implements OnInit, OnDestroy {
 
   }
 
-
-
-  pagedGuests = computed(() => {
-    return this.filteredGuests();
-  });
-
-  filteredGuests = computed(() => {
-    return this.rawGuests();
-  });
-
+  pagedGuests = computed(
+    () => this.rawGuests()
+  );
 
   onGenderChange(gender: string): void {
     this.selectedGender.set(gender);
@@ -253,7 +252,6 @@ export class GuestComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private emailService: EmailService,
     private cdr: ChangeDetectorRef
   ) {
 
@@ -265,19 +263,18 @@ export class GuestComponent implements OnInit, OnDestroy {
 
       untracked(() => {
 
+        if (
+          query ===
+          this.guestSearchQuery()
+        ) {
+          return;
+        }
+
         this.guestSearchQuery.set(query);
 
-        if (
-          window.location.pathname.includes(
-            'guests'
-          )
-        ) {
+        this.currentPage.set(0);
 
-          this.currentPage.set(0);
-
-          this.fetchPaginatedGuests();
-
-        }
+        this.fetchPaginatedGuests();
 
       });
 
@@ -287,22 +284,15 @@ export class GuestComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-
-
     this.loadGuestSummary();
     this.loadGuestCategorySummary();
     this.loadGiftSummary();
-
-    // this.navBarService.searchQuery.set('');
-    // Initial content array stream grid load
 
     this.exportSubscription =
       this.navBarService.exportClick$
         .subscribe(() => {
 
-          if (
-            window.location.pathname.includes('guests')
-          ) {
+          if (this.isBrowser()) {
             this.downloadExcel();
           }
 
@@ -312,7 +302,7 @@ export class GuestComponent implements OnInit, OnDestroy {
 
     // FIX FIXED: Top dynamic navbar button subscription trigger setup
     this.navBarAddSubscription = this.navBarService.addClick$.subscribe(() => {
-      if (window.location.pathname.includes('guests')) {
+      if (this.isBrowser()) {
         this.openAddGuestDialog();
       }
     });
@@ -346,23 +336,10 @@ export class GuestComponent implements OnInit, OnDestroy {
         this.loadGiftSummary();
 
         Promise.resolve().then(() => {
-          // Naya record smoothly array ke sabse aakhiri kone (end) me append hoga
           this.rawGuests.set([...this.rawGuests(), result]);
           this.cdr.detectChanges();
         });
       }
-    });
-  }
-
-  loadAllGuests(): void {
-    this.emailService.getData().subscribe({
-      next: (response: any) => {
-        let parsedData = typeof response === 'string' ? JSON.parse(response) : response;
-        let dataArray = parsedData?.content || parsedData?.guestList || (Array.isArray(parsedData) ? parsedData : [parsedData]);
-        this.rawGuests.set(dataArray);
-        this.cdr.detectChanges();
-      },
-      error: (err) => console.error(err)
     });
   }
 
@@ -417,7 +394,6 @@ export class GuestComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // this.clearFilters();
         this.loadGuestSummary();
         this.loadGiftSummary();
         this.fetchPaginatedGuests();
@@ -488,7 +464,6 @@ export class GuestComponent implements OnInit, OnDestroy {
 
   }
 
-  // Naya method jo har baar fresh paginated data layega
   fetchPaginatedGuests(): void {
     const page = this.currentPage();
     const size = this.pageSize();
@@ -501,8 +476,6 @@ export class GuestComponent implements OnInit, OnDestroy {
     const cash = this.selectedCash();
     const invitationSent = this.selectedInvitationStatus();
 
-
-    // Apni API matching pagination query url params ke sath hit karein
     this.guestService.getGuestsPaged(
       page,
       size,
@@ -515,9 +488,6 @@ export class GuestComponent implements OnInit, OnDestroy {
       cash,
       invitationSent).subscribe({
         next: (response: any) => {
-
-          // this.loadGuestSummary();
-
 
           this.rawGuests.set(response.content || []);
 
@@ -544,7 +514,5 @@ export class GuestComponent implements OnInit, OnDestroy {
       this.selectedFile = file;
     }
   }
-
-
 
 }
