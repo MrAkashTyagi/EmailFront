@@ -11,6 +11,7 @@ import { inject } from '@angular/core';
 import { AuthService } from '../../service/auth-service';
 
 import { Router, RouterLink } from '@angular/router';
+import { NotificationService } from '../../service/notification-service';
 
 @Component({
   selector: 'app-register',
@@ -30,6 +31,9 @@ export class Register {
 
   private router =
     inject(Router);
+
+  private readonly notificationService =
+    inject(NotificationService);
 
   constructor() {
 
@@ -83,8 +87,8 @@ export class Register {
 
         next: () => {
 
-          this.successMessage.set(
-            'Registration Successful'
+          this.notificationService.success(
+            'Registration successful.'
           );
 
           this.registerForm.reset();
@@ -98,15 +102,18 @@ export class Register {
         error: (error) => {
 
           console.error(error);
+
+          const message =
+            error?.error ||
+            'Registration failed';
+
           this.errorMessage.set(
-            error?.error
+            message
           );
 
-          setTimeout(() => {
-
-            this.errorMessage.set('');
-
-          }, 5000);
+          this.notificationService.error(
+            message
+          );
 
         }
 
