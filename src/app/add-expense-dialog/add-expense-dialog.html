@@ -96,10 +96,7 @@
         ) {
         <mat-error>Paid Amount is required</mat-error>
         }
-        @if (
-        expenseForm.get('paidAmount')?.value >
-        expenseForm.get('totalAmount')?.value
-        ) {
+        @if (isPaidAmountInvalid) {
 
         <div class="validation-warning">
           ⚠️ Paid Amount cannot be greater than Total Amount
