@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,16 +7,15 @@ import { Observable } from 'rxjs';
 })
 export class DashboardService {
 
-  private apiUrl = 'http://localhost:8090/dashboard';
+  private readonly baseUrl = 'http://localhost:8090/dashboard';
 
-  constructor(private http: HttpClient) {
-
-  }
+  private http =
+    inject(HttpClient);
 
   getSummary(): Observable<any> {
 
     return this.http.get<any>(
-      `${this.apiUrl}/summary`
+      `${this.baseUrl}/summary`
     );
 
   }
@@ -24,7 +23,7 @@ export class DashboardService {
   getRecentGuests(): Observable<any> {
 
     return this.http.get<any>(
-      `${this.apiUrl}/recent-guests`
+      `${this.baseUrl}/recent-guests`
     );
 
   }
@@ -32,7 +31,7 @@ export class DashboardService {
   getRecentExpenses(): Observable<any> {
 
     return this.http.get<any>(
-      `${this.apiUrl}/recent-expenses`
+      `${this.baseUrl}/recent-expenses`
     );
 
   }
