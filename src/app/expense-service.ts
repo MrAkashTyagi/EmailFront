@@ -9,19 +9,19 @@ import { AuthService } from './service/auth-service';
 })
 export class ExpenseService {
 
-  private baseUrl = 'http://localhost:8090';
+  private readonly baseUrl = 'http://localhost:8090';
 
   private authService =
     inject(AuthService);
 
-
-  constructor(private http: HttpClient) { }
+  private http =
+    inject(HttpClient);
 
   getExpensesPaged(
     page: number,
     size: number,
-    search: string,
-    category: string
+    search: string = '',
+    category: string = ''
   ): Observable<any> {
 
 
@@ -90,17 +90,23 @@ export class ExpenseService {
     );
   }
 
-  exportExpenses(): Observable<Blob> {
+  exportExpenses(
+    search: string = '',
+    category: string = ''
+  ): Observable<Blob> {
 
+    const params = new HttpParams()
+      .set('search', search.trim())
+      .set('category', category.trim());
 
     return this.http.get(
       `${this.baseUrl}/expenses/export`,
       {
+        params,
         responseType: 'blob'
       }
     );
   }
-
 
   getExpenseSummary(): Observable<any> {
     return this.http.get(
@@ -151,6 +157,30 @@ export class ExpenseService {
       { params }
     );
 
+  }
+
+  getBill(
+    id: number
+  ): Observable<Blob> {
+
+    return this.http.get(
+      `${this.baseUrl}/expenses/bill/${id}`,
+      {
+        responseType: 'blob'
+      }
+    );
+  }
+
+  downloadBill(
+    id: number
+  ): Observable<Blob> {
+
+    return this.http.get(
+      `${this.baseUrl}/expenses/bill/download/${id}`,
+      {
+        responseType: 'blob'
+      }
+    );
   }
 
 }
