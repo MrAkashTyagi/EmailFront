@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef, ViewChild, OnInit, AfterViewInit, OnDestroy, effect, signal, computed, untracked } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, OnInit, OnDestroy, effect, signal, computed, untracked } from '@angular/core';
 import { Familyservice } from '../../service/familyservice';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -8,10 +8,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { JsonPipe } from '@angular/common';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AddFamily } from '../add-family/add-family';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { NavbarActionService } from '../../service/navbar-action-service';
 import { Subscription } from 'rxjs';
 import { AddGuestComponent } from '../add-guest/add-guest';
@@ -71,20 +71,15 @@ export class Family implements OnInit, OnDestroy {
   familySearchQuery = signal<string>('');
   totalElements = signal<number>(0);
 
-  pagedFamilies = computed(() => {
-    return this.filteredFamilies();
-  });
+  pagedFamilies = computed(
+    () => this.rawFamilies()
+  );
 
   onPageChange(event: PageEvent): void {
     this.currentPage.set(event.pageIndex);
     this.pageSize.set(event.pageSize);
     this.fetchPaginatedFamily();
   }
-
-  filteredFamilies = computed(() => {
-    return this.rawFamilies();
-  });
-
 
   constructor(
     private familyService: Familyservice,
@@ -123,20 +118,14 @@ export class Family implements OnInit, OnDestroy {
       this.navBarService.exportClick$
         .subscribe(() => {
 
-          if (this.isBrowser()) {
-
-            this.downloadExcel();
-
-          }
+          this.downloadExcel();
 
         });
 
     this.navBarAddSubscription =
       this.navBarService.addClick$
         .subscribe(() => {
-
           this.openAddFamilyDialog();
-
         });
 
   }
@@ -324,8 +313,6 @@ export class Family implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     });
   }
-
-
 
   // Download Excel
 
