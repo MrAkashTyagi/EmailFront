@@ -7,11 +7,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { EmailService } from '../../service/emailService';
 import { GuestService } from '../../service/guest-service';
 import { Familyservice } from '../../service/familyservice';
-import { error } from 'console';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { NotificationService } from '../../service/notification-service';
 @Component({
   selector: 'app-add-guest',
   standalone: true,
@@ -30,13 +29,14 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
   styleUrls: ['./add-guest.css']
 })
 export class AddGuestComponent implements OnInit {
-  private dialogRef = inject(MatDialogRef<AddGuestComponent>, { optional: true });
-  public dialogData = inject(MAT_DIALOG_DATA, { optional: true });
 
-  private guestService = inject(GuestService);
-  private familyService = inject(Familyservice);
-  private cdr = inject(ChangeDetectorRef);
-  public editData = inject(MAT_DIALOG_DATA, { optional: true });
+  private readonly dialogRef = inject(MatDialogRef<AddGuestComponent>, { optional: true });
+  private readonly guestService = inject(GuestService);
+  private readonly familyService = inject(Familyservice);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly notificationService = inject(NotificationService);
+
+  readonly editData = inject(MAT_DIALOG_DATA, { optional: true });
 
   isEditMode = false;
   families: any[] = [];
@@ -62,7 +62,7 @@ export class AddGuestComponent implements OnInit {
   };
 
 
-  giftOptions = [
+  readonly giftOptions = [
     'Saree',
     'Joda',
     'Comforter',
@@ -84,66 +84,61 @@ export class AddGuestComponent implements OnInit {
 
       this.guest = {
         ...this.guest,
-        ...this.editData
+        ...this.editData,
+        family: this.editData.family || {
+          id: undefined,
+          familyName: ''
+        }
       };
 
-      if (this.guest.gift) {
-
-        this.selectedGifts =
-          this.guest.gift
+      this.selectedGifts =
+        this.guest.gift
+          ? this.guest.gift
             .split(',')
-            .map(gift => gift.trim());
-
-      }
-
-      this.guest.family = this.editData.family || {
-        id: undefined,
-        familyName: ''
-      };
-
+            .map(gift => gift.trim())
+            .filter(Boolean)
+          : [];
     }
 
-    // Families list loading for simple dropdown selection mapping
-    this.familyService.getAllFamiliesForDropdown().subscribe({
-      next: (response: any) => {
-        this.families = response || [];
-        this.filteredFamilies = this.families;
+    this.familyService
+      .getAllFamiliesForDropdown()
+      .subscribe({
+        next: (response: any) => {
 
-        console.log(
-          "Dropdown ke liye loaded families:",
-          this.families.length
-        );
+          this.families =
+            response || [];
 
-        this.cdr.detectChanges();
-      },
+          this.filteredFamilies =
+            [...this.families];
 
-      error: (err) => console.error("Error loading families:", err)
-    });
+          this.cdr.detectChanges();
+        },
 
-    // Edit configuration tracking layer load
-    if (this.editData) {
-      this.isEditMode = true;
-      this.guest = { ...this.editData };
-      if (!this.guest.family) {
-        this.guest.family = { id: undefined, familyName: '' };
-      }
-      setTimeout(() => {
-        this.cdr.detectChanges();
-      }, 0);
-    }
+        error: (err) => {
+          console.error(
+            'Error loading families:',
+            err
+          );
+        }
+      });
   }
 
-
   filterFamilies(): void {
-    const value = this.guest.family?.familyName ? this.guest.family.familyName.toLowerCase().trim() : '';
 
-    if (!value) {
-      this.filteredFamilies = this.families;
-    } else {
-      this.filteredFamilies = this.families.filter(family =>
-        family.familyName?.toLowerCase().includes(value)
-      );
-    }
+    const value =
+      this.guest.family?.familyName
+        ?.trim()
+        .toLowerCase() || '';
+
+    this.filteredFamilies =
+      value
+        ? this.families.filter(
+          family =>
+            family.familyName
+              ?.toLowerCase()
+              .includes(value)
+        )
+        : [...this.families];
   }
 
   save(): void {
@@ -158,7 +153,9 @@ export class AddGuestComponent implements OnInit {
 
     if (!/^[0-9]{10}$/.test(this.guest.phoneNumber)) {
 
-      alert('Phone number must be exactly 10 digits');
+      this.notificationService.warning(
+        'Phone number must be exactly 10 digits'
+      );
 
       return;
     }
@@ -170,20 +167,27 @@ export class AddGuestComponent implements OnInit {
       )
     ) {
 
-      alert(
+      this.notificationService.warning(
         'Whatsapp number must be exactly 10 digits'
       );
 
       return;
     }
 
-    // ====================================================
-    // 1. EDIT MODE CONFIGURATION LAYER (WORKING PROPERLY)
-    // ====================================================
     if (this.isEditMode) {
-      const guestId = this.guest.id ? Number(this.guest.id) : (this.editData?.id ? Number(this.editData.id) : null);
+      const guestId =
+        this.guest.id
+          ? Number(this.guest.id)
+          : this.editData?.id
+            ? Number(this.editData.id)
+            : null;
+
       if (!guestId) {
-        alert("Error: Guest ID nahi mil paa rahi hai!");
+
+        this.notificationService.error(
+          'Error: Could not found guest id!'
+        );
+
         return;
       }
 
@@ -207,24 +211,36 @@ export class AddGuestComponent implements OnInit {
         }
       };
 
-      console.log("Database me update karne ke liye data ja rha h:", updatePayload);
-
-      this.guestService.updateGuest(+this.guest.id!, updatePayload).subscribe({
+      this.guestService.updateGuest(
+        guestId,
+        updatePayload
+      ).subscribe({
         next: (updatedGuestFromBackend) => {
-          if (this.dialogRef) this.dialogRef.close(updatedGuestFromBackend);
+
+          this.notificationService.success(
+            'Guest updated successfully.'
+          );
+
+          this.dialogRef?.close(
+            updatedGuestFromBackend
+          );
+
         },
-        error: (err) => alert("Guest details update nahi ho payi!")
+        error: () => {
+
+          this.notificationService.error(
+            'Guest details update nahi ho payi!'
+          );
+
+        }
       });
 
-      // ====================================================
-      // 2. ADD MODE HANDLER (FIXED: CLEAN POST USING BASE API)
-      // ====================================================
     } else {
 
-      // Extraction Check: Dropdown item se direct clean text target content read kiya
-      const selectedFamilyName = this.guest.family?.familyName ? this.guest.family.familyName : 'General';
+      const selectedFamilyName =
+        this.guest.family?.familyName
+        || 'General';
 
-      // 100% POSTMAN VERIFIED FIXED STRUCTURE PAYLOAD (No custom URLs needed)
       const exactPayload = {
         name: this.guest.name,
         phoneNumber: this.guest.phoneNumber,
@@ -245,19 +261,30 @@ export class AddGuestComponent implements OnInit {
         }
       };
 
-      console.log("Postman verified format sending from Angular via base save:", exactPayload);
-
-      // Direct dynamic single pipeline trigger to standard endpoint http://localhost:8090/guests
       this.guestService.save(exactPayload).subscribe({
         next: (savedGuestFromBackend) => {
-          console.log("Mubarak ho! Database me successfully save ho gaya:", savedGuestFromBackend);
-          if (this.dialogRef) {
-            this.dialogRef.close(savedGuestFromBackend);
-          }
+
+          this.notificationService.success(
+            'Guest saved successfully.'
+          );
+
+          this.dialogRef?.close(
+            savedGuestFromBackend
+          );
+
         },
+
         error: (err) => {
-          console.error("Angular side post error detail:", err);
-          alert("Naya guest save nahi ho paya! Please console check karein.");
+
+          console.error(
+            'Guest save failed:',
+            err
+          );
+
+          this.notificationService.error(
+            'Naya guest save nahi ho paya!'
+          );
+
         }
       });
     }
