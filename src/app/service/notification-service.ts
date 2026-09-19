@@ -21,12 +21,12 @@ export class NotificationService {
 
     this.snackBar.open(
       message,
-      'Close',
+      undefined,
       {
-        duration: 3000,
+        duration: 2000,
         panelClass: ['success-snackbar'],
-        horizontalPosition: 'right',
-        verticalPosition: 'top'
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
       }
     );
 
@@ -42,8 +42,8 @@ export class NotificationService {
       {
         duration: 4000,
         panelClass: ['error-snackbar'],
-        horizontalPosition: 'right',
-        verticalPosition: 'top'
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
       }
     );
 
@@ -59,8 +59,8 @@ export class NotificationService {
       {
         duration: 3500,
         panelClass: ['warning-snackbar'],
-        horizontalPosition: 'right',
-        verticalPosition: 'top'
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
       }
     );
 
@@ -76,8 +76,8 @@ export class NotificationService {
       {
         duration: 3000,
         panelClass: ['info-snackbar'],
-        horizontalPosition: 'right',
-        verticalPosition: 'top'
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
       }
     );
 
