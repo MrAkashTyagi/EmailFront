@@ -40,26 +40,38 @@ html, body, .main-container, .card-wrapper {
   height: auto !important;
 }
 
-.success-snackbar {
-  --mdc-snackbar-container-color: #2af734;
-  --mat-snack-bar-button-color: white;
-  color: white;
+.mat-mdc-snack-bar-container {
+  margin-top: 12px !important;
 }
 
-.error-snackbar {
-  --mdc-snackbar-container-color: #d32f2f;
-  --mat-snack-bar-button-color: white;
-  color: white;
+.mat-mdc-snackbar-surface {
+  border-radius: 12px !important;
+  box-shadow:
+    0 8px 24px rgba(
+      0,
+      0,
+      0,
+      0.16
+    ) !important;
+
+  min-width: 340px !important;
+}
+.success-snackbar .mat-mdc-snackbar-surface {
+  background: #31bc60 !important;
+  color: white !important;
 }
 
-.warning-snackbar {
-  --mdc-snackbar-container-color: #ed6c02;
-  --mat-snack-bar-button-color: white;
-  color: white;
+.error-snackbar .mat-mdc-snackbar-surface {
+  background: #e03333 !important;
+  color: white !important;
 }
 
-.info-snackbar {
-  --mdc-snackbar-container-color: #0288d1;
-  --mat-snack-bar-button-color: white;
-  color: white;
+.warning-snackbar .mat-mdc-snackbar-surface {
+  background: #f59e0b !important;
+  color: white !important;
+}
+
+.info-snackbar .mat-mdc-snackbar-surface {
+  background: #2563eb !important;
+  color: white !important;
 }
