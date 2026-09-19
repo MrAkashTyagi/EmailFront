@@ -136,7 +136,7 @@
          gap:10px;
          justify-content:flex-end;
          min-width:140px;">
-<!-- 
+                  <!-- 
                   <span style="color:#94a3b8;
            font-size:13px;
            font-weight:500;">
@@ -147,6 +147,18 @@
                     (click)="openEditGuestDialog(guest, element); $event.stopPropagation()">
                     ✏ Edit
                   </button>
+
+                  <!-- delete guest button -->
+                  <button mat-icon-button color="warn" type="button" matTooltip="Delete guest" (click)="deleteGuestFromFamily(
+    guest.id,
+    element.id
+  ); $event.stopPropagation()">
+                    <mat-icon>
+                      delete
+                    </mat-icon>
+                  </button>
+
+
                 </div>
               </div>
               }
