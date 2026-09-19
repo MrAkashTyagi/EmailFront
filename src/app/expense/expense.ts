@@ -497,6 +497,10 @@ export class Expense implements OnInit {
         this.loadSummary();
         this.loadCategoryChart();
 
+        this.notificationService.success(
+          'Expense deleted successfully.'
+        );
+
       },
 
       error: (err: any) => {
