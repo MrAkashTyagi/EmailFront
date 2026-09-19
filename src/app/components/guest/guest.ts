@@ -25,6 +25,7 @@ import {
 } from 'chart.js';
 
 import { ChartOptions } from 'chart.js';
+import { NotificationService } from '../../service/notification-service';
 
 
 Chart.register(
@@ -59,7 +60,7 @@ export class GuestComponent implements OnInit, OnDestroy {
 
   private dialog = inject(MatDialog);
   private guestService = inject(GuestService);
-  private navBarService = inject(NavbarActionService); 
+  private navBarService = inject(NavbarActionService);
   private navBarAddSubscription!: Subscription;
   private exportSubscription!: Subscription;
 
@@ -93,11 +94,13 @@ export class GuestComponent implements OnInit, OnDestroy {
   readonly selectedInvitationStatus = signal<string>('');
   readonly guestCategorySummary = signal<any[]>([]);
   readonly giftSummary = signal<any[]>([]);
-
+ 
   selectedFile: File | null = null;
 
   private platformId =
     inject(PLATFORM_ID);
+
+    private notificationService = inject(NotificationService);
 
   private isBrowser(): boolean {
 
@@ -372,6 +375,11 @@ export class GuestComponent implements OnInit, OnDestroy {
           this.loadGiftSummary();
           this.fetchPaginatedGuests();
           this.cdr.detectChanges();
+
+          this.notificationService.success(
+            'Guest deleted successfully.'
+          );
+
         },
         error: (err) => {
           console.error("Delete karne me koi error aaya:", err);
