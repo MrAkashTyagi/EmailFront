@@ -509,9 +509,9 @@ export class Family {
                   (guest: any) =>
                     guest.id === result.id
                       ? {
-                          ...guest,
-                          ...result
-                        }
+                        ...guest,
+                        ...result
+                      }
                       : guest
                 );
 
@@ -594,7 +594,11 @@ export class Family {
             'Guest deleted successfully.'
           );
 
-          this.cdr.detectChanges();
+          setTimeout(() => {
+            this.cdr.detectChanges();
+          }, 100);
+
+          // this.cdr.detectChanges();
         },
 
         error: (error) => {
