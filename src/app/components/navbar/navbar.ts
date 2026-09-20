@@ -144,6 +144,10 @@ export class Navbar {
     return this.location.path().includes('dashboard');
   }
 
+  isWallPage(): boolean {
+    return this.location.path().includes('wall');
+  }
+
   isGuestPage(): boolean {
     return this.location.path().includes('guests');
   }
