@@ -554,11 +554,10 @@
           </th>
 
           <td mat-cell *matCellDef="let element" class="column-family">
-            <div class="family-cell" [title]="element.family?.familyName || 'General'">
+            <div class="family-cell" [title]="element.family?.familyName || 'No Family'">
               <span class="family-icon">⌂</span>
-
               <span class="family-name">
-                {{ element.family?.familyName || 'General' }}
+                {{ element.family?.familyName || 'No Family' }}
               </span>
             </div>
           </td>
