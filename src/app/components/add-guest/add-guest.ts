@@ -207,8 +207,11 @@ export class AddGuestComponent implements OnInit {
         invitationSent: this.guest.invitationSent,
 
         family: {
-          familyName: this.guest.family?.familyName || 'General'
+          familyName:
+            this.guest.family?.familyName?.trim()
+            || ''
         }
+
       };
 
       this.guestService.updateGuest(
@@ -239,7 +242,7 @@ export class AddGuestComponent implements OnInit {
 
       const selectedFamilyName =
         this.guest.family?.familyName
-        || 'General';
+        || '';
 
       const exactPayload = {
         name: this.guest.name,
