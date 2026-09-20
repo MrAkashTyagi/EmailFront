@@ -9,6 +9,7 @@ import { Dashboard } from './components/dashboard/dashboard';
 import { Register } from './components/register/register';
 import { Login } from './components/login/login';
 import { authGuard } from './auth-guard';
+import { Wall } from './components/wall/wall';
 
 
 
@@ -56,6 +57,11 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: "wall",
+        component: Wall,
+        pathMatch: "full"
+    },
+    {
         path: "register",
         component: Register,
         pathMatch: "full"
@@ -64,6 +70,6 @@ export const routes: Routes = [
         path: "login",
         component: Login,
         pathMatch: "full"
-    }
+    },
 
 ];
