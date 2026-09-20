@@ -130,7 +130,7 @@ export class GuestService {
     );
   }
 
-  // upload guest data
+  // import guest data
 
   importGuestDump(
     file: File
