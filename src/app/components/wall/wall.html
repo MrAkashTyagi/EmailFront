@@ -1,0 +1,428 @@
+<div class="wall-page">
+
+    <section class="wall-hero">
+
+        <div class="hero-copy">
+
+            <span class="hero-eyebrow">
+                WEDDING MEMORIES
+            </span>
+
+            <h1>
+                Our Celebration Wall
+            </h1>
+
+            <p>
+                Photos, videos and unforgettable moments,
+                all together in one beautiful place.
+            </p>
+
+        </div>
+
+        <div class="wall-stats">
+
+            <div class="stat-card">
+
+                <h3>
+                    {{ imageCount() }}
+                </h3>
+
+                <span>
+                    Photos
+                </span>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h3>
+                    {{ videoCount() }}
+                </h3>
+
+                <span>
+                    Videos
+                </span>
+
+            </div>
+
+        </div>
+
+        <label class="hero-upload-button" for="wallFileInput">
+
+            <mat-icon>
+                add_photo_alternate
+            </mat-icon>
+
+            Add memories
+
+        </label>
+
+        <input id="wallFileInput" class="hidden-file-input" type="file" accept="image/*,video/*" multiple
+            (change)="onFilesSelected($event)">
+
+        <button class="download-all-btn" type="button" (click)="downloadAllMedia()">
+
+            <mat-icon>
+                folder_zip
+            </mat-icon>
+
+            Download All
+
+        </button>
+
+    </section>
+
+    @if (selectedFiles().length > 0) {
+
+    <section class="upload-panel">
+
+        <div class="upload-panel-header">
+
+            <div>
+
+                <span class="section-kicker">
+                    READY TO UPLOAD
+                </span>
+
+                <h2>
+                    {{ selectedCount() }}
+                    selected file(s)
+                </h2>
+
+            </div>
+
+            <button mat-button type="button" class="clear-selection-button" [disabled]="uploading()"
+                (click)="clearSelectedFiles()">
+                Clear all
+            </button>
+
+        </div>
+
+        <div class="selected-file-strip">
+
+            @for (
+            item of selectedFiles();
+            track item.previewUrl;
+            let index = $index
+            ) {
+
+            <article class="selected-file-card">
+
+                @if (
+                item.mediaType === 'IMAGE'
+                ) {
+
+                <img [src]="item.previewUrl" [alt]="item.file.name">
+
+                } @else {
+
+                <video [src]="item.previewUrl" muted preload="metadata">
+                </video>
+
+                <span class="video-badge">
+                    <mat-icon>
+                        play_arrow
+                    </mat-icon>
+                </span>
+
+                }
+
+                <button mat-icon-button type="button" class="remove-file-button" matTooltip="Remove file"
+                    [disabled]="uploading()" (click)="removeSelectedFile(index)">
+                    <mat-icon>
+                        close
+                    </mat-icon>
+                </button>
+
+                <div class="selected-file-name">
+                    {{ item.file.name }}
+                </div>
+
+            </article>
+
+            }
+
+        </div>
+
+        <div class="upload-controls">
+
+            <label class="caption-field">
+
+                <span>
+                    Caption for this batch
+                </span>
+
+                <textarea [(ngModel)]="caption" maxlength="500" placeholder="Write something about these memories..."
+                    [disabled]="uploading()">
+          </textarea>
+
+                <small>
+                    {{ caption.length }}/500
+                </small>
+
+            </label>
+
+            <button mat-flat-button type="button" class="upload-action-button" [disabled]="uploading()"
+                (click)="uploadSelectedFiles()">
+
+                @if (uploading()) {
+
+                <mat-spinner diameter="20">
+                </mat-spinner>
+
+                <span>
+                    {{ uploadProgressText() }}
+                </span>
+
+                } @else {
+
+                <mat-icon>
+                    cloud_upload
+                </mat-icon>
+
+                Upload all
+
+                }
+
+            </button>
+
+        </div>
+
+    </section>
+
+    }
+
+    <section class="gallery-section">
+
+        <div class="gallery-header">
+
+            <div>
+
+                <span class="section-kicker">
+                    THE COLLECTION
+                </span>
+
+                <h2>
+                    Shared memories
+                </h2>
+
+            </div>
+
+            <span class="media-count">
+                {{ wallMedia().length }}
+                item(s)
+            </span>
+
+        </div>
+
+        @if (loading()) {
+
+        <div class="wall-loading">
+
+            <mat-spinner diameter="42">
+            </mat-spinner>
+
+            <span>
+                Loading memories...
+            </span>
+
+        </div>
+
+        } @else if (
+        wallMedia().length === 0
+        ) {
+
+        <div class="empty-wall">
+
+            <div class="empty-wall-icon">
+                <mat-icon>
+                    photo_library
+                </mat-icon>
+            </div>
+
+            <h3>
+                The wall is waiting for memories
+            </h3>
+
+            <p>
+                Upload photos and videos to create
+                the celebration gallery.
+            </p>
+
+            <label class="empty-upload-button" for="wallFileInput">
+                Upload first memory
+            </label>
+
+        </div>
+
+        } @else {
+
+        <div class="masonry-wall">
+
+            @for (
+            media of wallMedia();
+            track media.id
+            ) {
+            <article class="wall-card" [class.tall]="media.layoutClass === 'tall'"
+                [class.wide]="media.layoutClass === 'wide'" [class.square]="media.layoutClass === 'square'" tabindex="0"
+                (click)="openPreview(media)" (keydown.enter)="openPreview(media)">
+
+                <div class="wall-card-media">
+
+                    @if (
+                    media.mediaType === 'IMAGE'
+                    ) {
+
+                    <img [src]="media.displayUrl" [alt]="
+                    media.caption ||
+                    media.originalFileName
+                  " loading="lazy">
+
+                    } @else {
+
+                    <video [src]="media.displayUrl" muted preload="metadata">
+                    </video>
+
+                    <div class="video-overlay">
+
+                        <span class="video-play-button">
+                            <mat-icon>
+                                play_arrow
+                            </mat-icon>
+                        </span>
+
+                    </div>
+
+                    }
+
+                    <div class="wall-card-overlay">
+
+                        <button mat-icon-button type="button" class="delete-media-button" matTooltip="Delete media"
+                            (click)="deleteMedia(
+                    media,
+                    $event
+                  )">
+                            <mat-icon>
+                                delete
+                            </mat-icon>
+                        </button>
+
+                        <button mat-icon-button type="button" class="download-media-button" (click)="downloadMedia(
+    media,
+    $event
+  )">
+                            <mat-icon>
+                                download
+                            </mat-icon>
+                        </button>
+
+                    </div>
+
+                </div>
+
+                @if (
+                media.caption
+                ) {
+
+                <div class="wall-card-caption">
+
+                    <p>
+                        {{ media.caption }}
+                    </p>
+
+                    <!-- <span>
+                        {{
+                        formatFileSize(
+                        media.fileSize
+                        )
+                        }}
+                    </span> -->
+
+                    <span class="upload-date">
+
+                        📅
+                        {{ media.uploadedAt | date:'dd MMM yyyy' }}
+
+                    </span>
+
+                </div>
+
+                }
+
+            </article>
+
+            }
+
+        </div>
+
+        }
+
+    </section>
+
+    @if (previewMedia(); as media) {
+
+    <div class="preview-backdrop" role="dialog" aria-modal="true" (click)="closePreview()">
+
+        <div class="preview-shell" (click)="$event.stopPropagation()">
+
+            <button mat-icon-button type="button" class="preview-close-button" aria-label="Close preview"
+                (click)="closePreview()">
+                <mat-icon>
+                    close
+                </mat-icon>
+            </button>
+
+            <div class="preview-media-area">
+
+                @if (
+                media.mediaType === 'IMAGE'
+                ) {
+
+                <img [src]="media.displayUrl" [alt]="
+                media.caption ||
+                media.originalFileName
+              ">
+
+                } @else {
+
+                <video [src]="media.displayUrl" controls autoplay>
+                </video>
+
+                }
+
+            </div>
+
+            <div class="preview-details">
+
+                <div>
+
+                    <span class="preview-type">
+                        {{ media.mediaType }}
+                    </span>
+
+                    <h3>
+                        {{
+                        media.caption ||
+                        media.originalFileName
+                        }}
+                    </h3>
+
+                </div>
+
+                <span class="preview-size">
+                    {{
+                    formatFileSize(
+                    media.fileSize
+                    )
+                    }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    }
+
+</div>
