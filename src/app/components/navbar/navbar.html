@@ -40,7 +40,10 @@
     }
 
     <!-- Dashboard-specific navigation -->
-    @if (isWallPage()) {
+    @if (
+    isWallPage()
+    && isUser()
+    ) {
 
     <nav class="dashboard-nav-links" aria-label="Dashboard navigation">
 
@@ -71,10 +74,37 @@
     </nav>
 
     }
+    <!-- only for guest user -->
+    <!-- @if (
+    isWallPage()
+    && isGuest()
+    ) {
+
+    <nav class="dashboard-nav-links" aria-label="Wall navigation">
 
 
-        <!-- Dashboard-specific navigation -->
-    @if (isDashboardPage()) {
+      <a routerLink="/wall" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
+
+        <mat-icon>
+          photo_library
+        </mat-icon>
+
+        <span>
+          Wall
+        </span>
+
+      </a>
+
+    </nav>
+
+    } -->
+
+
+    <!-- Dashboard-specific navigation -->
+    @if (
+    isDashboardPage()
+    && isUser()
+    ) {
 
     <nav class="dashboard-nav-links" aria-label="Dashboard navigation">
 
@@ -117,7 +147,10 @@
 
     <!-- Guest Page -->
 
-    @if (isGuestPage()) {
+    @if (
+    isGuestPage()
+    && isUser()
+    ) {
 
     <a routerLink="/dashboard" routerLinkActive="dashboard-nav-active" [routerLinkActiveOptions]="{ exact: true }"
       class="dashboard-nav-link">
@@ -174,7 +207,10 @@
 
     <!-- expense page navbar settings -->
 
-    @if (isExpensePage()) {
+    @if (
+    isExpensePage()
+    && isUser()
+    ) {
 
     <!-- Dashboard -->
     <a routerLink="/dashboard" routerLinkActive="dashboard-nav-active" [routerLinkActiveOptions]="{ exact: true }"
@@ -242,7 +278,11 @@
 
     <!-- family page settings in navbar -->
 
-    @if (isFamilyPage()) {
+    @if (
+    isFamilyPage()
+    && isUser()
+    ) {
+
 
     <!-- Dashboard -->
     <a routerLink="/dashboard" routerLinkActive="dashboard-nav-active" [routerLinkActiveOptions]="{ exact: true }"
@@ -347,25 +387,33 @@
     <span>Home</span>
   </button>
 
+  @if (isUser()) {
   <button mat-menu-item routerLink="/dashboard" routerLinkActive="active-menu-item">
     <mat-icon>dashboard</mat-icon>
     <span>Dashboard</span>
   </button>
+  }
 
+  @if (isUser()) {
   <button mat-menu-item routerLink="/guests" routerLinkActive="active-menu-item">
     <mat-icon>groups</mat-icon>
     <span>Guest List</span>
   </button>
+  }
 
+  @if (isUser()) {
   <button mat-menu-item routerLink="/family" routerLinkActive="active-menu-item">
     <mat-icon>diversity_3</mat-icon>
     <span>Family List</span>
   </button>
+  }
 
+  @if (isUser()) {
   <button mat-menu-item routerLink="/expenses" routerLinkActive="active-menu-item">
     <mat-icon>payments</mat-icon>
     <span>Expenses</span>
   </button>
+  }
 
   <button mat-menu-item routerLink="/wall" routerLinkActive="active-menu-item">
 
@@ -379,10 +427,21 @@
 
   </button>
 
-  <button mat-menu-item routerLink="/sendemail" routerLinkActive="active-menu-item">
-    <mat-icon>email</mat-icon>
-    <span>Send Email</span>
+  @if (isUser()) {
+
+  <button mat-menu-item routerLink="/sendemail">
+
+    <mat-icon>
+      email
+    </mat-icon>
+
+    <span>
+      Send Email
+    </span>
+
   </button>
+
+  }
 
 
   @if (!authService.isLoggedIn()) {
