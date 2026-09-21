@@ -82,10 +82,22 @@ export class Login {
             'Login successful.'
           );
 
-          this.router.navigate([
-            '/dashboard'
-          ]);
+          if (
+            response.role ===
+            'ROLE_GUEST'
+          ) {
 
+            this.router.navigate([
+              '/wall'
+            ]);
+
+          } else {
+
+            this.router.navigate([
+              '/dashboard'
+            ]);
+
+          }
         },
 
         error: (error) => {
