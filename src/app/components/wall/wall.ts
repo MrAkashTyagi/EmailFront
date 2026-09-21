@@ -53,6 +53,7 @@ import {
   WallMedia,
   WallService
 } from '../../service/wall-service';
+import { AuthService } from '../../service/auth-service';
 
 interface SelectedWallFile {
 
@@ -123,6 +124,8 @@ export class Wall
     signal<DisplayWallMedia | null>(
       null
     );
+
+  readonly authService = inject(AuthService);
 
   caption = '';
 
