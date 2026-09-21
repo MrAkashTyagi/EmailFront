@@ -11,14 +11,17 @@ import { Login } from './components/login/login';
 import { authGuard } from './auth-guard';
 import { Wall } from './components/wall/wall';
 
-
+import {
+    guestAccessGuard
+} from './guest-access-guard';
 
 export const routes: Routes = [
 
     {
         path: "sendemail",
         component: Email,
-        pathMatch: "full"
+        pathMatch: "full",
+        canActivate: [authGuard, guestAccessGuard]
     },
 
     {
@@ -30,36 +33,37 @@ export const routes: Routes = [
         path: "guests",
         component: GuestComponent,
         pathMatch: "full",
-        canActivate: [authGuard]
+        canActivate: [authGuard, guestAccessGuard]
     },
     {
         path: "addguest",
         component: AddGuestComponent,
         pathMatch: "full",
-        canActivate: [authGuard]
+        canActivate: [authGuard, guestAccessGuard]
     },
     {
         path: "family",
         component: Family,
         pathMatch: "full",
-        canActivate: [authGuard]
+        canActivate: [authGuard, guestAccessGuard]
     },
     {
         path: "expenses",
         component: Expense,
         pathMatch: "full",
-        canActivate: [authGuard]
+        canActivate: [authGuard, guestAccessGuard]
     },
     {
         path: "dashboard",
         component: Dashboard,
         pathMatch: "full",
-        canActivate: [authGuard]
+        canActivate: [authGuard, guestAccessGuard]
     },
     {
         path: "wall",
         component: Wall,
-        pathMatch: "full"
+        pathMatch: "full",
+        canActivate: [authGuard]
     },
     {
         path: "register",
