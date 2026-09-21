@@ -89,15 +89,15 @@ export class Navbar {
     const currentPath = this.location.path();
 
     if (currentPath.includes('family')) {
-      return ' Family';
+      return 'Family';
     }
 
     if (currentPath.includes('guests')) {
-      return ' Guest';
+      return 'Guest';
     }
 
     if (currentPath.includes('expenses')) {
-      return ' Expense';
+      return 'Expense';
     }
 
     return 'Add New';
@@ -270,5 +270,25 @@ export class Navbar {
         }
       });
   }
+
+  isUser(): boolean {
+
+    return this.authService.isUser();
+  }
+
+  // isGuest(): boolean {
+
+  //   return this.authService.isGuest();
+  // }
+
+  isGuest(): boolean {
+
+  console.log(
+    'ROLE =>',
+    this.authService.currentUser()
+  );
+
+  return this.authService.isGuest();
+}
 
 }
