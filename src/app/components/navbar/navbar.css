@@ -84,7 +84,7 @@
   min-width: 0;
   align-items: center;
   justify-content: flex-end;
-  gap: 14px;
+  gap: 8px;
 }
 
 /* ==========================================
@@ -225,7 +225,7 @@
 
 .navbar-add-button {
   min-height: 38px !important;
-  padding: 0 16px !important;
+  padding: 0 8px !important;
 
   border: 1px solid #cbd5e1 !important;
   border-radius: 8px !important;
@@ -239,22 +239,22 @@
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
 }
 
+
 .navbar-add-button:hover {
   border-color: #a78bfa !important;
   background: #faf5ff !important;
 }
 
 .navbar-add-button mat-icon {
-  width: 19px !important;
-  height: 19px !important;
-  margin-right: 6px !important;
 
-  color: #7c3aed !important;
+  margin-right: 0px !important;
 
-  font-size: 19px !important;
-  line-height: 19px !important;
+  width: 18px !important;
+  height: 18px !important;
+
+  font-size: 18px !important;
+  line-height: 18px !important;
 }
-
 /* ==========================================
    EXPORT BUTTON
    ========================================== */
@@ -283,7 +283,7 @@
   transform: translateY(-2px);
 
   box-shadow:
-    0 6px 14px rgba(0,0,0,.12);
+    0 6px 14px rgba(0, 0, 0, .12);
 }
 
 .export-icon {
@@ -360,10 +360,7 @@
   color: #0f172a !important;
 }
 
-:host
-  ::ng-deep
-  .custom-premium-menu
-  .mat-mdc-menu-item.active-menu-item {
+:host ::ng-deep .custom-premium-menu .mat-mdc-menu-item.active-menu-item {
   background: #3f51b5 !important;
   color: #ffffff !important;
   font-weight: 650 !important;
@@ -371,11 +368,7 @@
   box-shadow: 0 4px 10px rgba(63, 81, 181, 0.25);
 }
 
-:host
-  ::ng-deep
-  .custom-premium-menu
-  .mat-mdc-menu-item.active-menu-item
-  mat-icon {
+:host ::ng-deep .custom-premium-menu .mat-mdc-menu-item.active-menu-item mat-icon {
   color: #ffffff !important;
 }
 
@@ -437,53 +430,49 @@
 
 .logout-btn {
 
-    border: none;
+  border: none;
 
-    background: #e1a92e;
+  background: #e1a92e;
 
-    color: white;
+  color: white;
 
-    padding: 10px 18px;
+  padding: 10px 18px;
 
-    border-radius: 10px;
+  border-radius: 10px;
 
-    font-size: 14px;
+  font-size: 14px;
 
-    font-weight: 600;
+  font-weight: 600;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 
-    box-shadow:
-        0 4px 12px rgba(
-            239,
-            68,
-            68,
-            0.3
-        );
+  box-shadow:
+    0 4px 12px rgba(239,
+      68,
+      68,
+      0.3);
 
 }
 
 .logout-btn:hover {
 
-    background: #dc2626;
+  background: #dc2626;
 
-    transform: translateY(-2px);
+  transform: translateY(-2px);
 
-    box-shadow:
-        0 8px 20px rgba(
-            239,
-            68,
-            68,
-            0.4
-        );
+  box-shadow:
+    0 8px 20px rgba(239,
+      68,
+      68,
+      0.4);
 
 }
 
 .logout-btn:active {
 
-    transform: scale(0.98);
+  transform: scale(0.98);
 
 }
 
@@ -495,97 +484,93 @@
 
 .logout-nav-link:hover {
 
-  background: rgba(
-    255,
-    255,
-    255,
-    0.12
-  );
+  background: rgba(255,
+      255,
+      255,
+      0.12);
 
 }
 
 .logout-icon-btn {
 
-    width: 32px !important;
-    height: 32px !important;
+  width: 32px !important;
+  height: 32px !important;
 
-    min-width: 32px !important;
+  min-width: 32px !important;
 
-    padding: 0 !important;
+  padding: 0 !important;
 
-    margin-left: 2px !important;
-    margin-right: 0 !important;
+  margin-left: 2px !important;
+  margin-right: 0 !important;
 
-    color: white;
+  color: white;
 
 }
 
 .logout-icon-btn .mat-icon {
 
-    font-size: 20px;
+  font-size: 20px;
 
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 
-    line-height: 20px;
+  line-height: 20px;
 
 }
 
 .logout-icon-btn:hover {
 
-    background: rgba(
-        255,
-        255,
-        255,
-        0.08
-    );
+  background: rgba(255,
+      255,
+      255,
+      0.08);
 
 }
 
 .logged-user {
 
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    gap: 6px;
+  gap: 6px;
 
-    margin-right: 4px;
+  margin-right: 4px;
 
-    /* max-width: 540px; */
+  /* max-width: 540px; */
 
-    font-weight: 500;
-    margin: 0 12px;
+  font-weight: 500;
+  margin: 0 12px;
 
 }
 
 .user-avatar {
 
-    width: 22px;
-    height: 22px;
+  width: 22px;
+  height: 22px;
 
-    object-fit: contain;
+  object-fit: contain;
 
-    flex-shrink: 0;
+  flex-shrink: 0;
 
-    display: block;
+  display: block;
 
 }
 
 .user-name {
 
-    color: #cbd5e1;
+  color: #cbd5e1;
 
-    font-size: 18px;
+  font-size: 18px;
 
-    font-weight: 400;
+  font-weight: 400;
 
-    overflow: hidden;
+  overflow: hidden;
 
-    text-overflow: ellipsis;
+  text-overflow: ellipsis;
 
-    white-space: nowrap;
+  white-space: nowrap;
 
-    max-width: 100px;
+  max-width: 100px;
 
 }
 
@@ -641,10 +626,24 @@
   transform: translateY(-1px);
 
   box-shadow:
-    0 5px 12px rgba(
-      15,
+    0 5px 12px rgba(15,
       23,
       42,
-      0.14
-    );
+      0.14);
+}
+
+.guest-mode-badge {
+
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  background: rgba(255,
+      255,
+      255,
+      0.15);
+
+  color: white;
+
+  font-weight: 600;
 }
