@@ -118,4 +118,23 @@ export class AuthService {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
   }
+
+  isUser(): boolean {
+
+    const user =
+      this.currentUser();
+
+    return user?.role
+      === 'ROLE_USER';
+  }
+
+  isGuest(): boolean {
+
+    const user =
+      this.currentUser();
+
+    return user?.role
+      === 'ROLE_GUEST';
+  }
+
 }
