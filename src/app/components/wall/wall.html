@@ -47,7 +47,13 @@
 
         </div>
 
+        @if (
+        authService.isUser()
+        || authService.isGuest()
+        ) {
+
         <label class="hero-upload-button" for="wallFileInput">
+
 
             <mat-icon>
                 add_photo_alternate
@@ -56,6 +62,7 @@
             Add memories
 
         </label>
+
 
         <input id="wallFileInput" class="hidden-file-input" type="file" accept="image/*,video/*" multiple
             (change)="onFilesSelected($event)">
@@ -69,10 +76,15 @@
             Download All
 
         </button>
+        }
 
     </section>
-
-    @if (selectedFiles().length > 0) {
+    
+    @if (
+    (authService.isUser()
+    || authService.isGuest())
+    && selectedFiles().length > 0
+    ) {
 
     <section class="upload-panel">
 
@@ -297,20 +309,17 @@
 
                     <div class="wall-card-overlay">
 
+                        @if (authService.isUser()) {
                         <button mat-icon-button type="button" class="delete-media-button" matTooltip="Delete media"
-                            (click)="deleteMedia(
-                    media,
-                    $event
-                  )">
+                            (click)="deleteMedia(media, $event)">
                             <mat-icon>
                                 delete
                             </mat-icon>
                         </button>
+                        }
 
-                        <button mat-icon-button type="button" class="download-media-button" (click)="downloadMedia(
-    media,
-    $event
-  )">
+                        <button mat-icon-button type="button" class="download-media-button"
+                            (click)="downloadMedia(media,$event)">
                             <mat-icon>
                                 download
                             </mat-icon>
