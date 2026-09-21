@@ -21,7 +21,7 @@
 </pre> -->
 
 
-
+    <!-- 
     <div class="dashboard-hero">
 
         <div class="hero-content">
@@ -37,7 +37,76 @@
 
         </div>
 
-    </div>
+    </div> -->
+
+    <section class="dashboard-hero">
+
+        <div class="hero-copy">
+
+            <span class="hero-eyebrow">
+
+                WEDDING OVERVIEW
+
+            </span>
+
+            <h1>
+
+                Wedding Dashboard
+
+            </h1>
+
+            <p>
+
+                Track guests, families, invitations,
+                expenses and every important wedding detail
+                from one place.
+
+            </p>
+
+        </div>
+
+        <div class="dashboard-stats">
+
+            <div class="hero-stat-card">
+
+                <h3>
+                    {{ summary().totalGuests }}
+                </h3>
+
+                <span>
+                    Guests
+                </span>
+
+            </div>
+
+            <div class="hero-stat-card">
+
+                <h3>
+                    {{ summary().totalFamilies }}
+                </h3>
+
+                <span>
+                    Families
+                </span>
+
+            </div>
+
+            <div class="hero-stat-card">
+
+                <h3>
+                    ₹{{ summary().totalExpense }}
+                </h3>
+
+                <span>
+                    Expenses
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
 
     <!-- <div class="top-progress-wrapper">
 
