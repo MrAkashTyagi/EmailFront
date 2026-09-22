@@ -1,0 +1,36 @@
+.guest-account-form {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 16px;
+
+  min-width: 420px;
+
+  padding-top: 8px;
+}
+
+mat-form-field {
+
+  width: 100%;
+}
+
+.mat-mdc-dialog-title {
+
+  font-weight: 600;
+
+  font-size: 22px;
+
+  color: #1e293b;
+}
+
+.mat-mdc-dialog-content {
+
+  padding-top: 8px !important;
+}
+
+.mat-mdc-dialog-actions {
+
+  padding-top: 16px !important;
+}
