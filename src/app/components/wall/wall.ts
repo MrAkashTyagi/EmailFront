@@ -203,95 +203,142 @@ export class Wall
       });
   }
 
-  private loadMediaContent(
-    mediaList: WallMedia[]
-  ): void {
+private loadMediaContent(
+  mediaList: WallMedia[]
+): void {
 
-    this.revokeWallDisplayUrls();
+  this.revokeWallDisplayUrls();
 
-    if (mediaList.length === 0) {
+  if (mediaList.length === 0) {
 
-      this.wallMedia.set([]);
+    this.wallMedia.set([]);
 
-      this.loading.set(false);
+    this.loading.set(false);
 
-      return;
-    }
-
-    from(mediaList)
-      .pipe(
-        concatMap(media =>
-          this.wallService
-            .getMediaContent(
-              media.id
-            )
-            .pipe(
-              concatMap(blob => {
-
-
-                const layouts = [
-                  'hero',
-                  'tall',
-                  'wide',
-                  'square'
-                ] as const;;
-
-                const displayMedia:
-                  DisplayWallMedia = {
-                  ...media,
-
-                  displayUrl:
-                    URL.createObjectURL(
-                      blob
-                    ),
-
-                  layoutClass:
-                    layouts[
-                    Math.floor(
-                      Math.random() *
-                      layouts.length
-                    )
-                    ]
-                };
-
-                return [
-                  displayMedia
-                ];
-              })
-            )
-        ),
-
-        toArray(),
-
-        finalize(() => {
-          this.loading.set(false);
-        }),
-
-        takeUntilDestroyed(
-          this.destroyRef
-        )
-      )
-      .subscribe({
-        next: displayMedia => {
-
-          this.wallMedia.set(
-            displayMedia
-          );
-        },
-
-        error: error => {
-
-          console.error(
-            'Media content load failed:',
-            error
-          );
-
-          this.notificationService.error(
-            'Kuch wall files load nahi ho payi.'
-          );
-        }
-      });
+    return;
   }
+
+  const layouts = [
+    'hero',
+    'tall',
+    'wide',
+    'square'
+  ] as const;
+
+  const displayMedia:
+    DisplayWallMedia[] =
+    mediaList.map(media => ({
+
+      ...media,
+
+      displayUrl:
+        media.mediaUrl,
+
+      layoutClass:
+        layouts[
+          Math.floor(
+            Math.random() *
+            layouts.length
+          )
+        ]
+    }));
+
+  this.wallMedia.set(
+    displayMedia
+  );
+
+  this.loading.set(false);
+}
+  
+  // private loadMediaContent(
+  //   mediaList: WallMedia[]
+  // ): void {
+
+  //   this.revokeWallDisplayUrls();
+
+  //   if (mediaList.length === 0) {
+
+  //     this.wallMedia.set([]);
+
+  //     this.loading.set(false);
+
+  //     return;
+  //   }
+
+  //   from(mediaList)
+  //     .pipe(
+  //       concatMap(media =>
+  //         this.wallService
+  //           .getMediaContent(
+  //             media.id
+  //           )
+  //           .pipe(
+  //             concatMap(blob => {
+
+
+  //               const layouts = [
+  //                 'hero',
+  //                 'tall',
+  //                 'wide',
+  //                 'square'
+  //               ] as const;;
+
+  //               const displayMedia:
+  //                 DisplayWallMedia = {
+  //                 ...media,
+
+  //                 displayUrl:
+  //                   URL.createObjectURL(
+  //                     blob
+  //                   ),
+
+  //                 layoutClass:
+  //                   layouts[
+  //                   Math.floor(
+  //                     Math.random() *
+  //                     layouts.length
+  //                   )
+  //                   ]
+  //               };
+
+  //               return [
+  //                 displayMedia
+  //               ];
+  //             })
+  //           )
+  //       ),
+
+  //       toArray(),
+
+  //       finalize(() => {
+  //         this.loading.set(false);
+  //       }),
+
+  //       takeUntilDestroyed(
+  //         this.destroyRef
+  //       )
+  //     )
+  //     .subscribe({
+  //       next: displayMedia => {
+
+  //         this.wallMedia.set(
+  //           displayMedia
+  //         );
+  //       },
+
+  //       error: error => {
+
+  //         console.error(
+  //           'Media content load failed:',
+  //           error
+  //         );
+
+  //         this.notificationService.error(
+  //           'Kuch wall files load nahi ho payi.'
+  //         );
+  //       }
+  //     });
+  // }
 
   onFilesSelected(
     event: Event
@@ -632,17 +679,24 @@ export class Wall
       });
   }
 
-  private revokeWallDisplayUrls():
-    void {
+  // private revokeWallDisplayUrls():
+  //   void {
 
-    this.wallMedia()
-      .forEach(media => {
+  //   this.wallMedia()
+  //     .forEach(media => {
 
-        URL.revokeObjectURL(
-          media.displayUrl
-        );
-      });
-  }
+  //       URL.revokeObjectURL(
+  //         media.displayUrl
+  //       );
+  //     });
+  // }
+
+private revokeWallDisplayUrls():
+  void {
+
+  this.wallMedia.set([]);
+
+}
 
   downloadMedia(
     media: DisplayWallMedia,
