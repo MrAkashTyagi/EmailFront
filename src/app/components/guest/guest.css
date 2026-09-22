@@ -980,22 +980,48 @@ mat-expansion-panel-header {
 
 .gift-summary-bar {
 
-  margin-top: 10px;
-  margin-bottom: 10px;
+  display: flex;
 
-  padding: 8px 12px;
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 16px;
+
+  flex-wrap: wrap;
+
+  margin: 12px 0;
+
+  padding: 12px 16px;
 
   background: #ffffff;
 
-  border-radius: 10px;
+  border: 1px solid #e2e8f0;
 
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  border-radius: 14px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+.gift-summary-left {
 
   display: flex;
+
   align-items: center;
+
   flex-wrap: wrap;
 
-  gap: 10px; /* pehle 6 tha */
+  gap: 8px;
+
+  flex: 1;
+}
+
+.guest-account-btn {
+
+  flex-shrink: 0;
+
+  white-space: nowrap;
 }
 
 .gift-summary-title {
@@ -1025,3 +1051,25 @@ mat-expansion-panel-header {
   margin-right: 4px;  /* extra spacing */
   margin-bottom: 2px;
 }
+.gift-summary-container {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-top: 12px;
+}
+
+.gift-summary-list {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
