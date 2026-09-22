@@ -15,6 +15,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCard } from "@angular/material/card";
 import { MatIcon } from "@angular/material/icon";
 
+import { CreateGuestAccountDialog } from
+  '../create-guest-account-dialog/create-guest-account-dialog';
+
 import { BaseChartDirective } from 'ng2-charts';
 import {
   Chart,
@@ -94,13 +97,13 @@ export class GuestComponent implements OnInit, OnDestroy {
   readonly selectedInvitationStatus = signal<string>('');
   readonly guestCategorySummary = signal<any[]>([]);
   readonly giftSummary = signal<any[]>([]);
- 
+
   selectedFile: File | null = null;
 
   private platformId =
     inject(PLATFORM_ID);
 
-    private notificationService = inject(NotificationService);
+  private notificationService = inject(NotificationService);
 
   private isBrowser(): boolean {
 
@@ -521,6 +524,16 @@ export class GuestComponent implements OnInit, OnDestroy {
     if (file) {
       this.selectedFile = file;
     }
+  }
+
+  openCreateGuestAccountDialog(): void {
+
+    this.dialog.open(
+      CreateGuestAccountDialog,
+      {
+        width: '500px'
+      }
+    );
   }
 
 }
