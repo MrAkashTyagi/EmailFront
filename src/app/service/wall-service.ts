@@ -28,6 +28,8 @@ export interface WallMedia {
   caption: string;
 
   uploadedAt: string;
+
+  uploadedByName: string;
 }
 
 @Injectable({
