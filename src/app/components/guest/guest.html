@@ -82,8 +82,6 @@
 
     </div>
 
-
-
   </div>
 
 
@@ -91,29 +89,43 @@
 
   <div class="gift-summary-bar">
 
-    <div class="gift-summary-title">
+    <div class="gift-summary-left">
 
-      🎁 Gift Planning
+      <div class="gift-summary-title">
+        🎁 Gift Planning
+      </div>
+
+      <div class="gift-summary-list">
+
+        @for (
+        item of giftSummary();
+        track item.giftName
+        ) {
+
+        <span class="gift-summary-chip">
+          {{ item.giftName }}: {{ item.total }}
+        </span>
+
+        }
+
+      </div>
 
     </div>
 
-    <div class="gift-summary-list">
+    <button mat-raised-button color="primary" class="guest-account-btn" (click)="openCreateGuestAccountDialog()">
 
-      @for (
-      item of giftSummary();
-      track item.giftName
-      ) {
-      <span class="gift-summary-chip">
-        {{ item.giftName }}: {{ item.total }}
-      </span>
+      <mat-icon>
+        person_add
+      </mat-icon>
 
-      }
+      Create Guest Account
 
-    </div>
+    </button>
 
   </div>
 
   }
+
 
   <!-- <div class="guest-chart-card">
 
@@ -328,6 +340,7 @@
     </div>
 
   </mat-expansion-panel>
+
   <!-- Guest table -->
   <section class="table-section">
     <div class="table-scroll-container">
