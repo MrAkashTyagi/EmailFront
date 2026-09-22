@@ -874,3 +874,75 @@
     background:
         rgb(247, 203, 60);
 }
+.uploaded-by-chip {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  margin-top: 8px;
+
+  padding: 4px 10px;
+
+  border-radius: 999px;
+
+  background: #f8fafc;
+
+  color: #475569;
+
+  font-size: 12px;
+
+  font-weight: 500;
+
+  border: 1px solid #e2e8f0;
+}
+
+.uploaded-by-chip mat-icon {
+
+  width: 14px;
+
+  height: 14px;
+
+  font-size: 14px;
+
+  color: #7c3aed;
+}
+
+.uploaded-by-chip strong {
+
+  color: #4338ca;
+}
+.preview-uploader {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 12px;
+
+  color: rgba(255,255,255,0.75);
+
+  font-size: 14px;
+}
+
+.preview-uploader mat-icon {
+
+  color: #c4b5fd;
+
+  width: 18px;
+
+  height: 18px;
+
+  font-size: 18px;
+}
+
+.preview-uploader strong {
+
+  color: #ffffff;
+
+  font-weight: 600;
+}
