@@ -79,7 +79,7 @@
         }
 
     </section>
-    
+
     @if (
     (authService.isUser()
     || authService.isGuest())
@@ -366,6 +366,7 @@
 
         }
 
+
     </section>
 
     @if (previewMedia(); as media) {
@@ -425,6 +426,20 @@
                     )
                     }}
                 </span>
+
+                <div class="preview-uploader">
+
+                    <mat-icon>
+                        person
+                    </mat-icon>
+
+                    Uploaded by
+
+                    <strong>
+                        {{ media.uploadedByName }}
+                    </strong>
+
+                </div>
 
             </div>
 
