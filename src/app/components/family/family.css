@@ -1,15 +1,12 @@
-/* Normal state: Detail row collapsed (chhipi hui) rahegi */
 .example-element-detail-wrapper {
   display: none;
   width: 100%;
 }
 
-/* Expanded state: Click hone par block display ho jayega */
 .example-element-detail-wrapper-expanded {
   display: flex;
 }
 
-/* Row elements ke styles */
 tr.example-detail-row {
   height: 0;
 }
@@ -17,35 +14,106 @@ tr.example-detail-row {
 tr.example-element-row:not(.example-expanded-row):hover {
   background: #f8fafc;
 }
-.family-name-cell{
-  font-size:15px;
-  font-weight:600;
-  color:#5b21b6;
+
+.family-name-cell {
+  font-size: 15px;
+  font-weight: 600;
+  color: #5b21b6;
 }
 
-.action-buttons{
-  display:flex;
-  justify-content:flex-end;
-  gap:10px;
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
-.edit-btn{
-  background:#4f46e5 !important;
-  color:white !important;
+.edit-btn {
+  background: #4f46e5 !important;
+  color: white !important;
 }
 
-.delete-btn{
-  background:#ef4444 !important;
-  color:white !important;
+.delete-btn {
+  background: #ef4444 !important;
+  color: white !important;
 }
 
-.guest-section-title{
-  color:#5b21b6;
-  margin-bottom:16px;
-  font-weight:600;
+.guest-section-title {
+  color: #5b21b6;
+  margin-bottom: 16px;
+  font-weight: 600;
 }
 
-.guest-card:hover{
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(50, 23, 204, 0.881);
+.guest-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(50, 23, 204, 0.881);
+}
+
+.member-count {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.guest-list-box {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.guest-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.guest-actions {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    justify-content:flex-end;
+    margin-left:auto;
+    flex-shrink:0;
+}
+
+
+@media (max-width: 768px) {
+
+  .mat-mdc-table {
+    min-width: 700px;
+  }
+
+  .family-name-cell {
+    font-size: 14px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    width: 100%;
+  }
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.guest-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .05);
+  width: 100%;
+  box-sizing: border-box;
+  gap: 12px;
 }
