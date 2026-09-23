@@ -1,130 +1,5 @@
 <div class="guest-page">
 
-  <div class="summary-cards">
-
-    <div class="summary-card">
-
-      <div class="summary-icon">
-        👥
-      </div>
-
-      <div>
-
-        <div class="summary-value">
-          {{ summary().totalGuests }}
-        </div>
-
-        <div class="summary-label">
-          Total Guests
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="summary-card">
-
-      <div class="summary-icon">
-        ✅
-      </div>
-
-      <div>
-
-        <div class="summary-value">
-          {{ summary().invitationSent }}
-        </div>
-
-        <div class="summary-label">
-          Invitations Sent
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="summary-card">
-
-      <div class="summary-icon">
-        ⏳
-      </div>
-
-      <div>
-
-        <div class="summary-value">
-          {{ summary().invitationPending }}
-        </div>
-
-        <div class="summary-label">
-          Pending Invitations
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="summary-card">
-
-      <div class="summary-icon">
-        🏠
-      </div>
-
-      <div>
-
-        <div class="summary-value">
-          {{ summary().stayRequired }}
-        </div>
-
-        <div class="summary-label">
-          Stay Required
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  @if (giftSummary().length > 0) {
-
-  <div class="gift-summary-bar">
-
-    <div class="gift-summary-left">
-
-      <div class="gift-summary-title">
-        🎁 Gift Planning
-      </div>
-
-      <div class="gift-summary-list">
-
-        @for (
-        item of giftSummary();
-        track item.giftName
-        ) {
-
-        <span class="gift-summary-chip">
-          {{ item.giftName }}: {{ item.total }}
-        </span>
-
-        }
-
-      </div>
-
-    </div>
-
-    <button mat-raised-button color="primary" class="guest-account-btn" (click)="openCreateGuestAccountDialog()">
-
-      <mat-icon>
-        person_add
-      </mat-icon>
-
-      Create Guest Account
-
-    </button>
-
-  </div>
-
-  }
 
 
   <!-- <div class="guest-chart-card">
@@ -151,11 +26,90 @@
 
 </div> -->
 
-  <mat-expansion-panel>
+
+  <!-- toolbar -->
+  <section class="page-toolbar">
+
+    <div class="page-toolbar-left">
+
+      <div class="search-wrapper">
+
+        <mat-icon class="search-icon">
+          search
+        </mat-icon>
+
+        <input type="text" class="search-input" placeholder="Search Guest..." [value]="searchText"
+          (input)="onSearch($event)" aria-label="Search guests">
+
+      </div>
+
+    </div>
+
+    <div class="page-toolbar-right">
+
+      <button mat-stroked-button type="button" class="toolbar-filter-btn" (click)="filterPanel.toggle()">
+
+        <mat-icon>tune</mat-icon>
+
+        Filters
+
+      </button>
+
+      <!-- Add Guest -->
+
+      <button mat-flat-button type="button" class="toolbar-add-btn" (click)="onAddClick()">
+
+        <mat-icon>add</mat-icon>
+
+        <span>
+          Add Guest
+        </span>
+
+      </button>
+
+      <!-- Create Guest Account -->
+
+      <button mat-flat-button color="primary" (click)="openCreateGuestAccountDialog()">
+
+        <mat-icon>
+          person_add
+        </mat-icon>
+
+        Create Account
+
+      </button>
+
+      <!-- Export -->
+
+      <button type="button" class="toolbar-icon-btn toolbar-export-btn" aria-label="Export Excel" title="Export Excel"
+        (click)="onExportClick()">
+
+        <img [src]="'icons/excel.png'" class="export-icon" alt="Export" />
+
+      </button>
+
+      <!-- Import -->
+
+      <input #guestDumpInput type="file" accept=".xlsx,.xls" hidden (change)="onGuestDumpSelected($event)">
+
+      <button type="button" class="toolbar-icon-btn toolbar-import-btn" aria-label="Import Guest Dump"
+        title="Import Guest Dump" (click)="guestDumpInput.click()">
+
+        <mat-icon>
+          upload_file
+        </mat-icon>
+
+      </button>
+
+    </div>
+
+  </section>
+
+  <mat-expansion-panel #filterPanel hideToggle>
     <mat-expansion-panel-header>
-      <mat-panel-title>
+      <!-- <mat-panel-title>
         🔍 Filters
-      </mat-panel-title>
+      </mat-panel-title> -->
     </mat-expansion-panel-header>
 
     <div class="filter-grid">
@@ -340,6 +294,150 @@
     </div>
 
   </mat-expansion-panel>
+
+  <!-- @if (giftSummary().length > 0) {
+
+  <div class="gift-summary-bar">
+
+    <div class="gift-summary-title">
+
+      🎁 Gift Planning
+
+    </div>
+
+    <div class="gift-summary-list">
+
+      @for (
+      item of giftSummary();
+      track item.giftName
+      ) {
+      <span class="gift-summary-chip">
+        {{ item.giftName }}: {{ item.total }}
+      </span>
+
+      }
+
+    </div>
+
+  </div>
+
+  } -->
+
+
+  @if (giftSummary().length > 0) {
+
+  <div class="gift-plan-bar">
+
+    <!-- <span class="gift-plan-title">
+      
+       
+    </span> -->
+    <mat-icon>checklist</mat-icon>
+
+
+
+
+    @for (item of giftSummary(); track item.giftName) {
+
+    <span class="gift-plan-chip">
+
+      {{ item.giftName }}
+
+      <span class="gift-plan-chip-count">
+        {{ item.total }}
+      </span>
+
+    </span>
+
+    }
+
+  </div>
+
+  }
+
+  <div class="summary-cards">
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        👥
+      </div>
+
+      <div>
+
+        <div class="summary-value">
+          {{ summary().totalGuests }}
+        </div>
+
+        <div class="summary-label">
+          Total Guests
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        ✅
+      </div>
+
+      <div>
+
+        <div class="summary-value">
+          {{ summary().invitationSent }}
+        </div>
+
+        <div class="summary-label">
+          Invitations Sent
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        ⏳
+      </div>
+
+      <div>
+
+        <div class="summary-value">
+          {{ summary().invitationPending }}
+        </div>
+
+        <div class="summary-label">
+          Pending Invitations
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        🏠
+      </div>
+
+      <div>
+
+        <div class="summary-value">
+          {{ summary().stayRequired }}
+        </div>
+
+        <div class="summary-label">
+          Stay Required
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
 
   <!-- Guest table -->
   <section class="table-section">
