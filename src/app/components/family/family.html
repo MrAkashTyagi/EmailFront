@@ -1,16 +1,96 @@
+<section class="page-toolbar">
+
+  <div class="page-toolbar-left">
+
+    <div class="search-wrapper">
+
+      <mat-icon class="search-icon">
+        search
+      </mat-icon>
+
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search Family..."
+        [value]="familySearchQuery()"
+        (input)="onSearch($event)"
+        aria-label="Search families"
+      />
+
+    </div>
+
+  </div>
+
+  <div class="page-toolbar-right">
+
+    <button
+      mat-flat-button
+      type="button"
+      class="toolbar-add-btn"
+      (click)="onAddClick()"
+    >
+      <mat-icon>
+        add
+      </mat-icon>
+
+      <span>
+        Add Family
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="toolbar-icon-btn toolbar-export-btn"
+      aria-label="Export families to Excel"
+      title="Export Excel"
+      (click)="onExportClick()"
+    >
+    <img [src]="'icons/excel.png'" class="toolbar-export-icon" alt="Export" />
+
+    </button>
+
+    <input
+      #familyDumpInput
+      type="file"
+      accept=".xlsx,.xls"
+      hidden
+      (change)="onFamilyDumpSelected($event)"
+    />
+
+    <button
+      type="button"
+      class="toolbar-icon-btn toolbar-import-btn"
+      aria-label="Import family dump"
+      title="Import Family Dump"
+      [disabled]="isImportingFamilies"
+      (click)="familyDumpInput.click()"
+    >
+      <mat-icon>
+        {{
+          isImportingFamilies
+            ? 'hourglass_top'
+            : 'upload_file'
+        }}
+      </mat-icon>
+    </button>
+
+  </div>
+
+</section>
+
 <!-- DATA TABLE SECTION -->
-<div class="mat-elevation-z8">
+<div class="table-section">
   <table mat-table [dataSource]="pagedFamilies()" multiTemplateDataRows>
 
     <!-- ID Column -->
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef style="font-weight: 600;"> Id </th>
+      <th mat-header-cell *matHeaderCellDef class="column-id"> Id </th>
       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef style="font-weight: 600;"> Name </th>
+      <th mat-header-cell *matHeaderCellDef class="column-name"> Name </th>
       <td mat-cell *matCellDef="let element">
 
         <div class="family-name-cell">
@@ -25,16 +105,18 @@
 
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef style="text-align: right; padding-right: 24px; font-weight: 600;"> Actions
+      <th mat-header-cell *matHeaderCellDef class="column-actions"> Actions
       </th>
-      <td mat-cell *matCellDef="let element" style="text-align: right; padding-right: 24px;">
+      <td mat-cell *matCellDef="let element">
         <div class="action-buttons">
 
-          <button mat-stroked-button color="primary" class="edit-btn" (click)="openEditFamilyDialog(element); $event.stopPropagation()">
+          <button mat-stroked-button color="primary" class="edit-btn"
+            (click)="openEditFamilyDialog(element); $event.stopPropagation()">
             Edit
           </button>
 
-          <button mat-stroked-button color="warn" class="delete-btn" (click)="deleteFamilyRecord(element.id); $event.stopPropagation()">
+          <button mat-stroked-button color="warn" class="delete-btn"
+            (click)="deleteFamilyRecord(element.id); $event.stopPropagation()">
             Delete
           </button>
 
@@ -44,83 +126,63 @@
 
     <!-- EXPANDABLE CONTENT ROW COLUMN (GUEST LIST CONTAINER) -->
     <ng-container matColumnDef="expandedDetail">
-      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length" style="padding: 0 !important;">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length" class="expanded-detail-cell">
+
         <div class="example-element-detail-wrapper"
           [class.example-element-detail-wrapper-expanded]="expandedElement === element">
 
-          <div class="guest-list-box"
-            style="padding: 20px; background: #f8fafc; border-radius: 8px; margin: 12px 24px; width: 100%; box-sizing: border-box;">
+          <div class="guest-list-box">
             <h4 class="guest-section-title">
               👥 Family Members ({{ element.guestList?.length || 0 }})
             </h4>
 
             <!-- Loop through backend guestList -->
             @if (element.guestList && element.guestList.length > 0) {
-            <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="guest-list-container">
               @for (guest of element.guestList; track guest.id) {
 
               <!-- Equal Width Grid Row Template -->
               <div class="guest-row">
 
                 <!-- Section 1: Guest Primary Name (25% Width Allocation) -->
-                <div
-                  style="flex: 0 0 24%; min-width: 180px; font-weight: 600; font-size: 15px; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <div class="guest-name-col">
                   {{ guest.name || guest.guestName }}
                 </div>
 
                 <!-- Section 2: Badges Group Block (25% Width Allocation) -->
-                <div style="
-    flex: 0 0 26%;
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-">
+                <div class="guest-badges">
 
                   <!-- Adult/Child Badge with dual casing safe checkpoint -->
                   @let status = guest.adultOrchild || guest.adultOrChild;
-                  <span [style.background-color]="status === 'Adult' ? '#e0f2fe' : '#fef3c7'"
-                    [style.color]="status === 'Adult' ? '#0369a1' : '#b45309'"
-                    style="font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 600; white-space: nowrap;">
+                  <span class="badge" [class.badge-adult]="status === 'Adult'" [class.badge-child]="status !== 'Adult'">
                     {{ status || 'N/A' }}
                   </span>
-
-                  <!-- Gender Status Badge -->
-                  <span
-                    style="font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 600; background-color: #f1f5f9; color: #475569; white-space: nowrap;">
+                  <span class="badge badge-gender">
                     {{ guest.gender || 'N/A' }}
                   </span>
 
-                  <!-- Category Status Badge -->
                   @if (guest.guestCategory) {
-                  <span
-                    style="font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 600; background-color: #e0e7ff; color: #3730a3; white-space: nowrap;">
+                  <span class="badge badge-category">
                     {{ guest.guestCategory }}
                   </span>
                   }
 
-
-                  <!-- Gift Badge -->
                   @if (guest.gift) {
-                  <span
-                    style="font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 600; background-color: #e0e7ff; color: #3730a3; white-space: nowrap;">
+                  <span class="badge badge-gift">
                     {{ guest.gift }}
                   </span>
-                  }
-
+                  }                  
 
                 </div>
 
                 <!-- Section 3: Communication Phone Block (22% Width Allocation) -->
-                <div
-                  style="flex: 0 0 15%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
-                  <span>📞</span> <span><b style="color: #64748b;">Phone:</b> {{ guest.phoneNumber || 'N/A' }}</span>
+                <div class="guest-contact">
+                  <span>📞</span> <span><b class="contact-label">Phone:</b> {{ guest.phoneNumber || 'N/A' }}</span>
                 </div>
 
                 <!-- Section 4: Communication WhatsApp Block (22% Width Allocation) -->
-                <div
-                  style="flex: 0 0 15%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
-                  <span style="color: #25d366;">💬</span> <span><b style="color: #64748b;">WhatsApp:</b> {{
+                <div class="guest-contact">
+                  <span class="whatsapp-icon">💬</span> <span><b class="contact-label">WhatsApp:</b> {{
                     guest.whatsapp_Number || guest.whatsappNumber || 'N/A' }}</span>
                 </div>
 
@@ -138,7 +200,8 @@
                     ID: {{ guest.id }}
                   </span> -->
 
-                  <button mat-icon-button color="warn" type="button" (click)="openEditGuestDialog(guest, element); $event.stopPropagation()">
+                  <button mat-icon-button color="warn" type="button"
+                    (click)="openEditGuestDialog(guest, element); $event.stopPropagation()">
                     <mat-icon>edit</mat-icon>
                   </button>
 
@@ -156,7 +219,7 @@
               }
             </div>
             } @else {
-            <div style="color: #94a3b8; font-style: italic; font-size: 13px; padding: 5px 0;">
+            <div class="empty-family-message">
               Is family me koi guest mapped nahi hai.
             </div>
             }
@@ -172,12 +235,11 @@
     <!-- Main clickable row that toggles expanded element -->
     <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
       [class.example-expanded-row]="expandedElement === element"
-      (click)="expandedElement = expandedElement === element ? null : element" style="cursor: pointer;">
+      (click)="expandedElement = expandedElement === element ? null : element">
     </tr>
 
     <!-- Secondary row dedicated entirely to the guest list container -->
-    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"
-      style="height: 0px !important;"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
   </table>
 
   <!-- Paginator -->
