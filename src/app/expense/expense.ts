@@ -107,6 +107,8 @@ export class Expense implements OnInit {
 
   readonly pieChartType: ChartType = 'pie';
 
+  isImportingExpenses = false;
+
   pieChartData: ChartConfiguration<'pie'>['data'] = {
     labels: [],
     datasets: [
@@ -195,6 +197,26 @@ export class Expense implements OnInit {
 
       });
 
+  }
+
+  onSearch(event: Event): void {
+    const value =
+      (event.target as HTMLInputElement)
+        .value;
+
+    this.navBarService
+      .searchQuery
+      .set(value);
+  }
+
+  onAddClick(): void {
+    this.navBarService
+      .triggerAddClick();
+  }
+
+  onExportClick(): void {
+    this.navBarService
+      .triggerExportClick();
   }
 
   loadCategoryChart(): void {
@@ -463,8 +485,14 @@ export class Expense implements OnInit {
 
   clearFilters(): void {
     this.selectedCategory.set('');
+
+    this.navBarService
+      .searchQuery
+      .set('');
+
     this.expenseSearchQuery.set('');
     this.currentPage.set(0);
+
     this.fetchPaginatedExpenses();
   }
 
@@ -515,5 +543,64 @@ export class Expense implements OnInit {
     });
 
   }
+  onExpenseDumpSelected(
+    event: Event
+  ): void {
 
+    const input =
+      event.target as HTMLInputElement;
+
+    const file =
+      input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.isImportingExpenses = true;
+
+    this.expenseService
+      .importExpenseDump(file)
+      .pipe(
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
+      .subscribe({
+        next: () => {
+
+          this.notificationService.success(
+            'Expense dump imported successfully.'
+          );
+
+          input.value = '';
+
+          this.currentPage.set(0);
+
+          this.fetchPaginatedExpenses();
+          this.loadSummary();
+          this.loadCategoryChart();
+
+          this.isImportingExpenses = false;
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Expense dump import failed:',
+            error
+          );
+
+          this.notificationService.error(
+            error?.error?.message
+            || error?.error?.detail
+            || 'Expense dump import nahi ho paya.'
+          );
+
+          input.value = '';
+
+          this.isImportingExpenses = false;
+        }
+      });
+  }
 }
