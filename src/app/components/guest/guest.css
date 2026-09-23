@@ -31,8 +31,13 @@
   box-sizing: border-box;
 }
 
-.guest-page {
+/* .guest-page {
   padding: 0 8px 8px 8px;
+} */
+
+.guest-page {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Page heading */
@@ -340,16 +345,16 @@
 } */
 
 .filter-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
 }
 
 .filter-field {
-    flex: 1 0 180px;
-    min-width: 180px;
-    max-width: 240px;
+  flex: 1 0 180px;
+  min-width: 180px;
+  max-width: 240px;
 }
 
 .filter-actions {
@@ -360,10 +365,15 @@
   margin-top: 10px;
 }
 
-.invitation-filter {
+/* .invitation-filter {
   width: 220px;
-}
+} */
 
+.invitation-filter {
+  flex: 1 0 180px;
+  min-width: 180px;
+  max-width: 240px;
+}
 
 .clear-btn,
 .export-btn,
@@ -778,50 +788,80 @@
   }
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .guest-page {
     padding: 14px;
+  } */
+
+@media (max-width: 768px) {
+
+  .summary-cards {
+    order: 3;
   }
 
-  .page-heading {
-    align-items: flex-start;
-    padding: 21px;
+  .gift-summary-bar {
+    order: 4;
   }
 
-  .heading-decoration {
-    display: none;
+  mat-expansion-panel {
+    order: 1;
   }
 
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .filter-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .section-header,
-  .table-section-header {
-    align-items: flex-start;
-    gap: 14px;
-    flex-direction: column;
-  }
-
-  .filter-actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .clear-btn,
-  .export-btn {
-    width: 100%;
-  }
-
-  .filter-status,
-  .record-counter {
-    align-self: flex-start;
+  .table-section {
+    order: 2;
   }
 }
+
+.page-heading {
+  align-items: flex-start;
+  padding: 21px;
+}
+
+.heading-decoration {
+  display: none;
+}
+
+.stats-grid {
+  grid-template-columns: 1fr;
+}
+
+.filter-grid {
+  grid-template-columns: 1fr;
+}
+
+.section-header,
+.table-section-header {
+  align-items: flex-start;
+  gap: 14px;
+  flex-direction: column;
+}
+
+.filter-actions {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.invitation-filter {
+    flex: 0 0 240px;
+    max-width: 240px;
+}
+
+.clear-btn {
+    height: 56px;
+    white-space: nowrap;
+}
+
+.clear-btn,
+.export-btn {
+  width: auto;
+}
+
+.filter-status,
+.record-counter {
+  align-self: flex-start;
+}
+
 
 .quick-summary {
   display: flex;
