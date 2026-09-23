@@ -67,6 +67,12 @@ export class GuestComponent implements OnInit, OnDestroy {
   private navBarAddSubscription!: Subscription;
   private exportSubscription!: Subscription;
 
+
+private readonly navbarActionService = inject(NavbarActionService);
+
+searchText = '';
+isImportingGuests = false;
+
   readonly displayedColumns = [
     'name',
     'gender',
@@ -536,4 +542,77 @@ export class GuestComponent implements OnInit, OnDestroy {
     );
   }
 
+onSearch(event: Event): void {
+  const input = event.target as HTMLInputElement;
+
+  this.searchText = input.value;
+
+  this.navbarActionService.searchQuery.set(
+    this.searchText
+  );
+}
+
+onAddClick(): void {
+  this.navbarActionService.triggerAddClick();
+}
+
+onExportClick(): void {
+  this.navbarActionService.triggerExportClick();
+}
+
+onGuestDumpSelected(event: Event): void {
+  const input =
+    event.target as HTMLInputElement;
+
+  const file =
+    input.files?.[0];
+
+  if (!file) {
+    return;
+  }
+
+  this.isImportingGuests = true;
+
+  this.guestService
+    .importGuestDump(file)
+    .subscribe({
+      next: (response) => {
+        console.log(
+          'Guest dump import response:',
+          response
+        );
+
+        this.notificationService.success(
+          'Guest dump imported successfully.'
+        );
+
+        input.value = '';
+
+        this.currentPage.set(0);
+
+        this.fetchPaginatedGuests();
+        this.loadGuestSummary();
+        this.loadGiftSummary();
+        this.loadGuestCategorySummary();
+
+        this.isImportingGuests = false;
+      },
+
+      error: (error) => {
+        console.error(
+          'Guest dump import failed:',
+          error
+        );
+
+        this.notificationService.error(
+          error?.error?.message
+          || error?.error?.detail
+          || 'Guest dump import nahi ho paya.'
+        );
+
+        input.value = '';
+        this.isImportingGuests = false;
+      }
+    });
+}
 }
