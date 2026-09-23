@@ -22,6 +22,51 @@
 
   </div>
 
+  <!-- center -->
+  @if (isUser()) {
+
+  <nav class="dashboard-nav-links">
+
+    <a routerLink="/dashboard" routerLinkActive="dashboard-nav-active" [routerLinkActiveOptions]="{ exact: true }"
+      class="dashboard-nav-link">
+
+      <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+
+    </a>
+
+    <a routerLink="/guests" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
+
+      <mat-icon>groups</mat-icon>
+      <span>Guests</span>
+
+    </a>
+
+    <a routerLink="/family" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
+
+      <mat-icon>diversity_3</mat-icon>
+      <span>Families</span>
+
+    </a>
+
+    <a routerLink="/expenses" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
+
+      <mat-icon>payments</mat-icon>
+      <span>Expenses</span>
+
+    </a>
+
+    <a routerLink="/wall" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
+
+      <mat-icon>photo_library</mat-icon>
+      <span>Wall</span>
+
+    </a>
+
+  </nav>
+
+  }
+
   <!-- Right section -->
   <div class="navbar-right-section">
 
@@ -39,313 +84,9 @@
 
     }
 
-    <!-- Dashboard-specific navigation -->
-    @if (
-    isWallPage()
-    && isUser()
-    ) {
 
-    <nav class="dashboard-nav-links" aria-label="Dashboard navigation">
 
-      <a routerLink="/dashboard" routerLinkActive="dashboard-nav-active" [routerLinkActiveOptions]="{ exact: true }"
-        class="dashboard-nav-link">
-        <mat-icon>dashboard</mat-icon>
-        <span>Dashboard</span>
-      </a>
 
-      <!-- Guests -->
-      <a routerLink="/guests" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-        <mat-icon>groups</mat-icon>
-        <span>Guests</span>
-      </a>
-
-      <a routerLink="/family" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-        <mat-icon>diversity_3</mat-icon>
-        <span>Families</span>
-      </a>
-
-      <!-- expense -->
-
-      <a routerLink="/expenses" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-        <mat-icon>payments</mat-icon>
-        <span>Expenses</span>
-      </a>
-
-    </nav>
-
-    }
-    <!-- only for guest user -->
-    <!-- @if (
-    isWallPage()
-    && isGuest()
-    ) {
-
-    <nav class="dashboard-nav-links" aria-label="Wall navigation">
-
-
-      <a routerLink="/wall" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-
-        <mat-icon>
-          photo_library
-        </mat-icon>
-
-        <span>
-          Wall
-        </span>
-
-      </a>
-
-    </nav>
-
-    } -->
-
-
-    <!-- Dashboard-specific navigation -->
-    @if (
-    isDashboardPage()
-    && isUser()
-    ) {
-
-    <nav class="dashboard-nav-links" aria-label="Dashboard navigation">
-
-      <!-- <a routerLink="/dashboard" routerLinkActive="dashboard-nav-active" [routerLinkActiveOptions]="{ exact: true }"
-        class="dashboard-nav-link">
-        <mat-icon>dashboard</mat-icon>
-        <span>Dashboard</span>
-      </a> -->
-
-      <!-- Guests -->
-      <a routerLink="/guests" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-        <mat-icon>groups</mat-icon>
-        <span>Guests</span>
-      </a>
-
-      <a routerLink="/family" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-        <mat-icon>diversity_3</mat-icon>
-        <span>Families</span>
-      </a>
-
-      <!-- expense -->
-
-      <a routerLink="/expenses" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-        <mat-icon>payments</mat-icon>
-        <span>Expenses</span>
-      </a>
-
-      <!-- wall -->
-      <a routerLink="/wall" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-
-        <mat-icon>photo_library</mat-icon>
-        <span>Wall</span>
-
-      </a>
-
-    </nav>
-
-    }
-
-
-    <!-- Guest Page -->
-
-    @if (
-    isGuestPage()
-    && isUser()
-    ) {
-
-    <a routerLink="/dashboard" routerLinkActive="dashboard-nav-active" [routerLinkActiveOptions]="{ exact: true }"
-      class="dashboard-nav-link">
-      <mat-icon>dashboard</mat-icon>
-      <span>Dashboard</span>
-    </a>
-
-    <a routerLink="/family" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-      <mat-icon>diversity_3</mat-icon>
-      <span>Families</span>
-    </a>
-
-    <!-- Expense -->
-    <a routerLink="/expenses" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-      <mat-icon>payments</mat-icon>
-      <span>Expenses</span>
-    </a>
-
-    <a routerLink="/wall" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-
-      <mat-icon>photo_library</mat-icon>
-      <span>Wall</span>
-
-    </a>
-
-    <div class="navbar-search-wrapper">
-
-      <input type="text" class="navbar-search-input" [placeholder]="getPlaceholderText()" [value]="searchText"
-        (input)="onSearch($event)" aria-label="Search records" />
-
-    </div>
-
-    <!-- Add -->
-    <button mat-flat-button type="button" class="navbar-add-button" (click)="onAddClick()">
-      <mat-icon>add</mat-icon>
-      <span>{{ getButtonText() }}</span>
-    </button>
-
-    <button type="button" class="navbar-export-button" aria-label="Export Excel" title="Export Excel"
-      (click)="onExportClick()">
-      <img [src]="'icons/excel.png'" class="export-icon" alt="Export" />
-    </button>
-
-    <!-- Import Guest Dump -->
-
-    <input #guestDumpInput type="file" accept=".xlsx,.xls" hidden (change)="onGuestDumpSelected($event)">
-
-    <button type="button" class="navbar-import-button" aria-label="Import Guest Dump" title="Import Guest Dump"
-      (click)="guestDumpInput.click()">
-      <mat-icon>upload_file</mat-icon>
-    </button>
-
-    }
-
-    <!-- expense page navbar settings -->
-
-    @if (
-    isExpensePage()
-    && isUser()
-    ) {
-
-    <!-- Dashboard -->
-    <a routerLink="/dashboard" routerLinkActive="dashboard-nav-active" [routerLinkActiveOptions]="{ exact: true }"
-      class="dashboard-nav-link">
-      <mat-icon>dashboard</mat-icon>
-      <span>Dashboard</span>
-    </a>
-
-    <!-- Family -->
-    <a routerLink="/family" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-      <mat-icon>diversity_3</mat-icon>
-      <span>Families</span>
-    </a>
-
-    <!-- Guests -->
-    <a routerLink="/guests" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-      <mat-icon>groups</mat-icon>
-      <span>Guests</span>
-    </a>
-
-    <!-- wall -->
-
-    <a routerLink="/wall" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-
-      <mat-icon>photo_library</mat-icon>
-      <span>Wall</span>
-
-    </a>
-
-    <!-- Search -->
-
-    <div class="navbar-search-wrapper">
-
-      <mat-icon class="navbar-search-icon">
-        search
-      </mat-icon>
-
-      <input type="text" class="navbar-search-input" [placeholder]="getPlaceholderText()" [value]="searchText"
-        (input)="onSearch($event)" aria-label="Search records" />
-
-    </div>
-
-    <!-- Add -->
-    <button mat-flat-button type="button" class="navbar-add-button" (click)="onAddClick()">
-      <mat-icon>add</mat-icon>
-      <span>{{ getButtonText() }}</span>
-    </button>
-
-    <!-- Export -->
-    <button type="button" class="navbar-export-button" aria-label="Export Excel" title="Export Excel"
-      (click)="onExportClick()">
-      <img [src]="'icons/excel.png'" class="export-icon" alt="Export" />
-    </button>
-
-    <!-- expense data dump -->
-
-    <input #expenseDumpInput type="file" accept=".xlsx,.xls" hidden (change)="onExpenseDumpSelected($event)">
-
-    <button type="button" class="navbar-import-button" aria-label="Import Expense Dump" title="Import Expense Dump"
-      (click)="expenseDumpInput.click()">
-      <mat-icon>upload_file</mat-icon>
-    </button>
-
-    }
-
-    <!-- family page settings in navbar -->
-
-    @if (
-    isFamilyPage()
-    && isUser()
-    ) {
-
-
-    <!-- Dashboard -->
-    <a routerLink="/dashboard" routerLinkActive="dashboard-nav-active" [routerLinkActiveOptions]="{ exact: true }"
-      class="dashboard-nav-link">
-      <mat-icon>dashboard</mat-icon>
-      <span>Dashboard</span>
-    </a>
-
-    <!-- Expense -->
-    <a routerLink="/expenses" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-      <mat-icon>payments</mat-icon>
-      <span>Expenses</span>
-    </a>
-
-    <!-- Wall -->
-    <a routerLink="/wall" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-
-      <mat-icon>photo_library</mat-icon>
-      <span>Wall</span>
-
-    </a>
-
-    <!-- Guests -->
-    <a routerLink="/guests" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
-      <mat-icon>groups</mat-icon>
-      <span>Guests</span>
-    </a>
-
-    <!-- Search -->
-
-    <div class="navbar-search-wrapper">
-
-      <mat-icon class="navbar-search-icon">
-        search
-      </mat-icon>
-
-      <input type="text" class="navbar-search-input" [placeholder]="getPlaceholderText()" [value]="searchText"
-        (input)="onSearch($event)" aria-label="Search records" />
-
-    </div>
-
-    <!-- Add -->
-    <button mat-flat-button type="button" class="navbar-add-button" (click)="onAddClick()">
-      <mat-icon>add</mat-icon>
-      <span>{{ getButtonText() }}</span>
-    </button>
-
-    <!-- Export -->
-    <button type="button" class="navbar-export-button" aria-label="Export Excel" title="Export Excel"
-      (click)="onExportClick()">
-      <img [src]="'icons/excel.png'" class="export-icon" alt="Export" />
-    </button>
-
-    <!-- import family dump -->
-
-    <input #familyDumpInput type="file" accept=".xlsx,.xls" hidden (change)="onFamilyDumpSelected($event)">
-
-    <button type="button" class="navbar-import-button" aria-label="Import Family Dump" title="Import Family Dump"
-      (click)="familyDumpInput.click()">
-      <mat-icon>upload_file</mat-icon>
-    </button>
-
-    }
 
     @if (currentUser()) {
 
@@ -359,7 +100,6 @@
     }
 
   </div>
-
 
 </mat-toolbar>
 
