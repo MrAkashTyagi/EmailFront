@@ -17,7 +17,7 @@
 }
 
 .wall-hero {
-    max-width: 1200px;
+    max-width: 1600px;
     min-height: 180px;
     margin: 0 auto 24px;
     padding: 28px 36px;
@@ -61,7 +61,8 @@
 }
 
 .hero-copy {
-    max-width: 720px;
+    flex: 1;
+    max-width: none;
     position: relative;
     z-index: 1;
 }
@@ -94,7 +95,7 @@
 
 .hero-copy p {
     margin-top: 12px;
-    max-width: 520px;
+    max-width: 800px;
     margin: 22px 0 0;
     font-size: 15px;
     line-height: 1.7;
@@ -806,13 +807,12 @@
     font-size: 12px;
 }
 .wall-stats {
-
     display: flex;
-
     gap: 16px;
-
-    margin-top: 20px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
 }
+
 .stat-card {
 
     min-width: 120px;
