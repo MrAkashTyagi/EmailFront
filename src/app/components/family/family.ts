@@ -10,10 +10,7 @@ import {
   untracked
 } from '@angular/core';
 
-import {
-  isPlatformBrowser,
-  JsonPipe
-} from '@angular/common';
+import { isPlatformBrowser, JsonPipe, NgClass } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
 
@@ -102,7 +99,8 @@ import {
     MatDialogModule,
     MatPaginatorModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    NgClass
   ],
   templateUrl: './family.html',
   styleUrl: './family.css'
@@ -141,6 +139,9 @@ export class Family {
     'name',
     'actions'
   ];
+
+  isImportingFamilies = false;
+
 
   readonly rawFamilies =
     signal<any[]>([]);
@@ -217,6 +218,26 @@ export class Family {
       .subscribe(() => {
         this.openAddFamilyDialog();
       });
+  }
+
+  onSearch(event: Event): void {
+    const value =
+      (event.target as HTMLInputElement)
+        .value;
+
+    this.navBarService
+      .searchQuery
+      .set(value);
+  }
+
+  onAddClick(): void {
+    this.navBarService
+      .triggerAddClick();
+  }
+
+  onExportClick(): void {
+    this.navBarService
+      .triggerExportClick();
   }
 
   private isBrowser(): boolean {
@@ -680,4 +701,64 @@ export class Family {
         }
       });
   }
+
+  onFamilyDumpSelected(
+    event: Event
+  ): void {
+
+    const input =
+      event.target as HTMLInputElement;
+
+    const file =
+      input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.isImportingFamilies = true;
+
+    this.familyService
+      .importFamilyDump(file)
+      .pipe(
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
+      .subscribe({
+        next: () => {
+
+          this.notificationService.success(
+            'Family dump imported successfully.'
+          );
+
+          input.value = '';
+
+          this.currentPage.set(0);
+
+          this.fetchPaginatedFamily();
+
+          this.isImportingFamilies = false;
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Family dump import failed:',
+            error
+          );
+
+          this.notificationService.error(
+            error?.error?.message
+            || error?.error?.detail
+            || 'Family dump import nahi ho paya.'
+          );
+
+          input.value = '';
+
+          this.isImportingFamilies = false;
+        }
+      });
+  }
+
 }
