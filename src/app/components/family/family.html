@@ -60,18 +60,17 @@
               @for (guest of element.guestList; track guest.id) {
 
               <!-- Equal Width Grid Row Template -->
-              <div
-                style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: white; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); box-sizing: border-box; width: 100%;">
+              <div class="guest-row">
 
                 <!-- Section 1: Guest Primary Name (25% Width Allocation) -->
                 <div
-                  style="flex: 0 0 25%; min-width: 180px; font-weight: 600; font-size: 15px; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                  style="flex: 0 0 24%; min-width: 180px; font-weight: 600; font-size: 15px; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                   {{ guest.name || guest.guestName }}
                 </div>
 
                 <!-- Section 2: Badges Group Block (25% Width Allocation) -->
                 <div style="
-    flex: 0 0 30%;
+    flex: 0 0 26%;
     display: flex;
     gap: 6px;
     align-items: center;
@@ -114,13 +113,13 @@
 
                 <!-- Section 3: Communication Phone Block (22% Width Allocation) -->
                 <div
-                  style="flex: 0 0 18%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+                  style="flex: 0 0 15%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
                   <span>📞</span> <span><b style="color: #64748b;">Phone:</b> {{ guest.phoneNumber || 'N/A' }}</span>
                 </div>
 
                 <!-- Section 4: Communication WhatsApp Block (22% Width Allocation) -->
                 <div
-                  style="flex: 0 0 18%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+                  style="flex: 0 0 15%; font-size: 13px; color: #475569; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
                   <span style="color: #25d366;">💬</span> <span><b style="color: #64748b;">WhatsApp:</b> {{
                     guest.whatsapp_Number || guest.whatsappNumber || 'N/A' }}</span>
                 </div>
@@ -131,11 +130,7 @@
                   ID: {{ guest.id }}
                 </div> -->
 
-                <div style="display:flex;
-         align-items:center;
-         gap:10px;
-         justify-content:flex-end;
-         min-width:140px;">
+                <div class="guest-actions">
                   <!-- 
                   <span style="color:#94a3b8;
            font-size:13px;
