@@ -39,6 +39,7 @@
   align-items: center;
   gap: 12px;
   min-width: 180px;
+  flex: 0 0 auto;
 }
 
 .menu-button {
@@ -79,12 +80,42 @@
    RIGHT SECTION
    ========================================== */
 
-.navbar-right-section {
+/* .navbar-right-section {
   display: flex;
   min-width: 0;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
+} */
+
+.navbar-right-section {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+
+    .dashboard-nav-links {
+        display: none;
+    }
+
+    .user-name {
+        display: none;
+    }
+
+    .brand-count {
+        display: none;
+    }
+
+}
+@media (max-width: 768px) {
+
+    .logout-icon-btn {
+        display: none;
+    }
+
 }
 
 /* ==========================================
@@ -92,9 +123,11 @@
    ========================================== */
 
 .dashboard-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
 }
 
 .dashboard-nav-link {
