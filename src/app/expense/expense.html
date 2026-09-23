@@ -1,5 +1,56 @@
 <div class="expense-page">
 
+  <section class="page-toolbar">
+
+    <div class="page-toolbar-left">
+
+      <div class="search-wrapper">
+
+        <mat-icon class="search-icon">
+          search
+        </mat-icon>
+
+        <input type="text" class="search-input" placeholder="Search Expense..." [value]="expenseSearchQuery()"
+          (input)="onSearch($event)" aria-label="Search expenses" />
+
+      </div>
+
+    </div>
+
+    <div class="page-toolbar-right">
+
+      <button mat-flat-button type="button" class="toolbar-add-btn" (click)="onAddClick()">
+        <mat-icon>
+          add
+        </mat-icon>
+
+        <span>
+          Add Expense
+        </span>
+      </button>
+
+      <button type="button" class="toolbar-icon-btn toolbar-export-btn" aria-label="Export expenses to Excel"
+        title="Export Excel" (click)="onExportClick()">
+        <img [src]="'icons/excel.png'" class="toolbar-export-icon" alt="Export" />
+      </button>
+
+      <input #expenseDumpInput type="file" accept=".xlsx,.xls" hidden (change)="onExpenseDumpSelected($event)" />
+
+      <button type="button" class="toolbar-icon-btn toolbar-import-btn" aria-label="Import expense dump"
+        title="Import Expense Dump" [disabled]="isImportingExpenses" (click)="expenseDumpInput.click()">
+        <mat-icon>
+          {{
+          isImportingExpenses
+          ? 'hourglass_top'
+          : 'upload_file'
+          }}
+        </mat-icon>
+      </button>
+
+    </div>
+
+  </section>
+
   <!-- Filters -->
   <mat-expansion-panel>
     <mat-expansion-panel-header>
@@ -305,31 +356,31 @@
 
       <div class="chart-stats">
 
-  <div class="mini-stat">
+        <div class="mini-stat">
 
-    <span class="stat-label">
-      Top Category
-    </span>
+          <span class="stat-label">
+            Top Category
+          </span>
 
-    <span class="stat-value">
-      {{ summary().topCategory }}
-    </span>
+          <span class="stat-value">
+            {{ summary().topCategory }}
+          </span>
 
-  </div>
+        </div>
 
-  <div class="mini-stat">
+        <div class="mini-stat">
 
-    <span class="stat-label">
-      Total Expenses
-    </span>
+          <span class="stat-label">
+            Total Expenses
+          </span>
 
-    <span class="stat-value">
-      {{ summary().totalExpenses }}
-    </span>
+          <span class="stat-value">
+            {{ summary().totalExpenses }}
+          </span>
 
-  </div>
+        </div>
 
-</div>
+      </div>
 
 
     </div>
