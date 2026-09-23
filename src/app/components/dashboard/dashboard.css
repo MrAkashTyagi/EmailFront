@@ -245,7 +245,7 @@
     padding: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, .05);
 
-    height: 320px;
+    min-height: 320px;
     /* ✅ */
 }
 
@@ -420,9 +420,9 @@
 
     align-items: center;
 
-    gap: 28px;
+    gap: 48px;
 
-    padding: 34px;
+    padding: 42px;
 
     margin-bottom: 24px;
 
@@ -460,12 +460,10 @@
 }
 
 .hero-copy {
-
     position: relative;
-
     z-index: 1;
-
-    max-width: 600px;
+    flex: 1;
+    min-width: 320px;
 }
 
 .hero-eyebrow {
@@ -511,16 +509,23 @@
 }
 
 .dashboard-stats {
-
-    position: relative;
-
-    z-index: 1;
-
+    flex: 1;
+    justify-content: flex-end;
     display: flex;
-
     gap: 14px;
-
     flex-wrap: wrap;
+}
+
+@media (max-width: 1024px) {
+
+    .dashboard-hero {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dashboard-stats {
+        justify-content: center;
+    }
 }
 
 .hero-stat-card {
