@@ -58,7 +58,11 @@ export class CreateGuestAccountDialog {
 
       name: [
         '',
-        Validators.required
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(50)
+        ]
       ],
 
       email: [
