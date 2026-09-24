@@ -282,16 +282,6 @@ export class Expense implements OnInit {
 
   }
 
-  // private extractBillName(
-  //   billPath?: string
-  // ): string {
-
-  //   return billPath
-  //     ?.split(/[\\/]/)
-  //     .pop()
-  //     || 'bill';
-  // }
-
   private extractBillName(
     expense: any
   ): string {
@@ -304,143 +294,132 @@ export class Expense implements OnInit {
   //   expense: any
   // ): void {
 
-  //   this.expenseService
-  //     .getBill(expense.id)
-  //     .subscribe({
-  //       next: (blob: Blob) => {
+  //   if (!expense.billUrl) {
+  //     return;
+  //   }
 
-  //         const objectUrl =
-  //           URL.createObjectURL(blob);
-
-  //         const dialogRef =
-  //           this.dialog.open(
-  //             BillPreviewDialog,
-  //             {
-  //               width: '90vw',
-  //               maxWidth: '1200px',
-  //               maxHeight: '90vh',
-  //               data: {
-  //                 url: objectUrl,
-  //                 contentType: blob.type,
-  //                 fileName:
-  //                   this.extractBillName(
-  //                     expense.billPath
-  //                   )
-  //               }
-  //             }
-  //           );
-
-  //         dialogRef
-  //           .afterClosed()
-  //           .subscribe(() => {
-
-  //             URL.revokeObjectURL(
-  //               objectUrl
-  //             );
-
-  //           });
-  //       },
-
-  //       error: (error) => {
-
-  //         console.error(
-  //           'Bill preview failed:',
-  //           error
-  //         );
-
-  //         this.notificationService.error(
-  //           'Bill preview nahi ho paya.'
-  //         );
-  //       }
-  //     });
+  //   window.open(
+  //     expense.billUrl,
+  //     '_blank'
+  //   );
   // }
 
   viewBill(
     expense: any
   ): void {
 
-    if (!expense.billUrl) {
-      return;
-    }
+    this.expenseService
+      .getBill(expense.id)
+      .subscribe({
+        next: (blob: Blob) => {
 
-    window.open(
-      expense.billUrl,
-      '_blank'
-    );
+          const objectUrl =
+            URL.createObjectURL(blob);
+
+          const dialogRef =
+            this.dialog.open(
+              BillPreviewDialog,
+              {
+                width: '90vw',
+                maxWidth: '1200px',
+                maxHeight: '90vh',
+                data: {
+                  url: objectUrl,
+                  contentType:
+                    expense.billContentType || blob.type,
+                  fileName:
+                    this.extractBillName(
+                      expense
+                    )
+                }
+              }
+            );
+
+          dialogRef
+            .afterClosed()
+            .subscribe(() => {
+
+              URL.revokeObjectURL(
+                objectUrl
+              );
+
+            });
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Bill preview failed:',
+            error
+          );
+
+          this.notificationService.error(
+            'Bill preview nahi ho paya.'
+          );
+        }
+      });
   }
-
-  // downloadBill(
-  //   expense: any
-  // ): void {
-
-  //   this.expenseService
-  //     .downloadBill(expense.id)
-  //     .subscribe({
-  //       next: (blob: Blob) => {
-
-  //         const url =
-  //           URL.createObjectURL(blob);
-
-  //         const link =
-  //           document.createElement('a');
-
-  //         link.href = url;
-
-  //         link.download =
-  //           this.extractBillName(
-  //             expense.billPath
-  //           );
-
-  //         document.body.appendChild(
-  //           link
-  //         );
-
-  //         link.click();
-  //         link.remove();
-
-  //         URL.revokeObjectURL(url);
-  //       },
-
-  //       error: (error) => {
-
-  //         console.error(
-  //           'Bill download failed:',
-  //           error
-  //         );
-
-  //         this.notificationService.error(
-  //           'Bill download nahi ho paya.'
-  //         );
-  //       }
-  //     });
-  // }
 
   downloadBill(
     expense: any
   ): void {
 
-    if (!expense.billUrl) {
+    if (!expense?.billUrl) {
+
+      this.notificationService.error(
+        'Bill available nahi hai.'
+      );
+
       return;
     }
 
-    const link =
-      document.createElement('a');
+    this.expenseService
+      .downloadBill(expense.id)
+      .pipe(
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
+      .subscribe({
+        next: (blob: Blob) => {
 
-    link.href =
-      expense.billUrl;
+          const objectUrl =
+            URL.createObjectURL(blob);
 
-    link.download =
-      this.extractBillName(
-        expense
-      );
+          const link =
+            document.createElement('a');
 
-    document.body.appendChild(
-      link
-    );
+          link.href = objectUrl;
 
-    link.click();
+          link.download =
+            this.extractBillName(
+              expense
+            );
 
-    link.remove();
+          document.body.appendChild(
+            link
+          );
+
+          link.click();
+          link.remove();
+
+          URL.revokeObjectURL(
+            objectUrl
+          );
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Bill download failed:',
+            error
+          );
+
+          this.notificationService.error(
+            'Bill download nahi ho paya.'
+          );
+        }
+      });
   }
 
   openAddExpenseDialog(): void {
