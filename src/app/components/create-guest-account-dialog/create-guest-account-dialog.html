@@ -5,20 +5,46 @@
 <mat-dialog-content>
 
     <form [formGroup]="form" class="guest-account-form">
-
         <mat-form-field appearance="outline">
 
             <mat-label>
-                Name
+                Guest Name
             </mat-label>
 
-            <input matInput formControlName="name">
+            <input matInput formControlName="name" />
 
-            <mat-icon matSuffix>
-                person
-            </mat-icon>
+            @if (
+            form.controls.name.hasError('required')
+            &&
+            form.controls.name.touched
+            ) {
+            <mat-error>
+                Guest name is required
+            </mat-error>
+            }
+
+            @if (
+            form.controls.name.hasError('minlength')
+            &&
+            form.controls.name.touched
+            ) {
+            <mat-error>
+                Guest name must be at least 2 characters
+            </mat-error>
+            }
+
+            @if (
+            form.controls.name.hasError('maxlength')
+            &&
+            form.controls.name.touched
+            ) {
+            <mat-error>
+                Guest name cannot exceed 50 characters
+            </mat-error>
+            }
 
         </mat-form-field>
+
 
         <mat-form-field appearance="outline">
 
