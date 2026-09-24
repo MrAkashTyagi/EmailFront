@@ -106,65 +106,6 @@
         </div>
 
     </section>
-
-
-    <!-- <div class="top-progress-wrapper">
-
-        <div class="top-progress-header">
-
-            <span>📨 Invitation Progress</span>
-
-            <span class="progress-percentage">
-
-                {{
-                summary().invitationSent + summary().pendingInvitations > 0
-                ? (
-                summary().invitationSent * 100 /
-                (
-                summary().invitationSent +
-                summary().pendingInvitations
-                )
-                ).toFixed(0)
-                : 0
-                }}%
-
-            </span>
-
-        </div>
-
-        <div class="top-progress-bar">
-
-            <div class="top-progress-fill" [style.width.%]="
-    summary().invitationSent + summary().pendingInvitations > 0
-      ? (summary().invitationSent * 100) /
-        (summary().invitationSent + summary().pendingInvitations)
-      : 0
-  ">
-            </div>
-
-
-        </div>
-
-        
-            <div class="top-progress-info">
-
-                <span>
-                    ✅ Sent:
-                    {{ summary().invitationSent }}
-                </span>
-
-                <span>
-                    ⏳ Pending:
-                    {{ summary().pendingInvitations }}
-                </span>
-
-                <span>
-                    👥 Total Guests:
-                    {{ summary().totalGuests }}
-                </span>
-
-            </div> -->
-
     <div class="top-progress-wrapper">
 
         <div class="top-progress-header">
@@ -261,7 +202,7 @@
 
         </div>
 
-                <!-- average family size -->
+        <!-- average family size -->
 
         <div class="dashboard-card orange">
 
@@ -323,7 +264,7 @@
 
         </div>
 
-<!-- amount pending card -->
+        <!-- amount pending card -->
         <div class="dashboard-card orange">
 
             <div class="card-icon">⏳</div>
@@ -343,7 +284,7 @@
         </div>
 
 
-<!-- total expenses card -->
+        <!-- total expenses card -->
         <div class="dashboard-card green">
 
             <div class="card-icon">💰</div>
@@ -460,13 +401,20 @@
 
             <h3>💰 Expense Distribution</h3>
 
-            @if (expenseChartLoaded) {
-            <canvas baseChart [data]="expensePieChartData" [options]="pieChartOptions" [type]="'pie'">
-            </canvas>
-            }
+            <div class="chart-container">
+
+                @if (expenseChartLoaded) {
+
+                <canvas baseChart [data]="expensePieChartData" [options]="pieChartOptions" [type]="'pie'">
+                </canvas>
+
+                }
+
+            </div>
 
         </div>
 
+        <!-- guest distribuition -->
         <div class="chart-card">
 
             <h3>👥 Guest Distribution</h3>
