@@ -68,6 +68,16 @@
 
             <input matInput type="password" formControlName="password">
 
+            @if (
+            form.controls.password.hasError('minlength')
+            &&
+            form.controls.password.touched
+            ) {
+            <mat-error>
+                Password must be at least 6 characters
+            </mat-error>
+            }
+
             <mat-icon matSuffix>
                 lock
             </mat-icon>
