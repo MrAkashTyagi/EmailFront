@@ -261,18 +261,20 @@
 
         </div>
 
-        <div class="dashboard-card green">
+                <!-- average family size -->
 
-            <div class="card-icon">💰</div>
+        <div class="dashboard-card orange">
+
+            <div class="card-icon">📊</div>
 
             <div class="card-content">
 
                 <div class="card-value">
-                    ₹{{ summary().totalExpense }}
+                    {{ summary().averageFamilySize | number:'1.0-0' }}
                 </div>
 
                 <div class="card-label">
-                    Total Expenses
+                    Average Family Size
                 </div>
 
             </div>
@@ -321,7 +323,7 @@
 
         </div>
 
-
+<!-- amount pending card -->
         <div class="dashboard-card orange">
 
             <div class="card-icon">⏳</div>
@@ -340,6 +342,25 @@
 
         </div>
 
+
+<!-- total expenses card -->
+        <div class="dashboard-card green">
+
+            <div class="card-icon">💰</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    ₹{{ summary().totalExpense }}
+                </div>
+
+                <div class="card-label">
+                    Total Expenses
+                </div>
+
+            </div>
+
+        </div>
 
         <!-- <div class="dashboard-card success">
 
@@ -397,26 +418,6 @@
             </div>
 
         </div> -->
-
-        <!-- average family size -->
-
-        <div class="dashboard-card orange">
-
-            <div class="card-icon">📊</div>
-
-            <div class="card-content">
-
-                <div class="card-value">
-                    {{ summary().averageFamilySize | number:'1.0-0' }}
-                </div>
-
-                <div class="card-label">
-                    Average Family Size
-                </div>
-
-            </div>
-
-        </div>
 
     </div>
 
