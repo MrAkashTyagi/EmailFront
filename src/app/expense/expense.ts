@@ -47,6 +47,10 @@ import { BaseChartDirective } from 'ng2-charts';
 import { BillPreviewDialog } from '../bill-preview-dialog/bill-preview-dialog';
 import { NotificationService } from '../service/notification-service';
 
+import {
+  ExpenseBillsDialog
+} from '../expense-bills-dialog/expense-bills-dialog';
+
 @Component({
   selector: 'app-expense',
   standalone: true,
@@ -289,20 +293,6 @@ export class Expense implements OnInit {
     return expense.billOriginalName
       || 'bill';
   }
-
-  // viewBill(
-  //   expense: any
-  // ): void {
-
-  //   if (!expense.billUrl) {
-  //     return;
-  //   }
-
-  //   window.open(
-  //     expense.billUrl,
-  //     '_blank'
-  //   );
-  // }
 
   viewBill(
     expense: any
@@ -632,4 +622,39 @@ export class Expense implements OnInit {
         }
       });
   }
+
+  viewBills(
+    expense: any
+  ): void {
+
+    this.expenseService
+      .getExpenseBills(
+        expense.id
+      )
+      .subscribe({
+        next: bills => {
+
+          console.log(
+            'BILLS RECEIVED',
+            bills
+          );
+
+          this.dialog.open(
+            ExpenseBillsDialog,
+            {
+              width: '850px',
+              maxWidth: '95vw',
+              maxHeight: '85vh',
+              data: {
+                bills
+              }
+            }
+          );
+
+        }
+
+      });
+
+  }
+
 }
