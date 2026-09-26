@@ -197,12 +197,18 @@
 
             @for (
             bill of selectedBills;
-            track bill.name
+            track $index
             ) {
 
-            <span class="selected-file-name">
+            <div class="selected-file-name">
+
               📷 {{ bill.name }}
-            </span>
+
+              <button type="button" (click)="removeBill($index)">
+                ✖
+              </button>
+
+            </div>
 
             }
 
