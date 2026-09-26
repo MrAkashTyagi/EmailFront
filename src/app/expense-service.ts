@@ -39,31 +39,40 @@ export class ExpenseService {
 
 
   createExpense(
-    expense: any,
-    bill: File | null
-  ): Observable<any> {
+  expense: any,
+  bills: File[]
+): Observable<any> {
 
+  const formData =
+    new FormData();
 
-    const formData = new FormData();
+  formData.append(
+    'expense',
+    JSON.stringify(expense)
+  );
 
-    formData.append(
-      'expense',
-      JSON.stringify(expense)
-    );
+  if (
+      bills &&
+      bills.length > 0
+  ) {
 
-    if (bill) {
+    bills.forEach(
+      bill => {
 
-      formData.append(
-        'bill',
-        bill
-      );
-    }
+        formData.append(
+          'bills',
+          bill
+        );
 
-    return this.http.post<any>(
-      `${this.baseUrl}/expenses`,
-      formData
+      }
     );
   }
+
+  return this.http.post<any>(
+    `${this.baseUrl}/expenses`,
+    formData
+  );
+}
 
 
   getExpenseById(id: number): Observable<any> {
