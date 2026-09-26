@@ -185,13 +185,45 @@ onBillsSelected(event: Event): void {
   const input =
     event.target as HTMLInputElement;
 
-  this.selectedBills = [];
-
-  if (input.files) {
-
-    this.selectedBills =
-      Array.from(input.files);
+  if (!input.files) {
+    return;
   }
+
+  const newFiles =
+    Array.from(input.files);
+
+  newFiles.forEach(
+    file => {
+
+      const alreadyExists =
+        this.selectedBills.some(
+          existing =>
+            existing.name === file.name
+            &&
+            existing.size === file.size
+        );
+
+      if (!alreadyExists) {
+
+        this.selectedBills.push(
+          file
+        );
+
+      }
+
+    }
+  );
+
+  input.value = '';
+}
+
+removeBill(index: number): void {
+
+  this.selectedBills.splice(
+    index,
+    1
+  );
+
 }
 
   saveExpense(): void {
