@@ -289,26 +289,31 @@
         <ng-container matColumnDef="bill">
 
           <th mat-header-cell *matHeaderCellDef>
-            Bill
+            Bills
           </th>
           <td mat-cell *matCellDef="let element">
 
-            @if (element.billUrl && element.billUrl.trim()) {
+            @if (
+            element.bills &&
+            element.bills.length > 0
+            ) {
 
-            <button mat-icon-button color="primary" matTooltip="View Bill" (click)="viewBill(element)">
-
-              <mat-icon>visibility</mat-icon>
-
+            <button mat-icon-button color="primary" matTooltip="View Bills" (click)="viewBills(element)">
+              <mat-icon>
+                visibility
+              </mat-icon>
             </button>
 
-            <button mat-icon-button color="accent" matTooltip="Download Bill" (click)="downloadBill(element)">
-
-              <mat-icon>download</mat-icon>
-            </button>
-            } @else {
-            <span class="no-bill">
-              No Bill
+            <span>
+              ({{ element.bills.length }})
             </span>
+
+            } @else {
+
+            <span class="no-bill">
+              No Bills
+            </span>
+
             }
           </td>
         </ng-container>
