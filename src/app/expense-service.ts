@@ -192,4 +192,14 @@ export class ExpenseService {
     );
   }
 
+  getExpenseBills(
+  expenseId: number
+): Observable<any[]> {
+
+  return this.http.get<any[]>(
+    `${this.baseUrl}/expenses/${expenseId}/bills`
+  );
+
+}
+
 }
