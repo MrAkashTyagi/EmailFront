@@ -57,7 +57,7 @@ export class AddExpenseDialog implements OnInit {
   isSaving = false;
   saveError = '';
   existingBillName = '';
-  selectedBill: File | null = null;
+  selectedBills: File[] = [];
 
   readonly today = new Date();
 
@@ -180,15 +180,20 @@ export class AddExpenseDialog implements OnInit {
       || '';
   }
 
-  onBillSelected(event: Event): void {
+onBillsSelected(event: Event): void {
 
-    const input = event.target as HTMLInputElement;
+  const input =
+    event.target as HTMLInputElement;
 
-    if (input.files && input.files.length > 0) {
-      this.selectedBill = input.files[0];
-    }
+  this.selectedBills = [];
 
+  if (input.files) {
+
+    this.selectedBills =
+      Array.from(input.files);
   }
+}
+
   saveExpense(): void {
 
     if (
@@ -244,14 +249,21 @@ export class AddExpenseDialog implements OnInit {
         JSON.stringify(payload)
       );
 
-      if (this.selectedBill) {
+  if (
+    this.selectedBills.length > 0
+) {
 
-        formData.append(
-          'bill',
-          this.selectedBill
-        );
+  this.selectedBills.forEach(
+    bill => {
 
-      }
+      formData.append(
+        'bills',
+        bill
+      );
+
+    }
+  );
+}
 
       this.expenseService.updateExpense(
         this.data.id,
@@ -295,7 +307,7 @@ export class AddExpenseDialog implements OnInit {
 
       this.expenseService.createExpense(
         payload,
-        this.selectedBill
+        this.selectedBills
       ).subscribe({
         next: (createdExpense: any) => {
 
