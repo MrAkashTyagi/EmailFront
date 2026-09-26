@@ -1,23 +1,74 @@
+:host {
+  display: block;
+}
+
 .dialog-header {
+
   display: flex;
   justify-content: flex-end;
-  padding: 8px;
+
+  padding: 12px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #e5e7eb;
+
 }
 
 .close-btn {
-  color: #6b7280;
-}
 
-.close-btn:hover {
   background: #f3f4f6;
+
 }
 
 .preview-container {
-  padding: 12px;
+
+  height: calc(90vh - 70px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #111827;
+
+  overflow: auto;
+
+  padding: 16px;
+
 }
 
 .preview-image {
-  width: 100%;
-  max-height: 80vh;
+
+  max-width: 100%;
+  max-height: 100%;
+
+  border-radius: 12px;
+
+  box-shadow:
+      0 10px 25px
+      rgba(0,0,0,0.4);
+
   object-fit: contain;
+
+}
+.bill-info {
+
+  display: flex;
+  flex-direction: column;
+
+}
+
+.bill-name {
+
+  font-size: 16px;
+  font-weight: 600;
+
+}
+
+.bill-date {
+
+  font-size: 13px;
+
+  color: #6b7280;
+
 }
