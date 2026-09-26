@@ -182,7 +182,7 @@
 
         <div class="compact-upload-box">
 
-          <input #billInput type="file" accept=".pdf,.jpg,.jpeg,.png" hidden (change)="onBillSelected($event)" />
+          <input #billInput type="file" accept=".jpg,.jpeg,.png" multiple hidden (change)="onBillsSelected($event)" />
 
           <button mat-stroked-button color="primary" type="button" (click)="billInput.click()">
 
@@ -190,22 +190,36 @@
             Upload Bill
 
           </button>
-          @if (selectedBill) {
 
-          <span class="selected-file-name">
-            📄 {{ selectedBill.name }}
-          </span>
+          @if (selectedBills.length > 0) {
+
+          <div class="selected-files">
+
+            @for (
+            bill of selectedBills;
+            track bill.name
+            ) {
+
+            <span class="selected-file-name">
+              📷 {{ bill.name }}
+            </span>
+
+            }
+
+          </div>
 
           }
 
-          @if (!selectedBill && existingBillName) {
+          @if (
+          selectedBills.length === 0
+          && existingBillName
+          ) {
 
           <span class="selected-file-name">
-            📄 {{ existingBillName }}
+            📷 {{ existingBillName }}
           </span>
 
           }
-
         </div>
 
       </div>
