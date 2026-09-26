@@ -1,0 +1,108 @@
+:host {
+  display: block;
+}
+
+.dialog-header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 20px 24px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+}
+
+.bills-container {
+
+  padding: 24px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(280px, 1fr)
+    );
+
+  gap: 16px;
+
+  max-height: 65vh;
+
+  overflow-y: auto;
+
+}
+
+.bill-card {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 16px;
+
+  border-radius: 14px;
+
+  border: 1px solid #e5e7eb;
+
+  cursor: pointer;
+
+  transition: all .2s ease;
+
+  background: #fff;
+
+}
+
+.bill-card:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 6px 20px
+    rgba(
+      0,
+      0,
+      0,
+      0.08
+    );
+
+}
+
+.bill-thumbnail {
+
+  width: 72px;
+
+  height: 72px;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+
+  border: 1px solid #e5e7eb;
+
+}
+
+.bill-name {
+
+  flex: 1;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  word-break: break-word;
+
+}
+
+.empty-state {
+
+  text-align: center;
+
+  padding: 40px;
+
+  color: #6b7280;
+
+}
