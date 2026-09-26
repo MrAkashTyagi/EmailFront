@@ -1,0 +1,47 @@
+<div class="dialog-header">
+
+  <h2>
+    Expense Bills
+  </h2>
+
+  <button
+    mat-icon-button
+    (click)="close()"
+  >
+    <mat-icon>
+      close
+    </mat-icon>
+  </button>
+
+</div>
+
+<div class="bills-container">
+
+  @for (
+    bill of data.bills;
+    track bill.id
+  ) {
+
+    <div
+      class="bill-card"
+      (click)="openBill(bill)"
+    >
+
+      <img
+        [src]="bill.billUrl"
+        class="bill-thumbnail"
+      />
+
+      <div class="bill-name">
+
+        {{
+          bill.billOriginalName
+        }}
+
+      </div>
+
+    </div>
+
+  }
+
+</div>
