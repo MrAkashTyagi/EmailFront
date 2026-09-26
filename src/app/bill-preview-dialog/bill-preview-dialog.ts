@@ -33,4 +33,18 @@ export class BillPreviewDialog {
       'application/pdf';
   }
 
+get billName(): string {
+
+  return this.data?.bill?.billOriginalName
+    ?? 'Bill Preview';
+
+}
+
+get expenseDate(): string {
+
+  return this.data?.bill?.expenseDate
+    ?? '';
+
+}
+
 }
