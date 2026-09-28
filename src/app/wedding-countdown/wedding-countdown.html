@@ -1,0 +1,214 @@
+<!-- 
+
+<section class="countdown-card">
+
+  @if (isLoading) {
+
+    <div class="loading-state">
+
+      <div class="loading-ring">
+      </div>
+
+      <span>
+        Loading wedding countdown...
+      </span>
+
+    </div>
+
+  } @else if (!settings) {
+
+    <div class="empty-state">
+
+      <div class="hero-icon">
+        💍
+      </div>
+
+      <div>
+
+        <h2>
+          Your Big Day Awaits
+        </h2>
+
+        <p>
+          Set your wedding date to begin
+          the countdown.
+        </p>
+
+      </div>
+
+      <button
+        mat-flat-button
+        type="button"
+        class="settings-button"
+        (click)="openSettings()"
+      >
+
+        <mat-icon>
+          event
+        </mat-icon>
+
+        Set Wedding Date
+
+      </button>
+
+    </div>
+
+  } @else {
+
+    <div class="countdown-header">
+
+      <div>
+
+        <div class="eyebrow">
+          💍 Wedding Countdown
+        </div>
+
+        <h2>
+          {{ heading }}
+        </h2>
+
+        <p>
+          {{ subtitle }}
+        </p>
+
+      </div>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="edit-button"
+        aria-label="Edit wedding details"
+        matTooltip="Edit Wedding Details"
+        (click)="openSettings()"
+      >
+
+        <mat-icon>
+          edit
+        </mat-icon>
+
+      </button>
+
+    </div>
+
+    @if (
+      isWeddingToday
+      && !isWeddingComplete
+    ) {
+
+      <div class="wedding-day-message">
+        🎉 The celebration begins today!
+      </div>
+
+    }
+
+    <div class="countdown-grid">
+
+      <div class="time-card">
+
+        <span class="time-value">
+          {{ days() | number:'2.0-0' }}
+        </span>
+
+        <span class="time-label">
+          Days
+        </span>
+
+      </div>
+
+      <div class="time-card">
+
+        <span class="time-value">
+          {{ hours() | number:'2.0-0' }}
+        </span>
+
+        <span class="time-label">
+          Hours
+        </span>
+
+      </div>
+
+      <div class="time-card">
+
+        <span class="time-value">
+          {{ minutes() | number:'2.0-0' }}
+        </span>
+
+        <span class="time-label">
+          Minutes
+        </span>
+
+      </div>
+
+      <div class="time-card">
+
+        <span class="time-value">
+          {{ seconds() | number:'2.0-0' }}
+        </span>
+
+        <span class="time-label">
+          Seconds
+        </span>
+
+      </div>
+
+    </div>
+
+  }
+
+</section> -->
+
+<section class="countdown-hero">
+
+  <div class="couple-name">
+    Akash ❤️ {{ settings?.partnerName }}
+  </div>
+
+  <div class="wedding-date">
+    {{ settings?.weddingDateTime | date:'dd MMMM yyyy • hh:mm a' }}
+  </div>
+
+  <div class="countdown-row">
+
+    <div>
+      <span class="count-value">
+        {{ days() }}
+      </span>
+
+      <span class="count-label">
+        Days
+      </span>
+    </div>
+
+    <div>
+      <span class="count-value">
+        {{ hours() }}
+      </span>
+
+      <span class="count-label">
+        Hours
+      </span>
+    </div>
+
+    <div>
+      <span class="count-value">
+        {{ minutes() }}
+      </span>
+
+      <span class="count-label">
+        Minutes
+      </span>
+    </div>
+
+    <div>
+      <span class="count-value">
+        {{ seconds() }}
+      </span>
+
+      <span class="count-label">
+        Seconds
+      </span>
+    </div>
+
+  </div>
+
+</section>
