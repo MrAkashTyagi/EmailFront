@@ -364,4 +364,14 @@ loadSettings(): void {
 
     return 'Until the big day';
   }
+
+  hasWeddingDate(): boolean {
+
+  return !!(
+    this.settings &&
+    this.settings.weddingDateTime
+  );
+
+}
+
 }
