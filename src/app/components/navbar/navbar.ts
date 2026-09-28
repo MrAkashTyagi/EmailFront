@@ -291,4 +291,11 @@ export class Navbar {
   return this.authService.isGuest();
 }
 
+openWeddingSettings(): void {
+
+  this.navBarService
+      .triggerWeddingSettingsClick();
+
+}
+
 }
