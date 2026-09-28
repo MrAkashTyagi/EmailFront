@@ -155,6 +155,19 @@
   </button>
   }
 
+    @if (isUser()) {
+  <button mat-menu-item (click)="openWeddingSettings()">
+
+    <mat-icon>
+      favorite
+    </mat-icon>
+
+    <span>
+      Wedding Settings
+    </span>
+
+  </button>
+  }
   <button mat-menu-item routerLink="/wall" routerLinkActive="active-menu-item">
 
     <mat-icon>
