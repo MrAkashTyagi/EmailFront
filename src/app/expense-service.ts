@@ -20,16 +20,23 @@ export class ExpenseService {
   getExpensesPaged(
     page: number,
     size: number,
-    search: string = '',
-    category: string = ''
+    search: string,
+    category: string,
+    paymentStatus: string,
+    paidBy: string,
+    fromDate: string,
+    toDate: string
   ): Observable<any> {
-
 
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('search', search)
-      .set('category', category);
+      .set('category', category)
+      .set('paymentStatus', paymentStatus)
+      .set('paidBy', paidBy)
+      .set('fromDate', fromDate)
+      .set('toDate', toDate);
 
     return this.http.get<any>(
       `${this.baseUrl}/expenses`,
@@ -37,42 +44,41 @@ export class ExpenseService {
     );
   }
 
-
   createExpense(
-  expense: any,
-  bills: File[]
-): Observable<any> {
+    expense: any,
+    bills: File[]
+  ): Observable<any> {
 
-  const formData =
-    new FormData();
+    const formData =
+      new FormData();
 
-  formData.append(
-    'expense',
-    JSON.stringify(expense)
-  );
+    formData.append(
+      'expense',
+      JSON.stringify(expense)
+    );
 
-  if (
+    if (
       bills &&
       bills.length > 0
-  ) {
+    ) {
 
-    bills.forEach(
-      bill => {
+      bills.forEach(
+        bill => {
 
-        formData.append(
-          'bills',
-          bill
-        );
+          formData.append(
+            'bills',
+            bill
+          );
 
-      }
+        }
+      );
+    }
+
+    return this.http.post<any>(
+      `${this.baseUrl}/expenses`,
+      formData
     );
   }
-
-  return this.http.post<any>(
-    `${this.baseUrl}/expenses`,
-    formData
-  );
-}
 
 
   getExpenseById(id: number): Observable<any> {
@@ -193,13 +199,24 @@ export class ExpenseService {
   }
 
   getExpenseBills(
-  expenseId: number
-): Observable<any[]> {
+    expenseId: number
+  ): Observable<any[]> {
 
-  return this.http.get<any[]>(
-    `${this.baseUrl}/expenses/${expenseId}/bills`
-  );
+    return this.http.get<any[]>(
+      `${this.baseUrl}/expenses/${expenseId}/bills`
+    );
 
-}
+  }
+
+  deleteExpenseBill(
+    expenseId: number,
+    billId: number
+  ) {
+
+    return this.http.delete(
+      `${this.baseUrl}/expenses/${expenseId}/bills/${billId}`
+    );
+
+  }
 
 }
