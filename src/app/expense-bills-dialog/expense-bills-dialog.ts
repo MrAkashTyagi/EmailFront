@@ -20,6 +20,9 @@ import {
   BillPreviewDialog
 } from '../bill-preview-dialog/bill-preview-dialog';
 
+import { ExpenseService }
+  from '../expense-service';
+
 @Component({
   selector: 'app-expense-bills-dialog',
   standalone: true,
@@ -48,6 +51,9 @@ export class ExpenseBillsDialog {
         ExpenseBillsDialog
       >
     );
+
+  private expenseService =
+    inject(ExpenseService);
 
   close(): void {
 
@@ -84,4 +90,53 @@ export class ExpenseBillsDialog {
 
   }
 
+  deleteBill(
+    event: Event,
+    bill: any
+  ): void {
+
+    event.stopPropagation();
+
+    const confirmed =
+      confirm(
+        'Delete this bill ?'
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.expenseService
+      .deleteExpenseBill(
+        this.data.expenseId,
+        bill.id
+      )
+      .subscribe({
+
+        next: () => {
+
+          this.data.bills =
+            this.data.bills.filter(
+              (x: any) =>
+                x.id !== bill.id
+            );
+
+          this.dialogRef.close(
+            true
+          );
+
+        },
+
+        error: err => {
+
+          console.error(
+            'Delete bill failed',
+            err
+          );
+
+        }
+
+      });
+
+  }
 }
