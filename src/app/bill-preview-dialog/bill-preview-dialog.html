@@ -1,26 +1,61 @@
-<div class="dialog-header">
+<div
+  class="preview-wrapper"
+  #previewContainer
+>
 
-  <button mat-icon-button class="close-btn" (click)="close()">
+  <div class="dialog-header">
 
-    <mat-icon>
-      close
-    </mat-icon>
+    <button
+      mat-icon-button
+      (click)="toggleFullscreen()"
+    >
 
-  </button>
+      <mat-icon>
 
-</div>
+        {{
+          isFullscreen
+            ? 'fullscreen_exit'
+            : 'fullscreen'
+        }}
 
-<div class="preview-container">
+      </mat-icon>
 
-  @if (isPdf) {
+    </button>
 
-  <iframe [src]="data.url" width="100%" height="700">
-  </iframe>
+    <button
+      mat-icon-button
+      class="close-btn"
+      (click)="close()"
+    >
 
-  } @else {
+      <mat-icon>
+        close
+      </mat-icon>
 
-  <img [src]="data.url" class="preview-image" alt="Bill Preview" />
+    </button>
 
-  }
+  </div>
+
+  <div class="preview-container">
+
+    @if (isPdf) {
+
+      <iframe
+        [src]="data.url"
+        width="100%"
+        height="700">
+      </iframe>
+
+    } @else {
+
+      <img
+        [src]="data.url"
+        class="preview-image"
+        alt="Bill Preview"
+      />
+
+    }
+
+  </div>
 
 </div>
