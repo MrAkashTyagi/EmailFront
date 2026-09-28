@@ -6,24 +6,36 @@
 
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 
-  padding: 12px;
+  height: 48px;
 
-  background: #ffffff;
+  padding: 0 8px;
 
   border-bottom: 1px solid #e5e7eb;
+
+  background: white;
 
 }
 
 .close-btn {
 
+  width: 36px;
+  height: 36px;
   background: #f3f4f6;
+
+}
+
+.mat-mdc-icon-button {
+
+  width: 36px;
+  height: 36px;
 
 }
 
 .preview-container {
 
-  height: calc(90vh - 70px);
+  height: calc(85vh - 75px);
 
   display: flex;
   align-items: center;
@@ -45,12 +57,12 @@
   border-radius: 12px;
 
   box-shadow:
-      0 10px 25px
-      rgba(0,0,0,0.4);
+    0 10px 25px rgba(0, 0, 0, 0.4);
 
   object-fit: contain;
 
 }
+
 .bill-info {
 
   display: flex;
