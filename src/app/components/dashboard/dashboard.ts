@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { DashboardService } from '../../service/dashboard-service';
 import { CommonModule } from '@angular/common';
 
@@ -7,6 +7,10 @@ import { ExpenseService } from '../../expense-service';
 import { GuestService } from '../../service/guest-service';
 import { RouterLink } from '@angular/router';
 import { WeddingCountdown } from '../../wedding-countdown/wedding-countdown';
+import { MatDialog } from '@angular/material/dialog';
+import { NavbarActionService } from '../../service/navbar-action-service';
+import { WeddingSettingsService } from '../../service/wedding-settings-service';
+import { WeddingSettingsDialog } from '../wedding-settings-dialog/wedding-settings-dialog';
 
 
 
@@ -31,6 +35,15 @@ export class Dashboard implements OnInit {
 
   private guestService =
     inject(GuestService);
+
+  private readonly dialog =
+    inject(MatDialog);
+
+  private readonly navBarService =
+    inject(NavbarActionService);
+
+  private readonly weddingSettingsService =
+    inject(WeddingSettingsService);
 
   recentGuests: any[] = [];
 
@@ -57,6 +70,25 @@ export class Dashboard implements OnInit {
   });
 
 
+  constructor() {
+
+    effect(() => {
+
+      const clickCounter =
+        this.navBarService
+          .weddingSettingsClick();
+
+      if (clickCounter === 0) {
+        return;
+      }
+
+      this.openWeddingSettings();
+
+    });
+
+  }
+
+
   ngOnInit() {
     this.loadDashboard();
     this.loadGiftSummary();
@@ -64,6 +96,8 @@ export class Dashboard implements OnInit {
     this.loadGuestChart();
     this.loadRecentGuests();
     this.loadRecentExpenses();
+
+
   }
 
   loadDashboard(): void {
@@ -83,7 +117,7 @@ export class Dashboard implements OnInit {
 
 
   loadGiftSummary(): void {
-    
+
     this.guestService
       .getGiftSummary()
       .subscribe({
@@ -244,6 +278,70 @@ export class Dashboard implements OnInit {
           console.error('Guest Chart Error', err);
         }
       });
+  }
+
+
+  openWeddingSettings(): void {
+
+    this.weddingSettingsService
+      .getSettings()
+      .subscribe({
+
+        next: settings => {
+
+          const dialogRef =
+            this.dialog.open(
+              WeddingSettingsDialog,
+              {
+                width: '620px',
+                maxWidth: '95vw',
+                autoFocus: false,
+                data: settings
+              }
+            );
+
+          dialogRef
+            .afterClosed()
+            .subscribe(result => {
+
+              if (result) {
+
+                window.location.reload();
+
+              }
+
+            });
+
+        },
+
+        error: () => {
+
+          const dialogRef =
+            this.dialog.open(
+              WeddingSettingsDialog,
+              {
+                width: '620px',
+                maxWidth: '95vw',
+                autoFocus: false
+              }
+            );
+
+          dialogRef
+            .afterClosed()
+            .subscribe(result => {
+
+              if (result) {
+
+                window.location.reload();
+
+              }
+
+            });
+
+        }
+
+      });
+
   }
 
 }
