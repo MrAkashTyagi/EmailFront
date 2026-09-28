@@ -364,3 +364,58 @@
   
 
 }
+.empty-state {
+
+  text-align: center;
+
+  padding: 20px;
+
+}
+
+.empty-state h2 {
+
+  margin-bottom: 8px;
+
+  color: #e0e3eb;
+
+}
+
+.empty-state p {
+
+  color: #c9d0dd;
+
+  margin-bottom: 16px;
+
+}
+
+.set-date-btn {
+
+  background: #7c3aed !important;
+
+  color: white !important;
+
+}
+
+.empty-title {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 10px;
+
+  font-size: 28px;
+
+  font-weight: 700;
+
+  color: #e8ecf6;
+
+}
+
+.empty-icon {
+
+  font-size: 30px;
+
+}
