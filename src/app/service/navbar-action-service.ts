@@ -6,10 +6,15 @@ import { Subject } from "rxjs";
 })
 export class NavbarActionService {
 
-readonly searchQuery = signal<string>('');
-readonly totalGuestCount = signal<number>(0);
-readonly countLabel = signal<string>('Total Guests');
+  readonly searchQuery = signal<string>('');
+  readonly totalGuestCount = signal<number>(0);
+  readonly countLabel = signal<string>('Total Guests');
+  // readonly weddingSettingsClick =
+  //   new Subject<void>();
 
+  readonly weddingSettingsClick =
+    signal(0);
+    
 
   private addClickSubject = new Subject<void>();
   addClick$ = this.addClickSubject.asObservable();
@@ -24,4 +29,19 @@ readonly countLabel = signal<string>('Total Guests');
   triggerExportClick() {
     this.exportClickSubject.next();
   }
+
+  // triggerWeddingSettingsClick(): void {
+
+  //   this.weddingSettingsClick.next();
+
+  // }
+
+  triggerWeddingSettingsClick(): void {
+
+    this.weddingSettingsClick.update(
+      value => value + 1
+    );
+
+  }
+
 }
