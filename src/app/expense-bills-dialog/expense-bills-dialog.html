@@ -4,10 +4,7 @@
     Expense Bills
   </h2>
 
-  <button
-    mat-icon-button
-    (click)="close()"
-  >
+  <button mat-icon-button (click)="close()">
     <mat-icon>
       close
     </mat-icon>
@@ -18,29 +15,28 @@
 <div class="bills-container">
 
   @for (
-    bill of data.bills;
-    track bill.id
+  bill of data.bills;
+  track bill.id
   ) {
 
-    <div
-      class="bill-card"
-      (click)="openBill(bill)"
-    >
+  <div class="bill-card">
 
-      <img
-        [src]="bill.billUrl"
-        class="bill-thumbnail"
-      />
+    <img [src]="bill.billUrl" class="bill-thumbnail" (click)="openBill(bill)" />
 
-      <div class="bill-name">
-
-        {{
-          bill.billOriginalName
-        }}
-
-      </div>
-
+    <div class="bill-name" (click)="openBill(bill)">
+      {{ bill.billOriginalName }}
     </div>
+
+    <button mat-icon-button color="warn" (click)="deleteBill(
+      $event,
+      bill
+    )">
+      <mat-icon>
+        delete
+      </mat-icon>
+    </button>
+
+  </div>
 
   }
 
