@@ -374,3 +374,96 @@
   min-width: 0;
   width: 100%;
 }
+.toolbar-filter-field {
+
+  width: 180px;
+
+}
+
+.page-toolbar-right {
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+}
+.filters-card {
+  padding: 8px 10px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.section-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-icon {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  background: #eef2ff;
+}
+
+.filter-field {
+  width: 180px;
+  margin-bottom: 0;
+}
+
+.date-range-field {
+  width: 240px;
+  margin-bottom: 0 !important;
+}
+
+
+.filter-grid {
+  display: flex;
+  align-items: flex-start; /* center se start */
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+.clear-btn {
+  height: 56px;
+  white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  .filter-grid {
+    flex-wrap: wrap;
+  }
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 8px !important;
+}
+
+::ng-deep .filter-field .mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+::ng-deep .filter-field .mat-mdc-form-field-bottom-align {
+  display: none !important;
+}
