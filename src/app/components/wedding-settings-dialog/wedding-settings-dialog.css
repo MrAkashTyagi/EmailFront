@@ -1,0 +1,85 @@
+.dialog-container {
+  min-width: 520px;
+  max-width: 100%;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 20px 24px 8px;
+}
+
+.dialog-header h2 {
+  margin: 0;
+}
+
+.dialog-header p {
+  margin: 4px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+.header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 45px;
+  height: 45px;
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fdf2f8,
+      #ede9fe
+    );
+
+  font-size: 23px;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  padding-top: 8px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.date-time-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 14px;
+}
+
+.save-button {
+  border-radius: 10px !important;
+
+  background: #7c3aed !important;
+  color: white !important;
+}
+
+@media (max-width: 600px) {
+
+  .dialog-container {
+    min-width: 0;
+  }
+
+  .date-time-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+}
