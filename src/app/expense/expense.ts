@@ -50,6 +50,15 @@ import { NotificationService } from '../service/notification-service';
 import {
   ExpenseBillsDialog
 } from '../expense-bills-dialog/expense-bills-dialog';
+import { MatInputModule } from '@angular/material/input';
+
+import {
+  MatDatepickerModule
+} from '@angular/material/datepicker';
+
+import {
+  MatNativeDateModule
+} from '@angular/material/core';
 
 @Component({
   selector: 'app-expense',
@@ -68,7 +77,10 @@ import {
     MatTooltipModule,
     MatIconModule,
     BaseChartDirective,
-    BillPreviewDialog
+    BillPreviewDialog,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   templateUrl: './expense.html',
   styleUrl: './expense.css'
@@ -100,6 +112,25 @@ export class Expense implements OnInit {
     highestExpense: 0,
     topCategory: '-'
   });
+
+  readonly selectedPaymentStatus =
+    signal('');
+
+  readonly selectedPaidBy =
+    signal('');
+
+  // readonly fromDate =
+  //   signal('');
+
+  // readonly toDate =
+  //   signal('');
+
+
+  readonly fromDate =
+    signal<Date | null>(null);
+
+  readonly toDate =
+    signal<Date | null>(null);
 
   private expenseService = inject(ExpenseService);
   private navBarService = inject(NavbarActionService);
@@ -464,6 +495,15 @@ export class Expense implements OnInit {
   }
 
   fetchPaginatedExpenses(): void {
+    const fromDateValue =
+      this.formatLocalDate(
+        this.fromDate()
+      );
+
+    const toDateValue =
+      this.formatLocalDate(
+        this.toDate()
+      );
 
     const page = this.currentPage();
     const size = this.pageSize();
@@ -474,7 +514,11 @@ export class Expense implements OnInit {
       page,
       size,
       search,
-      category
+      category,
+      this.selectedPaymentStatus(),
+      this.selectedPaidBy(),
+      fromDateValue,
+      toDateValue
     ).subscribe({
       next: (response: any) => {
 
@@ -503,7 +547,13 @@ export class Expense implements OnInit {
   }
 
   clearFilters(): void {
+
     this.selectedCategory.set('');
+    this.selectedPaymentStatus.set('');
+    this.selectedPaidBy.set('');
+
+    this.fromDate.set(null);
+    this.toDate.set(null);
 
     this.navBarService
       .searchQuery
@@ -632,29 +682,98 @@ export class Expense implements OnInit {
         expense.id
       )
       .subscribe({
+
         next: bills => {
 
-          console.log(
-            'BILLS RECEIVED',
-            bills
-          );
-
-          this.dialog.open(
-            ExpenseBillsDialog,
-            {
-              width: '850px',
-              maxWidth: '95vw',
-              maxHeight: '85vh',
-              data: {
-                bills
+          const dialogRef =
+            this.dialog.open(
+              ExpenseBillsDialog,
+              {
+                width: '850px',
+                maxWidth: '95vw',
+                maxHeight: '85vh',
+                data: {
+                  bills,
+                  expenseId: expense.id
+                }
               }
-            }
-          );
+            );
+
+          dialogRef
+            .afterClosed()
+            .subscribe(
+              refreshNeeded => {
+
+                if (
+                  refreshNeeded
+                ) {
+
+                  this.fetchPaginatedExpenses();
+
+                }
+
+              }
+            );
 
         }
 
       });
 
+  }
+  onFromDateChange(
+    date: Date | null
+  ): void {
+
+    this.fromDate.set(
+      date
+    );
+
+    this.currentPage.set(0);
+
+    this.fetchPaginatedExpenses();
+  }
+
+  onToDateChange(
+    date: Date | null
+  ): void {
+
+    this.toDate.set(
+      date
+    );
+
+    this.currentPage.set(0);
+
+    this.fetchPaginatedExpenses();
+  }
+
+  private formatLocalDate(
+    date: Date | null
+  ): string {
+
+    if (!date) {
+      return '';
+    }
+
+    const year =
+      date.getFullYear();
+
+    const month =
+      String(
+        date.getMonth() + 1
+      ).padStart(
+        2,
+        '0'
+      );
+
+    const day =
+      String(
+        date.getDate()
+      ).padStart(
+        2,
+        '0'
+      );
+
+    return `${year}-${month}-${day}`;
   }
 
 }
