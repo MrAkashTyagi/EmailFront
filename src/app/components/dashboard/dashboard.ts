@@ -6,13 +6,17 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ExpenseService } from '../../expense-service';
 import { GuestService } from '../../service/guest-service';
 import { RouterLink } from '@angular/router';
+import { WeddingCountdown } from '../../wedding-countdown/wedding-countdown';
+
+
 
 @Component({
   selector: 'app-dashboard',
   imports: [
     CommonModule,
     BaseChartDirective,
-    RouterLink
+    RouterLink,
+    WeddingCountdown
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
