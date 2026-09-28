@@ -1,0 +1,186 @@
+<div class="dialog-container">
+
+  <div class="dialog-header">
+
+    <div class="header-icon">
+      💍
+    </div>
+
+    <div>
+
+      <h2 mat-dialog-title>
+        Wedding Details
+      </h2>
+
+      <p>
+        Set the date and time for your big day.
+      </p>
+
+    </div>
+
+  </div>
+
+  <mat-dialog-content>
+
+    <form
+      class="settings-form"
+      [formGroup]="settingsForm"
+    >
+
+      <mat-form-field
+        appearance="outline"
+        class="full-width"
+      >
+
+        <mat-label>
+          Partner Name
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="partnerName"
+          placeholder="Enter partner name"
+        >
+
+        <mat-hint>
+          Optional
+        </mat-hint>
+
+        @if (
+          settingsForm.controls
+            .partnerName
+            .hasError('maxlength')
+        ) {
+
+          <mat-error>
+            Partner name cannot exceed
+            100 characters.
+          </mat-error>
+
+        }
+
+      </mat-form-field>
+
+      <div class="date-time-grid">
+
+        <mat-form-field
+          appearance="outline"
+        >
+
+          <mat-label>
+            Wedding Date
+          </mat-label>
+
+          <input
+            matInput
+            [matDatepicker]="weddingPicker"
+            formControlName="weddingDate"
+            readonly
+            (click)="weddingPicker.open()"
+          >
+
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="weddingPicker"
+          >
+          </mat-datepicker-toggle>
+
+          <mat-datepicker
+            #weddingPicker
+          >
+          </mat-datepicker>
+
+          @if (
+            settingsForm.controls
+              .weddingDate
+              .touched
+            &&
+            settingsForm.controls
+              .weddingDate
+              .hasError('required')
+          ) {
+
+            <mat-error>
+              Wedding date is required.
+            </mat-error>
+
+          }
+
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+        >
+
+          <mat-label>
+            Wedding Time
+          </mat-label>
+
+          <input
+            matInput
+            type="time"
+            formControlName="weddingTime"
+          >
+
+          @if (
+            settingsForm.controls
+              .weddingTime
+              .touched
+            &&
+            settingsForm.controls
+              .weddingTime
+              .hasError('required')
+          ) {
+
+            <mat-error>
+              Wedding time is required.
+            </mat-error>
+
+          }
+
+        </mat-form-field>
+
+      </div>
+
+    </form>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions
+    align="end"
+  >
+
+    <button
+      mat-button
+      type="button"
+      (click)="close()"
+    >
+      Cancel
+    </button>
+
+    <button
+      mat-flat-button
+      type="button"
+      class="save-button"
+      [disabled]="
+        settingsForm.invalid
+        || isSaving
+      "
+      (click)="save()"
+    >
+
+      @if (isSaving) {
+
+        Saving...
+
+      } @else {
+
+        Save Details
+
+      }
+
+    </button>
+
+  </mat-dialog-actions>
+
+</div>
