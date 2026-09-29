@@ -1,6 +1,7 @@
 import {
   Component,
   DestroyRef,
+  effect,
   inject,
   OnInit,
   signal
@@ -32,6 +33,15 @@ import {
 } from '@angular/material/tooltip';
 import { WeddingSettingsDialog } from '../components/wedding-settings-dialog/wedding-settings-dialog';
 import { WeddingSettingsService, WeddingSettings } from '../service/wedding-settings-service';
+
+import {
+  ChangeDetectorRef
+} from '@angular/core';
+// import { NavbarActionService } from '../service/navbar-action-service';
+
+import {
+  NavbarActionService
+} from '../service/navbar-action-service';
 
 @Component({
   selector:
@@ -65,24 +75,32 @@ export class WeddingCountdown
   private readonly destroyRef =
     inject(DestroyRef);
 
+  private readonly cdr =
+    inject(ChangeDetectorRef);
+
+  // private navbarService = inject(NavbarActionService);
+
+  private readonly navBarService =
+    inject(NavbarActionService);
+
   settings:
     WeddingSettings | null =
-      null;
+    null;
 
   isLoading =
     true;
 
-readonly days =
-  signal(0);
+  readonly days =
+    signal(0);
 
-readonly hours =
-  signal(0);
+  readonly hours =
+    signal(0);
 
-readonly minutes =
-  signal(0);
+  readonly minutes =
+    signal(0);
 
-readonly seconds =
-  signal(0);
+  readonly seconds =
+    signal(0);
 
   isWeddingComplete =
     false;
@@ -93,11 +111,24 @@ readonly seconds =
   private countdownTimer:
     ReturnType<typeof setInterval>
     | null =
-      null;
+    null;
 
   ngOnInit(): void {
 
     this.loadSettings();
+
+    this.navBarService
+      .weddingSettingsUpdated$
+      .pipe(
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
+      .subscribe(() => {
+
+        this.loadSettings();
+
+      });
 
     this.destroyRef
       .onDestroy(() => {
@@ -106,38 +137,73 @@ readonly seconds =
 
       });
   }
+  loadSettings(): void {
 
-loadSettings(): void {
+    this.isLoading =
+      true;
 
-  console.log('STEP 1');
+    this.settingsService
+      .getSettings()
+      .pipe(
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
+      .subscribe({
 
-  this.settingsService
-    .getSettings()
-    .subscribe({
+        next: settings => {
 
-      next: settings => {
+          this.settings =
+            settings;
 
-        console.log('STEP 2', settings);
+          this.isLoading =
+            false;
 
-        this.settings = settings;
+          this.startTimer();
 
-        this.isLoading = false;
+        },
 
-        this.startTimer();
+        error: error => {
 
-      },
+          this.isLoading =
+            false;
 
-      error: error => {
+          this.settings =
+            null;
 
-        console.log('STEP 3', error);
+          this.stopTimer();
 
-        this.isLoading = false;
+          this.resetCountdown();
 
-      }
+          if (
+            error?.status !== 404
+          ) {
 
-    });
+            console.error(
+              'Wedding settings load failed:',
+              error
+            );
 
-}
+          }
+
+        }
+
+      });
+  }
+
+  private resetCountdown(): void {
+
+    this.days.set(0);
+    this.hours.set(0);
+    this.minutes.set(0);
+    this.seconds.set(0);
+
+    this.isWeddingComplete =
+      false;
+
+    this.isWeddingToday =
+      false;
+  }
 
   openSettings(): void {
 
@@ -173,36 +239,39 @@ loadSettings(): void {
           this.settings =
             savedSettings;
 
+          this.isLoading =
+            false;
+
           this.startTimer();
 
         }
       );
   }
-
+  
   private startTimer(): void {
 
-  console.log('TIMER START');
+    console.log('TIMER START');
 
-  this.stopTimer();
+    this.stopTimer();
 
-  if (
-    !this.settings
-    || !this.settings.weddingDateTime
-  ) {
-    return;
+    if (
+      !this.settings
+      || !this.settings.weddingDateTime
+    ) {
+      return;
+    }
+
+    this.updateCountdown();
+
+    this.countdownTimer =
+      setInterval(() => {
+
+        console.log('TICK');
+
+        this.updateCountdown();
+
+      }, 1000);
   }
-
-  this.updateCountdown();
-
-  this.countdownTimer =
-    setInterval(() => {
-
-      console.log('TICK');
-
-      this.updateCountdown();
-
-    }, 1000);
-}
 
   private stopTimer(): void {
 
@@ -226,7 +295,7 @@ loadSettings(): void {
     if (
       !this.settings
       || !this.settings
-          .weddingDateTime
+        .weddingDateTime
     ) {
       return;
     }
@@ -317,15 +386,15 @@ loadSettings(): void {
 
     return (
       firstDate.getFullYear()
-        ===
+      ===
       secondDate.getFullYear()
       &&
       firstDate.getMonth()
-        ===
+      ===
       secondDate.getMonth()
       &&
       firstDate.getDate()
-        ===
+      ===
       secondDate.getDate()
     );
   }
@@ -367,11 +436,11 @@ loadSettings(): void {
 
   hasWeddingDate(): boolean {
 
-  return !!(
-    this.settings &&
-    this.settings.weddingDateTime
-  );
+    return !!(
+      this.settings &&
+      this.settings.weddingDateTime
+    );
 
-}
+  }
 
 }
