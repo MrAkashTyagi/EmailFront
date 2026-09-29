@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { DashboardService } from '../../service/dashboard-service';
 import { CommonModule } from '@angular/common';
 
@@ -12,7 +12,9 @@ import { NavbarActionService } from '../../service/navbar-action-service';
 import { WeddingSettingsService } from '../../service/wedding-settings-service';
 import { WeddingSettingsDialog } from '../wedding-settings-dialog/wedding-settings-dialog';
 
-
+import {
+  takeUntilDestroyed
+} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,6 +47,9 @@ export class Dashboard implements OnInit {
   private readonly weddingSettingsService =
     inject(WeddingSettingsService);
 
+  private readonly destroyRef =
+    inject(DestroyRef);
+
   recentGuests: any[] = [];
 
   recentExpenses: any[] = [];
@@ -70,26 +75,10 @@ export class Dashboard implements OnInit {
   });
 
 
-  constructor() {
-
-    effect(() => {
-
-      const clickCounter =
-        this.navBarService
-          .weddingSettingsClick();
-
-      if (clickCounter === 0) {
-        return;
-      }
-
-      this.openWeddingSettings();
-
-    });
-
-  }
 
 
-  ngOnInit() {
+  ngOnInit(): void {
+
     this.loadDashboard();
     this.loadGiftSummary();
     this.loadExpenseChart();
@@ -97,7 +86,18 @@ export class Dashboard implements OnInit {
     this.loadRecentGuests();
     this.loadRecentExpenses();
 
+    this.navBarService
+      .weddingSettingsClick$
+      .pipe(
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
+      .subscribe(() => {
 
+        this.openWeddingSettings();
+
+      });
   }
 
   loadDashboard(): void {
@@ -285,63 +285,76 @@ export class Dashboard implements OnInit {
 
     this.weddingSettingsService
       .getSettings()
+      .pipe(
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
       .subscribe({
 
         next: settings => {
 
-          const dialogRef =
-            this.dialog.open(
-              WeddingSettingsDialog,
-              {
-                width: '620px',
-                maxWidth: '95vw',
-                autoFocus: false,
-                data: settings
-              }
-            );
-
-          dialogRef
-            .afterClosed()
-            .subscribe(result => {
-
-              if (result) {
-
-                window.location.reload();
-
-              }
-
-            });
+          this.openWeddingSettingsDialog(
+            settings
+          );
 
         },
 
-        error: () => {
+        error: error => {
 
-          const dialogRef =
-            this.dialog.open(
-              WeddingSettingsDialog,
-              {
-                width: '620px',
-                maxWidth: '95vw',
-                autoFocus: false
-              }
+          if (
+            error?.status !== 404
+          ) {
+
+            console.error(
+              'Wedding settings load failed:',
+              error
             );
 
-          dialogRef
-            .afterClosed()
-            .subscribe(result => {
+          }
 
-              if (result) {
-
-                window.location.reload();
-
-              }
-
-            });
+          this.openWeddingSettingsDialog(
+            null
+          );
 
         }
 
       });
+  }
 
+  private openWeddingSettingsDialog(
+    settings: any
+  ): void {
+
+    const dialogRef =
+      this.dialog.open(
+        WeddingSettingsDialog,
+        {
+          width: '620px',
+          maxWidth: '95vw',
+          maxHeight: '90vh',
+          autoFocus: false,
+          data: settings
+        }
+      );
+
+    dialogRef
+      .afterClosed()
+      .pipe(
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
+      .subscribe(savedSettings => {
+
+        if (!savedSettings) {
+          return;
+        }
+
+        this.navBarService
+          .triggerWeddingSettingsUpdated();
+
+      });
   }
 
 }
