@@ -12,9 +12,35 @@ export class NavbarActionService {
   // readonly weddingSettingsClick =
   //   new Subject<void>();
 
-  readonly weddingSettingsClick =
-    signal(0);
-    
+  private readonly weddingSettingsClickSubject =
+    new Subject<void>();
+
+  readonly weddingSettingsClick$ =
+    this.weddingSettingsClickSubject
+      .asObservable();
+
+  private readonly weddingSettingsUpdatedSubject =
+    new Subject<void>();
+
+  readonly weddingSettingsUpdated$ =
+    this.weddingSettingsUpdatedSubject
+      .asObservable();
+
+  triggerWeddingSettingsClick(): void {
+
+    this.weddingSettingsClickSubject
+      .next();
+
+  }
+
+  triggerWeddingSettingsUpdated(): void {
+
+    this.weddingSettingsUpdatedSubject
+      .next();
+
+  }
+
+
 
   private addClickSubject = new Subject<void>();
   addClick$ = this.addClickSubject.asObservable();
@@ -36,12 +62,5 @@ export class NavbarActionService {
 
   // }
 
-  triggerWeddingSettingsClick(): void {
-
-    this.weddingSettingsClick.update(
-      value => value + 1
-    );
-
-  }
 
 }
