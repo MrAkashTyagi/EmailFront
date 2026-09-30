@@ -587,20 +587,20 @@
           </th>
 
           <td mat-cell *matCellDef="let element">
-
-            @if (element.invitationSent === true) {
+            @if (element.invitationSent) {
 
             <span class="sent-chip">
-              Sent
+              Invite Opened
             </span>
 
             } @else {
 
             <span class="pending-chip">
-              Pending
+              Not Invited
             </span>
 
             }
+
           </td>
 
         </ng-container>
@@ -688,6 +688,17 @@
                 <span>✎</span>
                 Edit
               </button>
+
+              <button mat-flat-button type="button" class="invite-btn" (click)="inviteGuest(element)">
+
+                {{
+                element.invitationSent
+                ? 'Resend Invite'
+                : 'Invite'
+                }}
+
+              </button>
+
 
               <button mat-flat-button type="button" class="delete-btn" (click)="deleteGuestRecord(element.id)"
                 aria-label="Delete guest">
