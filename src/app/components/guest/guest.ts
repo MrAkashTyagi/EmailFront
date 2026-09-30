@@ -620,4 +620,54 @@ export class GuestComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  
+inviteGuest(guest: any): void {
+console.log("Clicked!!");
+  const mobile =
+    guest.whatsapp_Number
+    || guest.phoneNumber;
+
+  if (!mobile) {
+
+    this.notificationService.error(
+      'WhatsApp number not available.'
+    );
+
+    return;
+  }
+
+  const videoUrl =
+    'PASTE_CLOUDINARY_VIDEO_URL_HERE';
+
+  const message =
+`Hi ${guest.name},
+
+You are warmly invited to our wedding 💍
+
+Akash ❤️ Srishti
+
+📅 05 December 2026
+
+🎥 Invitation Video:
+${videoUrl}
+
+Looking forward to celebrating with you ❤️`;
+
+  const cleanNumber =
+  mobile.replace(/\D/g, '');
+
+const whatsappUrl =
+  'https://wa.me/'
+  + cleanNumber
+  + '?text='
+  + encodeURIComponent(message);
+
+window.open(
+  whatsappUrl,
+  '_blank'
+);
+
+}
+
 }
