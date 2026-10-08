@@ -41,6 +41,7 @@ export class AddGuestComponent implements OnInit {
   isEditMode = false;
   families: any[] = [];
   filteredFamilies: any[] = [];
+  isFamilyLocked = false;
 
   guest = {
     id: undefined,
@@ -70,6 +71,7 @@ export class AddGuestComponent implements OnInit {
     'Kurta_Payjama',
     'Suit',
     'Dabba',
+    'German Silver',
     'Other',
     'None'
   ];
@@ -77,8 +79,7 @@ export class AddGuestComponent implements OnInit {
   selectedGifts: string[] = [];
 
   ngOnInit(): void {
-
-    if (this.editData) {
+    if (this.editData?.id) {
 
       this.isEditMode = true;
 
@@ -98,6 +99,20 @@ export class AddGuestComponent implements OnInit {
             .map(gift => gift.trim())
             .filter(Boolean)
           : [];
+    }
+
+
+    if (
+      !this.editData?.id &&
+      this.editData?.family
+    ) {
+
+      this.guest.family = {
+        id: this.editData.family.id,
+        familyName: this.editData.family.familyName
+      };
+
+      this.isFamilyLocked = true;
     }
 
     this.familyService
@@ -207,6 +222,7 @@ export class AddGuestComponent implements OnInit {
         invitationSent: this.guest.invitationSent,
 
         family: {
+          id: this.guest.family?.id,
           familyName:
             this.guest.family?.familyName?.trim()
             || ''
@@ -260,6 +276,7 @@ export class AddGuestComponent implements OnInit {
         invitationSent: this.guest.invitationSent,
 
         family: {
+          id: this.guest.family?.id,
           familyName: selectedFamilyName
         }
       };
