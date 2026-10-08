@@ -29,6 +29,7 @@ import {
 
 import { ChartOptions } from 'chart.js';
 import { NotificationService } from '../../service/notification-service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 Chart.register(
@@ -54,7 +55,8 @@ Chart.register(
     MatExpansionModule,
     MatCard,
     MatIcon,
-    BaseChartDirective
+    BaseChartDirective,
+    MatTooltipModule
   ],
   templateUrl: './guest.html',
   styleUrls: ['./guest.css']
@@ -621,7 +623,7 @@ export class GuestComponent implements OnInit, OnDestroy {
       });
   }
 
-  
+
 inviteGuest(guest: any): void {
 console.log("Clicked!!");
   const mobile =
