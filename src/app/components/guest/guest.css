@@ -360,8 +360,9 @@
 }
 
 .guest-table {
-  width: 100%;
-  table-layout: fixed;
+  width: max-content;
+  min-width: 100%;
+  table-layout: auto;
 }
 
 .mat-mdc-header-row {
@@ -430,14 +431,6 @@
   width: 120px;
 }
 
-.column-family {
-  width: 130px;
-}
-
-.column-actions {
-  width: 150px;
-}
-
 .guest-name {
   overflow: hidden;
   color: var(--navy);
@@ -458,7 +451,7 @@
   flex-direction: column;
   gap: 2px;
   font-size: 13px;
-  padding-right: 90px;
+  padding-right: 0px;
   text-align: left;
 }
 
@@ -497,6 +490,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .column-gift .data-chip {
   justify-content: flex-start;
 }
@@ -581,24 +575,7 @@
   text-overflow: ellipsis;
 }
 
-.action-buttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-}
-
-.edit-btn,
-.delete-btn {
-  min-width: 64px !important;
-  height: 36px !important;
-  padding: 0 12px !important;
-  border-radius: 10px !important;
-  font-size: 12px !important;
-  font-weight: 750 !important;
-}
-
-.edit-btn {
+/* .edit-btn {
   background: #eef2ff !important;
   color: #4338ca !important;
 }
@@ -612,7 +589,7 @@
 .delete-btn span {
   margin-right: 5px;
   font-size: 15px;
-}
+} */
 
 .empty-state {
   display: flex;
@@ -1171,6 +1148,121 @@ mat-expansion-panel-header {
   font-size: 10px;
   font-weight: 700;
 }
-.column-gift {
+
+.column-stay {
+  width: 75px;
+}
+
+.column-gender {
+  width: 80px;
+}
+
+.column-type {
+  width: 80px;
+}
+
+.contact-column {
   width: 150px;
+}
+
+.column-category,
+.column-category.mat-mdc-cell,
+.column-category.mat-mdc-header-cell {
+  width: 70px !important;
+  max-width: 70px !important;
+  min-width: 70px !important;
+}
+
+.column-category .data-chip {
+  width: fit-content;
+  min-width: unset;
+  margin: 0 auto;
+  
+}
+
+.column-invitation {
+  width: 110px;
+}
+
+.column-gift {
+  width: 100px;
+}
+
+.column-family {
+  width: 80px;
+}
+
+
+
+.invite-btn {
+  min-width: 60px;
+  height: 32px;
+
+  padding: 0 10px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #dcfce7;
+  color: #15803d;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.column-actions {
+  width: 110px;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.edit-btn,
+.invite-btn,
+.delete-btn {
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  min-width: 34px !important;
+  border-radius: 8px !important;
+}
+
+.edit-btn {
+  background: #eef2ff !important;
+  color: #4338ca !important;
+}
+
+.edit-btn:hover {
+  background: #dbe4ff !important;
+}
+
+.invite-btn {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+}
+
+.invite-btn:hover {
+  background: #bbf7d0 !important;
+}
+
+.delete-btn {
+  background: #fff1f2 !important;
+  color: #be123c !important;
+}
+
+.delete-btn:hover {
+  background: #ffe4e6 !important;
+}
+
+.edit-btn mat-icon,
+.invite-btn mat-icon,
+.delete-btn mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  line-height: 18px !important;
 }
