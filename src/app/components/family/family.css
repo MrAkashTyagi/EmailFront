@@ -377,3 +377,13 @@ tr.example-element-row:not(.example-expanded-row):hover {
     gap: 6px;
   }
 }
+.guest-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.guest-header .mat-mdc-mini-fab {
+  transform: scale(0.9);
+}
