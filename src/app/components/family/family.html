@@ -8,14 +8,8 @@
         search
       </mat-icon>
 
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search Family..."
-        [value]="familySearchQuery()"
-        (input)="onSearch($event)"
-        aria-label="Search families"
-      />
+      <input type="text" class="search-input" placeholder="Search Family..." [value]="familySearchQuery()"
+        (input)="onSearch($event)" aria-label="Search families" />
 
     </div>
 
@@ -23,12 +17,7 @@
 
   <div class="page-toolbar-right">
 
-    <button
-      mat-flat-button
-      type="button"
-      class="toolbar-add-btn"
-      (click)="onAddClick()"
-    >
+    <button mat-flat-button type="button" class="toolbar-add-btn" (click)="onAddClick()">
       <mat-icon>
         add
       </mat-icon>
@@ -38,38 +27,21 @@
       </span>
     </button>
 
-    <button
-      type="button"
-      class="toolbar-icon-btn toolbar-export-btn"
-      aria-label="Export families to Excel"
-      title="Export Excel"
-      (click)="onExportClick()"
-    >
-    <img [src]="'icons/excel.png'" class="toolbar-export-icon" alt="Export" />
+    <button type="button" class="toolbar-icon-btn toolbar-export-btn" aria-label="Export families to Excel"
+      title="Export Excel" (click)="onExportClick()">
+      <img [src]="'icons/excel.png'" class="toolbar-export-icon" alt="Export" />
 
     </button>
 
-    <input
-      #familyDumpInput
-      type="file"
-      accept=".xlsx,.xls"
-      hidden
-      (change)="onFamilyDumpSelected($event)"
-    />
+    <input #familyDumpInput type="file" accept=".xlsx,.xls" hidden (change)="onFamilyDumpSelected($event)" />
 
-    <button
-      type="button"
-      class="toolbar-icon-btn toolbar-import-btn"
-      aria-label="Import family dump"
-      title="Import Family Dump"
-      [disabled]="isImportingFamilies"
-      (click)="familyDumpInput.click()"
-    >
+    <button type="button" class="toolbar-icon-btn toolbar-import-btn" aria-label="Import family dump"
+      title="Import Family Dump" [disabled]="isImportingFamilies" (click)="familyDumpInput.click()">
       <mat-icon>
         {{
-          isImportingFamilies
-            ? 'hourglass_top'
-            : 'upload_file'
+        isImportingFamilies
+        ? 'hourglass_top'
+        : 'upload_file'
         }}
       </mat-icon>
     </button>
@@ -110,6 +82,12 @@
       <td mat-cell *matCellDef="let element">
         <div class="action-buttons">
 
+          <!-- <button mat-stroked-button color="accent" class="add-guest-btn" (click)="openAddGuestForFamily(element);
+           $event.stopPropagation()">
+            Add Guest
+          </button> -->
+
+
           <button mat-stroked-button color="primary" class="edit-btn"
             (click)="openEditFamilyDialog(element); $event.stopPropagation()">
             Edit
@@ -132,9 +110,24 @@
           [class.example-element-detail-wrapper-expanded]="expandedElement === element">
 
           <div class="guest-list-box">
-            <h4 class="guest-section-title">
-              👥 Family Members ({{ element.guestList?.length || 0 }})
-            </h4>
+
+            <div class="guest-header">
+
+              <h4 class="guest-section-title">
+                👥 Family Members
+                ({{ element.guestList?.length || 0 }})
+              </h4>
+
+              <button mat-mini-fab color="primary" matTooltip="Add Guest" (click)="openAddGuestForFamily(element);
+             $event.stopPropagation()">
+
+                <mat-icon>
+                  person_add
+                </mat-icon>
+
+              </button>
+
+            </div>
 
             <!-- Loop through backend guestList -->
             @if (element.guestList && element.guestList.length > 0) {
@@ -171,7 +164,7 @@
                   <span class="badge badge-gift">
                     {{ guest.gift }}
                   </span>
-                  }                  
+                  }
 
                 </div>
 
@@ -200,10 +193,13 @@
                     ID: {{ guest.id }}
                   </span> -->
 
+                  <!-- edit guest button -->
                   <button mat-icon-button color="warn" type="button"
                     (click)="openEditGuestDialog(guest, element); $event.stopPropagation()">
                     <mat-icon>edit</mat-icon>
                   </button>
+
+
 
                   <!-- delete guest button -->
                   <button mat-icon-button color="warn" type="button" matTooltip="Delete guest"
