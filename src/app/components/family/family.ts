@@ -761,4 +761,47 @@ export class Family {
       });
   }
 
+  openAddGuestForFamily(
+    familyData: any
+  ): void {
+
+    const dialogRef =
+      this.dialog.open(
+        AddGuestComponent,
+        {
+          width: '950px',
+          maxWidth: '95vw',
+          maxHeight: '90vh',
+          autoFocus: false,
+          disableClose: false,
+
+          data: {
+            family: {
+              id: familyData.id,
+              familyName: familyData.familyName
+            }
+          }
+        }
+      );
+
+    dialogRef.afterClosed()
+      .pipe(
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
+      .subscribe(result => {
+
+        if (!result) {
+          return;
+        }
+
+        this.fetchPaginatedFamily();
+
+        this.notificationService.success(
+          'Guest added successfully.'
+        );
+      });
+  }
+
 }
