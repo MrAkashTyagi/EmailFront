@@ -207,56 +207,8 @@
               <mat-option value="11000">₹11,000</mat-option>
             </mat-select>
           </mat-form-field>
-          <!-- 
-          <mat-select [value]="selectedInvitationStatus()" (selectionChange)="onInvitationChange($event.value)">
-
-            <mat-option value="">
-              All
-            </mat-option>
-
-            <mat-option value="true">
-              Sent
-            </mat-option>
-
-            <mat-option value="false">
-              Pending
-            </mat-option>
-
-          </mat-select> -->
 
         </div>
-        <!-- 
-        <div class="filter-footer">
-          <mat-form-field appearance="outline" class="filter-field">
-
-            <mat-label>
-              Invitation Status
-            </mat-label>
-
-            <mat-select [value]="selectedInvitationStatus()" (selectionChange)="onInvitationStatusChange($event.value)">
-              <mat-option value="">
-                All
-              </mat-option>
-              <mat-option value="true">
-                Sent
-              </mat-option>
-              <mat-option value="false">
-                Pending
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div> -->
-
-        <!-- Filter action buttons -->
-        <!-- <div class="filter-actions">
-
-          <button mat-stroked-button type="button" class="clear-btn" (click)="clearFilters()">
-            <span class="button-icon">↻</span>
-            Clear Filters
-          </button>
-        </div> -->
-
-
 
         <div class="filter-actions">
 
@@ -579,31 +531,39 @@
         </ng-container>
 
         <!-- Invitation field -->
+       <ng-container matColumnDef="invitationSent">
 
-        <ng-container matColumnDef="invitationSent">
+  <th
+      mat-header-cell
+      *matHeaderCellDef
+      class="column-invitation">
 
-          <th mat-header-cell *matHeaderCellDef>
-            Invitation
-          </th>
+    Invitation
 
-          <td mat-cell *matCellDef="let element">
-            @if (element.invitationSent) {
+  </th>
 
-            <span class="sent-chip">
-              Invite Opened
-            </span>
+  <td
+      mat-cell
+      *matCellDef="let element"
+      class="column-invitation">
 
-            } @else {
+    @if (element.invitationSent) {
 
-            <span class="pending-chip">
-              Not Invited
-            </span>
+      <span class="sent-chip">
+        Invite Opened
+      </span>
 
-            }
+    } @else {
 
-          </td>
+      <span class="pending-chip">
+        Not Invited
+      </span>
 
-        </ng-container>
+    }
+
+  </td>
+
+</ng-container>
 
         <!-- Gift Column -->
         <ng-container matColumnDef="gift">
@@ -681,33 +641,37 @@
           </th>
 
           <td mat-cell *matCellDef="let element" class="column-actions">
-            <div class="action-buttons">
+  <div class="action-buttons">
 
-              <button mat-flat-button type="button" class="edit-btn" (click)="openEditGuestDialog(element)"
-                aria-label="Edit guest">
-                <span>✎</span>
-                Edit
-              </button>
+    <button
+      mat-icon-button
+      class="edit-btn"
+      (click)="openEditGuestDialog(element)"
+      matTooltip="Edit Guest">
 
-              <button mat-flat-button type="button" class="invite-btn" (click)="inviteGuest(element)">
+      <mat-icon>edit</mat-icon>
+    </button>
 
-                {{
-                element.invitationSent
-                ? 'Resend Invite'
-                : 'Invite'
-                }}
+    <button
+      mat-icon-button
+      class="invite-btn"
+      (click)="inviteGuest(element)"
+      [matTooltip]="element.invitationSent ? 'Resend Invitation' : 'Send Invitation'">
 
-              </button>
+      <mat-icon>send</mat-icon>
+    </button>
 
+    <button
+      mat-icon-button
+      class="delete-btn"
+      (click)="deleteGuestRecord(element.id)"
+      matTooltip="Delete Guest">
 
-              <button mat-flat-button type="button" class="delete-btn" (click)="deleteGuestRecord(element.id)"
-                aria-label="Delete guest">
-                <span>♲</span>
-                Delete
-              </button>
+      <mat-icon>delete</mat-icon>
+    </button>
 
-            </div>
-          </td>
+  </div>
+</td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
