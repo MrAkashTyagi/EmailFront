@@ -14,6 +14,7 @@ import { Wall } from './components/wall/wall';
 import {
     guestAccessGuard
 } from './guest-access-guard';
+import { ContactsVendors } from './components/contacts-vendors/contacts-vendors';
 
 export const routes: Routes = [
 
@@ -75,5 +76,10 @@ export const routes: Routes = [
         component: Login,
         pathMatch: "full"
     },
+    {
+        path: 'contacts-vendors',
+        component: ContactsVendors,
+        pathMatch: "full"
+    }
 
 ];
