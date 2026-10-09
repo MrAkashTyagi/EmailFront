@@ -276,16 +276,19 @@
 }
 
 .filter-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(180px, 1fr));
+
+  gap: 10px;
   width: 100%;
 }
 
-.filter-field {
-  flex: 1 0 180px;
+.filter-field,
+.invitation-filter {
+  flex: 1 1 200px;
   min-width: 180px;
-  max-width: 240px;
+  max-width: 320px;
 }
 
 .filter-actions {
