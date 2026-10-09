@@ -56,6 +56,10 @@ export class Dashboard implements OnInit {
 
   readonly giftSummary = signal<any[]>([]);
 
+  readonly shadiGuests = signal<number>(0);
+  readonly sagaiGuests = signal<number>(0);
+  readonly bothGuests = signal<number>(0);
+
   expenseChartLoaded = false;
   guestChartLoaded = false;
 
@@ -251,34 +255,90 @@ export class Dashboard implements OnInit {
       });
   }
 
-  loadGuestChart(): void {
-    this.guestService
-      .getGuestCategorySummary()
-      .subscribe({
-        next: (response) => {
+ loadGuestChart(): void {
 
-          this.guestPieChartData = {
-            labels: response.map((x: any) => x.category),
-            datasets: [
-              {
-                data: response.map((x: any) => x.count),
-                backgroundColor: [
-                  '#8b5cf6',
-                  '#ec4899',
-                  '#f59e0b',
-                  '#10b981'
-                ]
-              }
-            ]
-          };
+  this.guestService
+    .getGuestCategorySummary()
+    .subscribe({
+      next: (response: any[]) => {
 
-          this.guestChartLoaded = true;
-        },
-        error: (err) => {
-          console.error('Guest Chart Error', err);
-        }
-      });
-  }
+        const categorySummary =
+          response || [];
+
+        this.guestPieChartData = {
+          labels: categorySummary.map(
+            (item: any) => item.category
+          ),
+          datasets: [
+            {
+              data: categorySummary.map(
+                (item: any) => item.count
+              ),
+              backgroundColor: [
+                '#8b5cf6',
+                '#ec4899',
+                '#f59e0b',
+                '#10b981'
+              ]
+            }
+          ]
+        };
+
+        const getCategoryCount = (
+          categoryName: string
+        ): number => {
+
+          const category =
+            categorySummary.find(
+              (item: any) =>
+                item.category
+                  ?.trim()
+                  .toLowerCase() ===
+                categoryName.toLowerCase()
+            );
+
+          return Number(
+            category?.count || 0
+          );
+        };
+
+        const shadiOnlyCount =
+          getCategoryCount('Shadi');
+
+        const sagaiOnlyCount =
+          getCategoryCount('Sagai');
+
+        const bothCount =
+          getCategoryCount('Both');
+
+        this.shadiGuests.set(
+          shadiOnlyCount + bothCount
+        );
+
+        this.sagaiGuests.set(
+          sagaiOnlyCount + bothCount
+        );
+
+        this.bothGuests.set(
+          bothCount
+        );
+
+        this.guestChartLoaded = true;
+      },
+
+      error: (err) => {
+
+        console.error(
+          'Guest Chart Error',
+          err
+        );
+
+        this.shadiGuests.set(0);
+        this.sagaiGuests.set(0);
+        this.bothGuests.set(0);
+      }
+    });
+}
 
 
   openWeddingSettings(): void {
