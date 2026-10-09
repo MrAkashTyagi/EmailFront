@@ -1,0 +1,314 @@
+<div class="contacts-page">
+
+    <!-- <h2>Contacts & Vendors</h2>
+
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="openAddDialog()">
+
+    Add Contact
+
+  </button> -->
+
+
+
+    <!-- <div class="page-toolbar">
+
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search vendor, venue or contact..."
+      (input)="onSearch($event)">
+
+    <div class="toolbar-actions">
+
+      <button
+        mat-stroked-button
+        (click)="exportContacts()">
+
+        <mat-icon>
+          download
+        </mat-icon>
+
+        Export
+
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openAddDialog()">
+
+        <mat-icon>
+          add
+        </mat-icon>
+
+        Add Contact
+
+      </button>
+
+    </div>
+
+  </div> -->
+
+    <section class="page-toolbar">
+
+        <div class="page-toolbar-left">
+
+            <div class="search-wrapper">
+
+                <mat-icon class="search-icon">
+                    search
+                </mat-icon>
+
+                <input type="text" class="search-input" placeholder="Search Contact..." (input)="onSearch($event)">
+
+            </div>
+
+        </div>
+
+        <div class="page-toolbar-right">
+
+            <button mat-flat-button type="button" class="toolbar-add-btn" (click)="openAddDialog()">
+
+                <mat-icon>
+                    add
+                </mat-icon>
+
+                Add Contact
+
+            </button>
+
+            <!-- <button type="button" class="toolbar-icon-btn toolbar-export-btn" (click)="exportContacts()">
+
+                <img [src]="'icons/excel.png'" class="toolbar-export-icon" alt="Export" />
+            </button> -->
+
+            <button type="button" class="toolbar-icon-btn toolbar-export-btn" (click)="exportContacts()">
+
+                <img [src]="'icons/excel.png'" class="toolbar-export-icon" alt="Export" />
+
+            </button>
+        </div>
+
+    </section>
+
+    <table mat-table [dataSource]="contacts()" class="contact-table">
+
+        <!-- Name -->
+        <ng-container matColumnDef="name">
+
+            <th mat-header-cell *matHeaderCellDef>
+
+                Name
+
+            </th>
+
+            <td mat-cell *matCellDef="let contact">
+
+                <div class="contact-name">
+
+                    {{ contact.name }}
+
+                    @if (contact.mapLink) {
+
+                    <button mat-icon-button class="map-button" (click)="openMap(contact.mapLink)">
+
+                        <mat-icon>
+                            location_on
+                        </mat-icon>
+
+                    </button>
+
+                    }
+
+                </div>
+
+            </td>
+
+        </ng-container>
+
+        <!-- address -->
+
+        <ng-container matColumnDef="address">
+
+            <th mat-header-cell *matHeaderCellDef>
+
+                Address
+
+            </th>
+
+            <td mat-cell *matCellDef="let contact">
+
+                <div class="address-cell">
+
+                    {{ contact.address || '-' }}
+
+                </div>
+
+            </td>
+
+        </ng-container>
+
+
+        <!-- Category -->
+        <ng-container matColumnDef="category">
+
+            <th mat-header-cell *matHeaderCellDef>
+
+                Category
+
+            </th>
+
+            <td mat-cell *matCellDef="let contact">
+
+                <span class="category-chip">
+
+                    {{ contact.category }}
+
+                </span>
+
+            </td>
+
+        </ng-container>
+
+        <!-- Contact Person -->
+        <ng-container matColumnDef="contactPerson">
+
+            <th mat-header-cell *matHeaderCellDef>
+
+                Contact Person
+
+            </th>
+
+            <td mat-cell *matCellDef="let contact">
+
+                {{ contact.contactPerson }}
+
+            </td>
+
+        </ng-container>
+
+        <!-- Mobile -->
+        <ng-container matColumnDef="mobileNumber">
+
+            <th mat-header-cell *matHeaderCellDef>
+
+                Mobile
+
+            </th>
+
+            <td mat-cell *matCellDef="let contact">
+
+                <div class="contact-actions">
+
+                    <button mat-icon-button color="primary" (click)="callContact(contact.mobileNumber)">
+
+                        <mat-icon>call</mat-icon>
+
+                    </button>
+
+
+                    <div class="contact-cell">
+
+                        <div>
+                            {{ contact.mobileNumber }}
+                        </div>
+
+                        @if(contact.whatsappNumber){
+
+                        <small>
+                            WA: {{ contact.whatsappNumber }}
+                        </small>
+
+                        }
+
+                    </div>
+
+                    <button mat-icon-button color="accent" (click)="openWhatsApp(contact)">
+
+                        <mat-icon>chat</mat-icon>
+
+                    </button>
+
+                </div>
+
+            </td>
+
+        </ng-container>
+
+        <!-- Advance -->
+        <ng-container matColumnDef="advancePaid">
+
+            <th mat-header-cell *matHeaderCellDef>
+
+                Advance
+
+            </th>
+
+            <td mat-cell *matCellDef="let contact">
+
+                ₹{{ contact.advancePaid }}
+
+            </td>
+
+        </ng-container>
+
+        <!-- Pending -->
+        <ng-container matColumnDef="pendingAmount">
+
+            <th mat-header-cell *matHeaderCellDef>
+
+                Pending
+
+            </th>
+
+            <td mat-cell *matCellDef="let contact">
+
+                ₹{{ contact.pendingAmount }}
+
+            </td>
+
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+
+            <th mat-header-cell *matHeaderCellDef>
+
+                Actions
+
+            </th>
+
+            <td mat-cell *matCellDef="let contact">
+
+                <button mat-icon-button (click)="openEditDialog(contact)">
+
+                    <mat-icon>edit</mat-icon>
+
+                </button>
+
+                <button mat-icon-button (click)="deleteContact(contact.id)">
+
+                    <mat-icon>delete</mat-icon>
+
+                </button>
+
+            </td>
+
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns">
+        </tr>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+
+    </table>
+
+    <mat-paginator [length]="totalElements()" [pageSize]="pageSize()" [pageIndex]="currentPage()"
+        [pageSizeOptions]="[5,10,20,50]" (page)="onPageChange($event)" showFirstLastButtons>
+    </mat-paginator>
+
+</div>
