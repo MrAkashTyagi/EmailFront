@@ -133,6 +133,94 @@
 
     <div class="cards-grid">
 
+    <!-- Total Guests -->
+    <div class="dashboard-card purple">
+
+        <div class="card-icon">
+            👥
+        </div>
+
+        <div class="card-content">
+
+            <div class="card-value">
+                {{ summary().totalGuests }}
+            </div>
+
+            <div class="card-label">
+                Total Guests
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Shadi Guests: Shadi Only + Both -->
+    <div class="dashboard-card pink">
+
+        <div class="card-icon">
+            💍
+        </div>
+
+        <div class="card-content">
+
+            <div class="card-value">
+                {{ shadiGuests() }}
+            </div>
+
+            <div class="card-label">
+                Shadi Guests
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Sagai Guests: Sagai Only + Both -->
+    <div class="dashboard-card orange">
+
+        <div class="card-icon">
+            💐
+        </div>
+
+        <div class="card-content">
+
+            <div class="card-value">
+                {{ sagaiGuests() }}
+            </div>
+
+            <div class="card-label">
+                Sagai Guests
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Both Guests: Both Only -->
+    <div class="dashboard-card green">
+
+        <div class="card-icon">
+            🎊
+        </div>
+
+        <div class="card-content">
+
+            <div class="card-value">
+                {{ bothGuests() }}
+            </div>
+
+            <div class="card-label">
+                Both Events
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- <div class="cards-grid">
+
         <div class="dashboard-card purple">
 
             <div class="card-icon">👥</div>
@@ -149,9 +237,9 @@
 
             </div>
 
-        </div>
+        </div> -->
 
-        <div class="dashboard-card pink">
+        <!-- <div class="dashboard-card pink">
 
             <div class="card-icon">👨‍👩‍👧</div>
 
@@ -167,11 +255,11 @@
 
             </div>
 
-        </div>
+        </div> -->
 
         <!-- average family size -->
 
-        <div class="dashboard-card orange">
+        <!-- <div class="dashboard-card orange">
 
             <div class="card-icon">📊</div>
 
@@ -187,9 +275,9 @@
 
             </div>
 
-        </div>
+        </div> -->
 
-        <div class="dashboard-card blue">
+        <!-- <div class="dashboard-card blue">
 
             <div class="card-icon">🏠</div>
 
@@ -205,13 +293,33 @@
 
             </div>
 
-        </div>
+        </div> -->
 
-    </div>
+    <!-- </div> -->
 
     <!-- Row 2 -->
 
     <div class="cards-grid">
+
+        
+        <!-- total expenses card -->
+        <div class="dashboard-card green">
+
+            <div class="card-icon">💰</div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    ₹{{ summary().totalExpense }}
+                </div>
+
+                <div class="card-label">
+                    Total Expenses
+                </div>
+
+            </div>
+
+        </div>
 
         <div class="dashboard-card green">
 
@@ -251,24 +359,28 @@
         </div>
 
 
-        <!-- total expenses card -->
-        <div class="dashboard-card green">
 
-            <div class="card-icon">💰</div>
+            <!-- Stay Required -->
+    <div class="dashboard-card blue">
 
-            <div class="card-content">
+        <div class="card-icon">
+            🏠
+        </div>
 
-                <div class="card-value">
-                    ₹{{ summary().totalExpense }}
-                </div>
+        <div class="card-content">
 
-                <div class="card-label">
-                    Total Expenses
-                </div>
+            <div class="card-value">
+                {{ summary().stayRequired }}
+            </div>
 
+            <div class="card-label">
+                Stay Required
             </div>
 
         </div>
+
+    </div>
+
 
         <!-- <div class="dashboard-card success">
 
@@ -290,7 +402,7 @@
 
         <!-- Pending Invitations -->
 
-        <div class="dashboard-card warning">
+        <!-- <div class="dashboard-card warning">
 
             <div class="card-icon">⏳</div>
 
@@ -306,7 +418,7 @@
 
             </div>
 
-        </div>
+        </div> -->
 
         <!-- Total Family members -->
         <!-- <div class="dashboard-card teal">
