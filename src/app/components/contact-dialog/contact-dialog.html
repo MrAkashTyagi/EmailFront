@@ -1,0 +1,279 @@
+<div class="dialog-header">
+
+  <div>
+
+    <span class="dialog-eyebrow">
+      WEDDING DIRECTORY
+    </span>
+
+    <h2>
+      {{
+        isEditMode
+          ? 'Edit Contact'
+          : 'Add Contact'
+      }}
+    </h2>
+
+    <p>
+      Vendor, venue manager ya important wedding
+      contact ki details maintain karein.
+    </p>
+
+  </div>
+
+  <button
+    mat-icon-button
+    type="button"
+    aria-label="Close dialog"
+    (click)="close()">
+
+    <mat-icon>
+      close
+    </mat-icon>
+
+  </button>
+
+</div>
+
+<div class="dialog-content">
+
+  <div class="form-grid">
+
+    <mat-form-field
+      appearance="outline"
+      class="full-width">
+
+      <mat-label>
+        Name
+      </mat-label>
+
+      <input
+        matInput
+        required
+        [(ngModel)]="contact.name"
+        placeholder="For example, Sharma Caterers">
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Category
+      </mat-label>
+
+      <mat-select
+        required
+        [(ngModel)]="contact.category">
+
+        @for (
+          category of categories;
+          track category
+        ) {
+
+          <mat-option
+            [value]="category">
+
+            {{ category }}
+
+          </mat-option>
+
+        }
+
+      </mat-select>
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Contact Person
+      </mat-label>
+
+      <input
+        matInput
+        [(ngModel)]="contact.contactPerson"
+        placeholder="Contact person name">
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Mobile Number
+      </mat-label>
+
+      <input
+        matInput
+        type="tel"
+        maxlength="10"
+        [(ngModel)]="contact.mobileNumber"
+        placeholder="10 digit number">
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        WhatsApp Number
+      </mat-label>
+
+      <input
+        matInput
+        type="tel"
+        maxlength="10"
+        [(ngModel)]="contact.whatsappNumber"
+        placeholder="Blank means same as mobile">
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Alternate Number
+      </mat-label>
+
+      <input
+        matInput
+        type="tel"
+        maxlength="10"
+        [(ngModel)]="contact.alternateNumber">
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Advance Paid
+      </mat-label>
+
+      <input
+        matInput
+        type="number"
+        min="0"
+        [(ngModel)]="contact.advancePaid">
+
+      <span matTextPrefix>
+        ₹&nbsp;
+      </span>
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Pending Amount
+      </mat-label>
+
+      <input
+        matInput
+        type="number"
+        min="0"
+        [(ngModel)]="contact.pendingAmount">
+
+      <span matTextPrefix>
+        ₹&nbsp;
+      </span>
+
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      class="full-width">
+
+      <mat-label>
+        Address
+      </mat-label>
+
+      <textarea
+        matInput
+        rows="2"
+        [(ngModel)]="contact.address"
+        placeholder="Complete address">
+      </textarea>
+
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      class="full-width">
+
+      <mat-label>
+        Google Maps Link
+      </mat-label>
+
+      <input
+        matInput
+        [(ngModel)]="contact.mapLink"
+        placeholder="Paste location link">
+
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      class="full-width">
+
+      <mat-label>
+        Notes
+      </mat-label>
+
+      <textarea
+        matInput
+        rows="3"
+        maxlength="2000"
+        [(ngModel)]="contact.notes"
+        placeholder="Package details, payment terms or important instructions">
+      </textarea>
+
+    </mat-form-field>
+
+  </div>
+
+</div>
+
+<div class="dialog-actions">
+
+  <button
+    mat-stroked-button
+    type="button"
+    [disabled]="saving"
+    (click)="close()">
+
+    Cancel
+
+  </button>
+
+  <button
+    mat-flat-button
+    type="button"
+    class="save-button"
+    [disabled]="saving"
+    (click)="save()">
+
+    @if (saving) {
+
+      <mat-spinner diameter="20">
+      </mat-spinner>
+
+      Saving...
+
+    } @else {
+
+      <mat-icon>
+        {{
+          isEditMode
+            ? 'save'
+            : 'add'
+        }}
+      </mat-icon>
+
+      {{
+        isEditMode
+          ? 'Update Contact'
+          : 'Add Contact'
+      }}
+
+    }
+
+  </button>
+
+</div>
