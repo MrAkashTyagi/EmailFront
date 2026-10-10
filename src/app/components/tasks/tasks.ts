@@ -1,25 +1,47 @@
-import { Component, signal } from '@angular/core';
-import { WeddingTask } from '../../models/wedding-task';
-import { inject } from '@angular/core';
-import { WeddingTaskService } from '../../service/wedding-task-service';
+import {
+  Component,
+  OnInit,
+  inject,
+  signal
+} from '@angular/core';
+
+import {
+  WeddingTask
+} from '../../models/wedding-task';
+
+import {
+  WeddingTaskService
+} from '../../service/wedding-task-service';
+
+import {
+  MatDialog
+} from '@angular/material/dialog';
+
+import {
+  TaskDialog
+} from '../task-dialog/task-dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-tasks',
-  imports: [],
+  standalone: true,
+  imports: [MatIconModule,
+    MatButtonModule,
+    CommonModule
+  ],
   templateUrl: './tasks.html',
-  styleUrl: './tasks.css',
+  styleUrl: './tasks.css'
 })
-export class Tasks {
+export class Tasks
+  implements OnInit {
 
-
-  // readonly todoTasks =
-  //   signal<any[]>([]);
-
-  // readonly inProgressTasks =
-  //   signal<any[]>([]);
-
-  // readonly completedTasks =
-  //   signal<any[]>([]);
+  private readonly taskService =
+    inject(
+      WeddingTaskService
+    );
 
   readonly todoTasks =
     signal<WeddingTask[]>([]);
@@ -30,9 +52,10 @@ export class Tasks {
   readonly completedTasks =
     signal<WeddingTask[]>([]);
 
-  private readonly taskService =
-    inject(WeddingTaskService);
-
+  private readonly dialog =
+    inject(
+      MatDialog
+    );
 
   ngOnInit(): void {
 
@@ -47,12 +70,18 @@ export class Tasks {
 
         next: (response: any) => {
 
-          const tasks =
+          console.log(
+            'TASK RESPONSE',
+            response
+          );
+
+          const tasks: WeddingTask[] =
             response?.content || [];
 
           this.todoTasks.set(
+
             tasks.filter(
-              (task: WeddingTask) =>
+              task =>
                 task.status === 'TODO'
             )
 
@@ -61,21 +90,21 @@ export class Tasks {
           this.inProgressTasks.set(
 
             tasks.filter(
-              (task: WeddingTask) =>
+              task =>
                 task.status === 'IN_PROGRESS'
             )
-
 
           );
 
           this.completedTasks.set(
 
             tasks.filter(
-              (task: WeddingTask) =>
+              task =>
                 task.status === 'DONE'
             )
 
           );
+
         },
 
         error: (error: any) => {
@@ -85,7 +114,34 @@ export class Tasks {
             error
           );
         }
+
       });
+  }
+
+  openAddTaskDialog(): void {
+
+    const dialogRef =
+
+      this.dialog.open(
+        TaskDialog,
+        {
+          width: '700px'
+        }
+      );
+
+    dialogRef
+      .afterClosed()
+      .subscribe(
+
+        result => {
+
+          if (result) {
+
+            this.loadTasks();
+          }
+        }
+
+      );
   }
 
 }
