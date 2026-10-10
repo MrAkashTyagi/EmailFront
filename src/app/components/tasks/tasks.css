@@ -1,0 +1,42 @@
+.task-board {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      1fr
+    );
+
+  gap: 20px;
+}
+
+.task-column {
+
+  background: #ffffff;
+
+  border-radius: 16px;
+
+  padding: 16px;
+
+  min-height: 500px;
+
+  border:
+    1px solid #e2e8f0;
+}
+
+.task-card {
+
+  padding: 12px;
+
+  margin-bottom: 10px;
+
+  border-radius: 10px;
+
+  background: #f8fafc;
+
+  border:
+    1px solid #e5e7eb;
+
+  cursor: pointer;
+}
