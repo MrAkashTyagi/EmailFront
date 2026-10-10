@@ -1,0 +1,103 @@
+<h2 mat-dialog-title>
+
+  ➕ Add Wedding Task
+
+</h2>
+
+<mat-dialog-content>
+
+  <mat-form-field appearance="outline">
+
+    <mat-label>
+
+      Title
+
+    </mat-label>
+
+    <input
+      matInput
+      [(ngModel)]="task.title">
+
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+
+    <mat-label>
+
+      Description
+
+    </mat-label>
+
+    <textarea
+      matInput
+      rows="4"
+      [(ngModel)]="task.description">
+    </textarea>
+
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+
+    <mat-label>
+
+      Priority
+
+    </mat-label>
+
+    <mat-select
+      [(ngModel)]="task.priority">
+
+      <mat-option value="HIGH">
+        High
+      </mat-option>
+
+      <mat-option value="MEDIUM">
+        Medium
+      </mat-option>
+
+      <mat-option value="LOW">
+        Low
+      </mat-option>
+
+    </mat-select>
+
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+
+    <mat-label>
+
+      Due Date
+
+    </mat-label>
+
+    <input
+      matInput
+      type="date"
+      [(ngModel)]="task.dueDate">
+
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+  <button
+    mat-button
+    class="cancel-btn"
+    (click)="close()">
+
+    Cancel
+
+  </button>
+
+  <button
+    mat-raised-button
+    class="save-btn"
+    (click)="save()">
+
+    Save Task
+
+  </button>
+
+</mat-dialog-actions>
