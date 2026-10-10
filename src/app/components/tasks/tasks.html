@@ -1,65 +1,144 @@
-<div class="task-board">
+<div class="tasks-page">
 
-  <div class="task-column">
+  <section class="task-toolbar">
 
-    <h3>
-      To Do
-    </h3>
+    <div class="task-toolbar-left">
 
-    @for (
-      task of todoTasks();
-      track task.id
-    ) {
+      <h2>
+        Wedding Task Board
+      </h2>
 
-      <div class="task-card">
+      <p>
+        Track all wedding activities from planning to completion.
+      </p>
 
-        {{ task.title }}
+    </div>
 
-      </div>
+    <div class="task-toolbar-right">
 
-    }
+      <button
+        mat-flat-button
+        class="add-task-btn"
+        (click)="openAddTaskDialog()">
 
-  </div>
+        <mat-icon>
+          add
+        </mat-icon>
 
-  <div class="task-column">
+        Add Task
 
-    <h3>
-      In Progress
-    </h3>
+      </button>
 
-    @for (
-      task of inProgressTasks();
-      track task.id
-    ) {
+    </div>
 
-      <div class="task-card">
+  </section>
 
-        {{ task.title }}
+  <div class="task-board">
 
-      </div>
+    <!-- TODO -->
 
-    }
+    <div class="task-column todo-column">
 
-  </div>
+      <div class="column-header">
 
-  <div class="task-column">
+        <span class="column-title">
+          To Do
+        </span>
 
-    <h3>
-      Done
-    </h3>
-
-    @for (
-      task of completedTasks();
-      track task.id
-    ) {
-
-      <div class="task-card">
-
-        {{ task.title }}
+        <span class="column-count">
+          {{ todoTasks().length }}
+        </span>
 
       </div>
 
-    }
+      @for (
+        task of todoTasks();
+        track task.id
+      ) {
+
+      <div class="task-card">
+
+        <div class="task-card-title">
+
+          {{ task.title }}
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
+
+    <!-- PROGRESS -->
+
+    <div class="task-column progress-column">
+
+      <div class="column-header">
+
+        <span class="column-title">
+          In Progress
+        </span>
+
+        <span class="column-count">
+          {{ inProgressTasks().length }}
+        </span>
+
+      </div>
+
+      @for (
+        task of inProgressTasks();
+        track task.id
+      ) {
+
+      <div class="task-card">
+
+        <div class="task-card-title">
+
+          {{ task.title }}
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
+
+    <!-- DONE -->
+
+    <div class="task-column done-column">
+
+      <div class="column-header">
+
+        <span class="column-title">
+          Done
+        </span>
+
+        <span class="column-count">
+          {{ completedTasks().length }}
+        </span>
+
+      </div>
+
+      @for (
+        task of completedTasks();
+        track task.id
+      ) {
+
+      <div class="task-card">
+
+        <div class="task-card-title">
+
+          {{ task.title }}
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
 
   </div>
 
