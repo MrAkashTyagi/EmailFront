@@ -15,6 +15,8 @@ import {
     guestAccessGuard
 } from './guest-access-guard';
 import { ContactsVendors } from './components/contacts-vendors/contacts-vendors';
+import { WeddingTaskService } from './service/wedding-task-service';
+import { Tasks } from './components/tasks/tasks';
 
 export const routes: Routes = [
 
@@ -79,6 +81,11 @@ export const routes: Routes = [
     {
         path: 'contacts-vendors',
         component: ContactsVendors,
+        pathMatch: "full"
+    },
+    {
+        path: 'tasks',
+        component: Tasks,
         pathMatch: "full"
     }
 
