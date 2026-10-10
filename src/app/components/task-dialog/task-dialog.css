@@ -1,0 +1,75 @@
+:host {
+
+  display: block;
+}
+
+mat-dialog-content {
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  min-width: 500px;
+
+  padding-top: 8px !important;
+}
+
+mat-form-field {
+
+  width: 100%;
+}
+
+textarea {
+
+  resize: none;
+}
+
+mat-dialog-actions {
+
+  padding-top: 12px;
+
+  border-top: 1px solid #e2e8f0;
+
+  margin-top: 8px;
+}
+
+.save-btn {
+
+  min-width: 120px !important;
+
+  height: 42px !important;
+
+  border-radius: 10px !important;
+
+  background: #4f46e5 !important;
+
+  color: white !important;
+
+  font-weight: 600 !important;
+}
+
+.cancel-btn {
+
+  min-width: 100px !important;
+
+  height: 42px !important;
+
+  border-radius: 10px !important;
+}
+.form-row {
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+
+  .form-row {
+
+    grid-template-columns: 1fr;
+  }
+}
