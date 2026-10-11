@@ -456,16 +456,58 @@
 
         <div class="gift-summary-list">
 
-            @for (
-            item of giftSummary();
-            track item.giftName
-            ) {
+            @for (item of giftSummary(); track item.giftName) {
 
             <span class="gift-summary-chip">
 
-                {{ item.giftName }}: {{ item.total }}
+                {{ item.giftName }}
+
+                <span class="gift-plan-chip-count">
+                    {{ item.total }}
+                </span>
 
             </span>
+
+            }
+
+            @if (cashSummary().items.length > 0) {
+
+            <div class="gift-plan-divider"></div>
+
+            @for (
+            item of cashSummary().items;
+            track item.denomination
+            ) {
+
+            <span class="cash-plan-chip">
+
+                ₹{{ item.denomination }}
+
+                <span class="cash-plan-chip-count">
+
+                    × {{ item.count }}
+
+                </span>
+
+            </span>
+
+            }
+
+            <div class="cash-final-section">
+
+                <span class="cash-plan-chip">
+
+                    📦 {{ cashSummary().totalEnvelopes }}
+
+                </span>
+
+                <span class="cash-total-chip">
+
+                    💰 ₹{{ cashSummary().grandTotal }}
+
+                </span>
+
+            </div>
 
             }
 
