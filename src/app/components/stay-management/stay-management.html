@@ -1,0 +1,446 @@
+<div class="stay-page">
+
+  <section class="stay-toolbar">
+
+    <div>
+
+      <span class="page-eyebrow">
+        ACCOMMODATION
+      </span>
+
+      <h2>
+        Stay Management
+      </h2>
+
+      <p>
+        Houses, hotels, dharamshalas and room capacities manage karein.
+      </p>
+
+    </div>
+
+    <button
+      mat-flat-button
+      type="button"
+      class="add-location-btn"
+      (click)="openAddLocationDialog()">
+
+      <mat-icon>
+        add_location_alt
+      </mat-icon>
+
+      Add Location
+
+    </button>
+
+  </section>
+
+  <div class="stay-layout">
+
+    <section class="locations-panel">
+
+      <div class="panel-header">
+
+        <div>
+
+          <h3>
+            Stay Locations
+          </h3>
+
+          <span>
+            {{ locations().length }} location(s)
+          </span>
+
+        </div>
+
+      </div>
+
+      @if (loadingLocations()) {
+
+        <div class="panel-state">
+
+          Loading locations...
+
+        </div>
+
+      } @else if (locations().length === 0) {
+
+        <div class="panel-state empty-state">
+
+          <mat-icon>
+            add_location_alt
+          </mat-icon>
+
+          <strong>
+            No stay locations
+          </strong>
+
+          <span>
+            Add home, hotel, rented house or dharamshala.
+          </span>
+
+        </div>
+
+      } @else {
+
+        <div class="location-list">
+
+          @for (
+            location of locations();
+            track location.id
+          ) {
+
+            <button
+              type="button"
+              class="location-card"
+              [class.selected-location]="
+                selectedLocation()?.id
+                === location.id
+              "
+              [class.inactive-card]="
+                !location.active
+              "
+              (click)="selectLocation(location)">
+
+              <div class="location-icon">
+
+                <mat-icon>
+                  {{ getLocationIcon(location.type) }}
+                </mat-icon>
+
+              </div>
+
+              <div class="location-content">
+
+                <div class="location-name">
+
+                  {{ location.name }}
+
+                </div>
+
+                <div class="location-type">
+
+                  {{
+                    location.type
+                      .replaceAll('_', ' ')
+                  }}
+
+                </div>
+
+              </div>
+
+              @if (!location.active) {
+
+                <span class="inactive-chip">
+                  Inactive
+                </span>
+
+              }
+
+              <div class="location-actions">
+
+                <button
+                  mat-icon-button
+                  type="button"
+                  matTooltip="Edit location"
+                  (click)="
+                    $event.stopPropagation();
+                    openEditLocationDialog(location)
+                  ">
+
+                  <mat-icon>
+                    edit
+                  </mat-icon>
+
+                </button>
+
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="delete-btn"
+                  matTooltip="Delete location"
+                  (click)="
+                    $event.stopPropagation();
+                    deleteLocation(location)
+                  ">
+
+                  <mat-icon>
+                    delete
+                  </mat-icon>
+
+                </button>
+
+              </div>
+
+            </button>
+
+          }
+
+        </div>
+
+      }
+
+    </section>
+
+    <section class="rooms-panel">
+
+      @if (!selectedLocation()) {
+
+        <div class="select-location-state">
+
+          <mat-icon>
+            meeting_room
+          </mat-icon>
+
+          <h3>
+            Select a stay location
+          </h3>
+
+          <p>
+            Rooms aur capacities dekhne ke liye left side se location select karein.
+          </p>
+
+        </div>
+
+      } @else {
+
+        <div class="rooms-header">
+
+          <div>
+
+            <span class="rooms-eyebrow">
+
+              {{
+                selectedLocation()!
+                  .type
+                  .replaceAll('_', ' ')
+              }}
+
+            </span>
+
+            <h3>
+              {{ selectedLocation()!.name }}
+            </h3>
+
+            @if (selectedLocation()!.address) {
+
+              <p>
+                <mat-icon>
+                  location_on
+                </mat-icon>
+
+                {{ selectedLocation()!.address }}
+              </p>
+
+            }
+
+          </div>
+
+          <button
+            mat-flat-button
+            type="button"
+            class="add-room-btn"
+            (click)="openAddRoomDialog()">
+
+            <mat-icon>
+              add
+            </mat-icon>
+
+            Add Room
+
+          </button>
+
+        </div>
+
+        @if (loadingRooms()) {
+
+          <div class="panel-state">
+            Loading rooms...
+          </div>
+
+        } @else if (rooms().length === 0) {
+
+          <div class="panel-state empty-state">
+
+            <mat-icon>
+              bed
+            </mat-icon>
+
+            <strong>
+              No rooms added
+            </strong>
+
+            <span>
+              Is location me room, bedroom ya shared hall add karein.
+            </span>
+
+          </div>
+
+        } @else {
+
+          <div class="rooms-grid">
+
+            @for (
+              room of rooms();
+              track room.id
+            ) {
+
+              <article
+                class="room-card"
+                [class.full-room]="room.full"
+                [class.inactive-room]="!room.active">
+
+                <div class="room-header">
+
+                  <div>
+
+                    <h4>
+                      {{ room.name }}
+                    </h4>
+
+                    <span>
+                      {{ room.floor || 'Floor not set' }}
+                    </span>
+
+                  </div>
+
+                  <div class="room-actions">
+
+                    <button
+                      mat-icon-button
+                      type="button"
+                      matTooltip="Edit room"
+                      (click)="openEditRoomDialog(room)">
+
+                      <mat-icon>
+                        edit
+                      </mat-icon>
+
+                    </button>
+
+                    <button
+                      mat-icon-button
+                      type="button"
+                      class="delete-btn"
+                      matTooltip="Delete room"
+                      (click)="deleteRoom(room)">
+
+                      <mat-icon>
+                        delete
+                      </mat-icon>
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+                <div class="room-capacity-row">
+
+                  <div class="capacity-stat">
+
+                    <span>
+                      {{ room.occupiedBeds || 0 }}
+                    </span>
+
+                    <small>
+                      Occupied
+                    </small>
+
+                  </div>
+
+                  <div class="capacity-stat">
+
+                    <span>
+                      {{ room.availableBeds || 0 }}
+                    </span>
+
+                    <small>
+                      Available
+                    </small>
+
+                  </div>
+
+                  <div class="capacity-stat">
+
+                    <span>
+                      {{ room.capacity }}
+                    </span>
+
+                    <small>
+                      Capacity
+                    </small>
+
+                  </div>
+
+                </div>
+
+                <div class="occupancy-header">
+
+                  <span>
+                    Occupancy
+                  </span>
+
+                  <strong>
+                    {{ room.occupiedBeds || 0 }}
+                    /
+                    {{ room.capacity }}
+                  </strong>
+
+                </div>
+
+                <div class="occupancy-track">
+
+                  <div
+                    class="occupancy-fill"
+                    [class.full-fill]="room.full"
+                    [style.width.%]="
+                      getOccupancyPercentage(room)
+                    ">
+                  </div>
+
+                </div>
+
+                <div class="room-footer">
+
+                  @if (room.full) {
+
+                    <span class="room-status full-status">
+                      FULL
+                    </span>
+
+                  } @else if (!room.active) {
+
+                    <span class="room-status inactive-status">
+                      INACTIVE
+                    </span>
+
+                  } @else {
+
+                    <span class="room-status available-status">
+
+                      {{
+                        room.availableBeds || 0
+                      }}
+                      bed(s) available
+
+                    </span>
+
+                  }
+
+                </div>
+
+              </article>
+
+            }
+
+          </div>
+
+        }
+
+      }
+
+    </section>
+
+  </div>
+
+</div>
