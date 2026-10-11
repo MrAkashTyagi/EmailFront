@@ -54,6 +54,18 @@ import {
   StayRoomDialog
 } from '../stay-room-dialog/stay-room-dialog';
 
+import {
+  StayAllocation
+} from '../../models/stay-allocation';
+
+import {
+  StayAllocationService
+} from '../../service/stay-allocation-service';
+
+import {
+  StayAllocationDialog
+} from '../stay-allocation-dialog/stay-allocation-dialog';
+
 @Component({
   selector: 'app-stay-management',
   standalone: true,
@@ -98,6 +110,12 @@ export class StayManagement
 
   readonly loadingRooms =
     signal(false);
+
+  private readonly allocationService =
+    inject(StayAllocationService);
+
+  readonly roomAllocations =
+    signal<StayAllocation[]>([]);
 
   ngOnInit(): void {
 
@@ -177,6 +195,8 @@ export class StayManagement
     this.loadRooms(
       location.id!
     );
+
+    this.roomAllocations.set([]);
   }
 
   loadRooms(
@@ -533,4 +553,272 @@ export class StayManagement
       100
     );
   }
+
+  loadRoomAllocations(
+    roomId: number
+  ): void {
+
+    this.allocationService
+      .getAllocations(
+        undefined,
+        roomId
+      )
+      .subscribe({
+
+        next: allocations => {
+
+          this.roomAllocations.set(
+            allocations.filter(
+              allocation =>
+                allocation.status === 'PLANNED'
+                || allocation.status === 'CHECKED_IN'
+            )
+          );
+        },
+
+        error: error => {
+
+          console.error(
+            'Room allocations load failed:',
+            error
+          );
+
+          this.notificationService.error(
+            'Room occupants load nahi ho paye.'
+          );
+        }
+      });
+  }
+
+  openAllocateGuestsDialog(
+    room?: StayRoom
+  ): void {
+
+    const location =
+      this.selectedLocation();
+
+    if (!location?.id) {
+
+      this.notificationService.warning(
+        'Pehle location select karein.'
+      );
+
+      return;
+    }
+
+    const dialogRef =
+      this.dialog.open(
+        StayAllocationDialog,
+        {
+          width: '950px',
+          maxWidth: '96vw',
+          maxHeight: '94vh',
+          autoFocus: false,
+          disableClose: true,
+          data: {
+            defaultLocationId:
+              location.id,
+
+            defaultRoomId:
+              room?.id
+          }
+        }
+      );
+
+    dialogRef
+      .afterClosed()
+      .subscribe(
+        result => {
+
+          if (result) {
+
+            this.loadRooms(
+              location.id!
+            );
+
+            if (room?.id) {
+
+              this.loadRoomAllocations(
+                room.id
+              );
+            }
+          }
+        }
+      );
+  }
+
+  openEditAllocationDialog(
+    allocation: StayAllocation
+  ): void {
+
+    const location =
+      this.selectedLocation();
+
+    const dialogRef =
+      this.dialog.open(
+        StayAllocationDialog,
+        {
+          width: '950px',
+          maxWidth: '96vw',
+          maxHeight: '94vh',
+          autoFocus: false,
+          disableClose: true,
+          data: {
+            allocation: {
+              ...allocation
+            }
+          }
+        }
+      );
+
+    dialogRef
+      .afterClosed()
+      .subscribe(
+        result => {
+
+          if (
+            result
+            && location?.id
+          ) {
+
+            this.loadRooms(
+              location.id
+            );
+
+            this.loadRoomAllocations(
+              result.roomId
+            );
+          }
+        }
+      );
+  }
+
+  checkInAllocation(
+    allocation: StayAllocation
+  ): void {
+
+    this.updateAllocationStatus(
+      allocation,
+      'CHECKED_IN'
+    );
+  }
+
+  checkOutAllocation(
+    allocation: StayAllocation
+  ): void {
+
+    this.updateAllocationStatus(
+      allocation,
+      'CHECKED_OUT'
+    );
+  }
+
+  cancelStayAllocation(
+    allocation: StayAllocation
+  ): void {
+
+    const confirmed =
+      confirm(
+        `${allocation.guestName} ki stay allocation cancel karni hai?`
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.allocationService
+      .cancelAllocation(
+        allocation.id
+      )
+      .subscribe({
+
+        next: () => {
+
+          this.notificationService.success(
+            'Stay allocation cancelled successfully.'
+          );
+
+          this.refreshAllocationView(
+            allocation.roomId
+          );
+        },
+
+        error: error => {
+
+          console.error(
+            'Allocation cancel failed:',
+            error
+          );
+
+          this.notificationService.error(
+            error?.error?.message
+            || error?.error?.detail
+            || 'Allocation cancel nahi ho payi.'
+          );
+        }
+      });
+  }
+
+  private updateAllocationStatus(
+    allocation: StayAllocation,
+    status:
+      'CHECKED_IN'
+      | 'CHECKED_OUT'
+  ): void {
+
+    this.allocationService
+      .updateStatus(
+        allocation.id,
+        status
+      )
+      .subscribe({
+
+        next: () => {
+
+          this.notificationService.success(
+            status === 'CHECKED_IN'
+              ? 'Guest checked in successfully.'
+              : 'Guest checked out successfully.'
+          );
+
+          this.refreshAllocationView(
+            allocation.roomId
+          );
+        },
+
+        error: error => {
+
+          console.error(
+            'Allocation status update failed:',
+            error
+          );
+
+          this.notificationService.error(
+            error?.error?.message
+            || error?.error?.detail
+            || 'Allocation status update nahi ho paya.'
+          );
+        }
+      });
+  }
+
+  private refreshAllocationView(
+    roomId: number
+  ): void {
+
+    const locationId =
+      this.selectedLocation()?.id;
+
+    if (locationId) {
+
+      this.loadRooms(
+        locationId
+      );
+    }
+
+    this.loadRoomAllocations(
+      roomId
+    );
+  }
+
 }
