@@ -27,25 +27,69 @@ export class WeddingTaskService {
   private readonly apiUrl =
     'http://localhost:8090/api/wedding-tasks';
 
- getTasks(
-  search?: string,
-  status?: string,
-  priority?: string
+//  getTasks(
+//   search?: string,
+//   status?: string,
+//   priority?: string
+// ): Observable<any> {
+
+//   let params = new HttpParams();
+
+//   if (search) {
+
+//     params =
+//       params.set(
+//         'search',
+//         search
+//       );
+//   }
+
+//   if (status) {
+
+//     params =
+//       params.set(
+//         'status',
+//         status
+//       );
+//   }
+
+//   if (priority) {
+
+//     params =
+//       params.set(
+//         'priority',
+//         priority
+//       );
+//   }
+
+//   return this.http.get(
+//     this.apiUrl,
+//     {
+//       params
+//     }
+//   );
+// }
+
+getTasks(
+  search = '',
+  status = '',
+  priority = ''
 ): Observable<any> {
 
-  let params = new HttpParams();
+  let params =
+    new HttpParams()
+      .set('page', '0')
+      .set('size', '1000');
 
-  if (search) {
-
+  if (search.trim()) {
     params =
       params.set(
         'search',
-        search
+        search.trim()
       );
   }
 
   if (status) {
-
     params =
       params.set(
         'status',
@@ -54,7 +98,6 @@ export class WeddingTaskService {
   }
 
   if (priority) {
-
     params =
       params.set(
         'priority',
