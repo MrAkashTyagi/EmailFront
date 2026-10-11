@@ -16,13 +16,39 @@ import {
   takeUntilDestroyed
 } from '@angular/core/rxjs-interop';
 
+
+import {
+  computed,
+} from '@angular/core';
+
+import {
+  Router
+} from '@angular/router';
+
+import {
+  WeddingTask
+} from '../../models/wedding-task';
+
+import {
+  WeddingTaskService
+} from '../../service/wedding-task-service';
+
+import {
+  NotificationService
+} from '../../service/notification-service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
+
 @Component({
   selector: 'app-dashboard',
   imports: [
     CommonModule,
     BaseChartDirective,
     RouterLink,
-    WeddingCountdown
+    WeddingCountdown,
+    MatIconModule,
+    MatButtonModule
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
@@ -50,6 +76,16 @@ export class Dashboard implements OnInit {
   private readonly destroyRef =
     inject(DestroyRef);
 
+  private readonly weddingTaskService =
+    inject(WeddingTaskService);
+
+  private readonly router =
+    inject(Router);
+
+  private readonly notificationService =
+    inject(NotificationService);
+
+
   recentGuests: any[] = [];
 
   recentExpenses: any[] = [];
@@ -59,6 +95,12 @@ export class Dashboard implements OnInit {
   readonly shadiGuests = signal<number>(0);
   readonly sagaiGuests = signal<number>(0);
   readonly bothGuests = signal<number>(0);
+
+  readonly dashboardTasks =
+    signal<WeddingTask[]>([]);
+
+  readonly loadingUpcomingTasks =
+    signal(false);
 
   expenseChartLoaded = false;
   guestChartLoaded = false;
@@ -78,8 +120,64 @@ export class Dashboard implements OnInit {
     pendingInvitations: 0
   });
 
+  readonly upcomingTasks =
+    computed<WeddingTask[]>(() => {
 
+      return this.dashboardTasks()
+        .filter(
+          task =>
+            task.status !== 'DONE'
+            && Boolean(task.dueDate)
+        )
+        .sort(
+          (
+            firstTask,
+            secondTask
+          ) => {
 
+            const firstDate =
+              this.toLocalDate(
+                firstTask.dueDate!
+              );
+
+            const secondDate =
+              this.toLocalDate(
+                secondTask.dueDate!
+              );
+
+            return (
+              firstDate.getTime()
+              - secondDate.getTime()
+            );
+          }
+        )
+        .slice(
+          0,
+          2
+        );
+    });
+
+  readonly pendingTaskCount =
+    computed<number>(() => {
+
+      return this.dashboardTasks()
+        .filter(
+          task =>
+            task.status === 'TODO'
+        )
+        .length;
+    });
+
+  readonly activeTaskCount =
+    computed<number>(() => {
+
+      return this.dashboardTasks()
+        .filter(
+          task =>
+            task.status === 'IN_PROGRESS'
+        )
+        .length;
+    });
 
   ngOnInit(): void {
 
@@ -89,6 +187,7 @@ export class Dashboard implements OnInit {
     this.loadGuestChart();
     this.loadRecentGuests();
     this.loadRecentExpenses();
+    this.loadUpcomingTasks();
 
     this.navBarService
       .weddingSettingsClick$
@@ -255,90 +354,90 @@ export class Dashboard implements OnInit {
       });
   }
 
- loadGuestChart(): void {
+  loadGuestChart(): void {
 
-  this.guestService
-    .getGuestCategorySummary()
-    .subscribe({
-      next: (response: any[]) => {
+    this.guestService
+      .getGuestCategorySummary()
+      .subscribe({
+        next: (response: any[]) => {
 
-        const categorySummary =
-          response || [];
+          const categorySummary =
+            response || [];
 
-        this.guestPieChartData = {
-          labels: categorySummary.map(
-            (item: any) => item.category
-          ),
-          datasets: [
-            {
-              data: categorySummary.map(
-                (item: any) => item.count
-              ),
-              backgroundColor: [
-                '#8b5cf6',
-                '#ec4899',
-                '#f59e0b',
-                '#10b981'
-              ]
-            }
-          ]
-        };
+          this.guestPieChartData = {
+            labels: categorySummary.map(
+              (item: any) => item.category
+            ),
+            datasets: [
+              {
+                data: categorySummary.map(
+                  (item: any) => item.count
+                ),
+                backgroundColor: [
+                  '#8b5cf6',
+                  '#ec4899',
+                  '#f59e0b',
+                  '#10b981'
+                ]
+              }
+            ]
+          };
 
-        const getCategoryCount = (
-          categoryName: string
-        ): number => {
+          const getCategoryCount = (
+            categoryName: string
+          ): number => {
 
-          const category =
-            categorySummary.find(
-              (item: any) =>
-                item.category
-                  ?.trim()
-                  .toLowerCase() ===
-                categoryName.toLowerCase()
+            const category =
+              categorySummary.find(
+                (item: any) =>
+                  item.category
+                    ?.trim()
+                    .toLowerCase() ===
+                  categoryName.toLowerCase()
+              );
+
+            return Number(
+              category?.count || 0
             );
+          };
 
-          return Number(
-            category?.count || 0
+          const shadiOnlyCount =
+            getCategoryCount('Shadi');
+
+          const sagaiOnlyCount =
+            getCategoryCount('Sagai');
+
+          const bothCount =
+            getCategoryCount('Both');
+
+          this.shadiGuests.set(
+            shadiOnlyCount + bothCount
           );
-        };
 
-        const shadiOnlyCount =
-          getCategoryCount('Shadi');
+          this.sagaiGuests.set(
+            sagaiOnlyCount + bothCount
+          );
 
-        const sagaiOnlyCount =
-          getCategoryCount('Sagai');
+          this.bothGuests.set(
+            bothCount
+          );
 
-        const bothCount =
-          getCategoryCount('Both');
+          this.guestChartLoaded = true;
+        },
 
-        this.shadiGuests.set(
-          shadiOnlyCount + bothCount
-        );
+        error: (err) => {
 
-        this.sagaiGuests.set(
-          sagaiOnlyCount + bothCount
-        );
+          console.error(
+            'Guest Chart Error',
+            err
+          );
 
-        this.bothGuests.set(
-          bothCount
-        );
-
-        this.guestChartLoaded = true;
-      },
-
-      error: (err) => {
-
-        console.error(
-          'Guest Chart Error',
-          err
-        );
-
-        this.shadiGuests.set(0);
-        this.sagaiGuests.set(0);
-        this.bothGuests.set(0);
-      }
-    });
-}
+          this.shadiGuests.set(0);
+          this.sagaiGuests.set(0);
+          this.bothGuests.set(0);
+        }
+      });
+  }
 
 
   openWeddingSettings(): void {
@@ -416,5 +515,123 @@ export class Dashboard implements OnInit {
 
       });
   }
+  loadUpcomingTasks(): void {
+
+    this.loadingUpcomingTasks.set(
+      true
+    );
+
+    this.weddingTaskService
+      .getTasks(
+        '',
+        '',
+        ''
+      )
+      .subscribe({
+
+        next: (response: any) => {
+
+          const tasks: WeddingTask[] =
+            response?.content || [];
+
+          this.dashboardTasks.set(
+            tasks
+          );
+
+          this.loadingUpcomingTasks.set(
+            false
+          );
+        },
+
+        error: (error: any) => {
+
+          console.error(
+            'Upcoming tasks load failed:',
+            error
+          );
+
+          this.loadingUpcomingTasks.set(
+            false
+          );
+
+          this.notificationService.error(
+            error?.error?.message
+            || error?.error?.detail
+            || 'Upcoming tasks load nahi ho paye.'
+          );
+        }
+
+      });
+  }
+
+  openTasksPage(): void {
+
+  this.router.navigate([
+    '/tasks'
+  ]);
+}
+
+openTask(
+  task: WeddingTask
+): void {
+
+  this.router.navigate(
+    [
+      '/tasks'
+    ],
+    {
+      queryParams: {
+        taskId:
+          task.id
+      }
+    }
+  );
+}
+
+private toLocalDate(
+  value: string
+): Date {
+
+  const datePart =
+    value.split('T')[0];
+
+  const [
+    year,
+    month,
+    day
+  ] =
+    datePart
+      .split('-')
+      .map(Number);
+
+  return new Date(
+    year,
+    month - 1,
+    day
+  );
+}
+
+formatTaskDate(
+  dueDate?: string
+): string {
+
+  if (!dueDate) {
+    return 'No due date';
+  }
+
+  const date =
+    this.toLocalDate(
+      dueDate
+    );
+
+  return date.toLocaleDateString(
+    'en-IN',
+    {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    }
+  );
+}
 
 }
