@@ -746,10 +746,10 @@
     border-radius: 10px;
 
     box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
-
+    gap: 10px;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: wrap;    
 }
 
 .gift-summary-title {
@@ -763,12 +763,12 @@
 }
 
 .gift-summary-list {
-
+    align-items: center;
     display: flex;
 
     flex-wrap: wrap;
-
-    gap: 10px;
+    width: 100%;
+    gap: 8px;
 }
 
 .gift-summary-chip {
@@ -1057,4 +1057,84 @@
     .upcoming-tasks-widget {
         padding: 14px;
     }
+}
+
+.gift-plan-divider {
+
+    width: 1px;
+
+    height: 22px;
+
+    background: #dbe3ef;
+
+    margin: 0 10px;
+
+    flex-shrink: 0;
+}
+
+.cash-plan-chip {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    background: #ecfdf5;
+
+    color: #166534;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.cash-plan-chip-count {
+
+    font-weight: 700;
+}
+
+.cash-total-chip {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    background: #fef3c7;
+
+    color: #92400e;
+
+    font-weight: 700;
+
+    margin-left: auto;
+}
+
+.gift-summary-list {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+.cash-final-section {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-left: auto;
 }
