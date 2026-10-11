@@ -2,48 +2,226 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  padding: 22px 24px 16px;
+  padding: 20px 24px 14px;
   border-bottom: 1px solid #e2e8f0;
+}
+
+.dialog-eyebrow {
+  color: #7c3aed;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
 }
 
 .dialog-header h2 {
   margin: 4px 0;
   color: #172033;
-  font-size: 24px;
+  font-size: 23px;
 }
 
 .dialog-header p {
   margin: 0;
   color: #64748b;
-  font-size: 13px;
-}
-
-.dialog-eyebrow {
-  color: #7c3aed;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
+  font-size: 12px;
 }
 
 .dialog-content {
   display: flex;
+  max-height: 68vh;
+  overflow-y: auto;
   flex-direction: column;
-  gap: 4px;
-  padding: 20px 24px;
+  gap: 14px;
+  padding: 18px 24px;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 12px;
+}
+
+.capacity-preview {
+  display: grid;
+  grid-template-columns:
+    repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 4px;
+  padding: 10px;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  background: #f0fdf4;
+}
+
+.capacity-preview div {
+  text-align: center;
+}
+
+.capacity-preview span {
+  display: block;
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.capacity-preview strong {
+  color: #15803d;
+  font-size: 17px;
+}
+
+.capacity-full {
+  border-color: #fecaca;
+  background: #fff1f2;
+}
+
+.capacity-full strong {
+  color: #be123c;
+}
+
+.guest-selector {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.guest-selector-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.guest-selector-header h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 14px;
+}
+
+.guest-selector-header p {
+  margin: 2px 0 0;
+  color: #64748b;
+  font-size: 10px;
+}
+
+.family-groups {
+  display: flex;
+  max-height: 290px;
+  overflow-y: auto;
+  flex-direction: column;
+  gap: 9px;
+  padding: 10px;
+}
+
+.family-group {
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 11px;
+  background: #ffffff;
+}
+
+.family-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 11px;
+  background: #faf7ff;
+}
+
+.family-header strong {
+  display: block;
+  color: #172033;
+  font-size: 12px;
+}
+
+.family-header span {
+  color: #64748b;
+  font-size: 9px;
+}
+
+.family-guest-list {
+  display: grid;
+  grid-template-columns:
+    repeat(2, 1fr);
+  gap: 6px;
+  padding: 8px;
+}
+
+.guest-option {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.guest-option:hover {
+  background: #f8fafc;
+}
+
+.selected-guest {
+  border-color: #c4b5fd;
+  background: #f5f3ff;
+}
+
+.guest-avatar {
+  display: grid;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.guest-info {
+  min-width: 0;
+}
+
+.guest-info strong {
+  display: block;
+  overflow: hidden;
+  color: #172033;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.guest-info span {
+  color: #64748b;
+  font-size: 9px;
+}
+
+.guest-empty-state,
+.dialog-loading {
+  display: flex;
+  min-height: 180px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 7px;
+  color: #64748b;
+  text-align: center;
+}
+
+.guest-empty-state mat-icon {
+  width: 34px;
+  height: 34px;
+  color: #7c3aed;
+  font-size: 34px;
 }
 
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  padding: 14px 24px 20px;
-  border-top: 1px solid #eef2f7;
+  padding: 13px 24px 18px;
+  border-top: 1px solid #e2e8f0;
 }
 
 .save-btn {
@@ -56,10 +234,15 @@
   color: #ffffff !important;
 }
 
-@media (max-width: 650px) {
+@media (max-width: 680px) {
 
-  .form-row {
+  .form-row,
+  .family-guest-list {
     grid-template-columns: 1fr;
-    gap: 0;
+  }
+
+  .capacity-preview {
+    grid-template-columns:
+      repeat(2, 1fr);
   }
 }
