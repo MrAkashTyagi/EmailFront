@@ -1,0 +1,189 @@
+<div class="dialog-header">
+
+  <div>
+
+    <span class="dialog-eyebrow">
+      STAY MANAGEMENT
+    </span>
+
+    <h2>
+      {{
+        isEditMode
+          ? 'Edit Location'
+          : 'Add Location'
+      }}
+    </h2>
+
+    <p>
+      Hotel, house, dharamshala or other stay location maintain karein.
+    </p>
+
+  </div>
+
+  <button
+    mat-icon-button
+    type="button"
+    aria-label="Close dialog"
+    (click)="close()">
+
+    <mat-icon>
+      close
+    </mat-icon>
+
+  </button>
+
+</div>
+
+<div class="dialog-content">
+
+  <div class="form-row">
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Location Name
+      </mat-label>
+
+      <input
+        matInput
+        [(ngModel)]="form.name"
+        placeholder="For example, Tyagi House">
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Location Type
+      </mat-label>
+
+      <mat-select
+        [(ngModel)]="form.type">
+
+        @for (
+          type of locationTypes;
+          track type.value
+        ) {
+
+          <mat-option
+            [value]="type.value">
+
+            {{ type.label }}
+
+          </mat-option>
+
+        }
+
+      </mat-select>
+
+    </mat-form-field>
+
+  </div>
+
+  <mat-form-field appearance="outline">
+
+    <mat-label>
+      Address
+    </mat-label>
+
+    <textarea
+      matInput
+      rows="2"
+      [(ngModel)]="form.address"
+      placeholder="Location address">
+    </textarea>
+
+  </mat-form-field>
+
+  <div class="form-row">
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Contact Person
+      </mat-label>
+
+      <input
+        matInput
+        [(ngModel)]="form.contactPerson"
+        placeholder="Caretaker or hotel manager">
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Contact Number
+      </mat-label>
+
+      <input
+        matInput
+        [(ngModel)]="form.contactNumber"
+        placeholder="Phone number">
+
+    </mat-form-field>
+
+  </div>
+
+  <mat-form-field appearance="outline">
+
+    <mat-label>
+      Notes
+    </mat-label>
+
+    <textarea
+      matInput
+      rows="3"
+      [(ngModel)]="form.notes"
+      placeholder="Additional details">
+    </textarea>
+
+  </mat-form-field>
+
+  <mat-slide-toggle
+    [(ngModel)]="form.active">
+
+    Active Location
+
+  </mat-slide-toggle>
+
+</div>
+
+<div class="dialog-actions">
+
+  <button
+    mat-stroked-button
+    type="button"
+    [disabled]="saving"
+    (click)="close()">
+
+    Cancel
+
+  </button>
+
+  <button
+    mat-flat-button
+    type="button"
+    class="save-btn"
+    [disabled]="saving"
+    (click)="save()">
+
+    <mat-icon>
+      {{
+        isEditMode
+          ? 'save'
+          : 'add_location_alt'
+      }}
+    </mat-icon>
+
+    {{
+      saving
+        ? 'Saving...'
+        : isEditMode
+          ? 'Update Location'
+          : 'Add Location'
+    }}
+
+  </button>
+
+</div>
