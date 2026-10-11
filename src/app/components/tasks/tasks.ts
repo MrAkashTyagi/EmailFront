@@ -1,3 +1,5 @@
+import * as XLSX from 'xlsx';
+
 import {
   Component,
   OnInit,
@@ -386,5 +388,177 @@ export class Tasks
 
     this.loadTasks();
   }
+
+  exportTasksToExcel(): void {
+
+  const tasks: WeddingTask[] = [
+    ...this.todoTasks(),
+    ...this.inProgressTasks(),
+    ...this.completedTasks()
+  ];
+
+  if (tasks.length === 0) {
+
+    this.notificationService.warning(
+      'Export ke liye koi task available nahi hai.'
+    );
+
+    return;
+  }
+
+  const exportData =
+    tasks.map(
+      (
+        task: WeddingTask,
+        index: number
+      ) => ({
+        'S.No.': index + 1,
+
+        'Task Title':
+          task.title,
+
+        'Description':
+          task.description || '',
+
+        'Status':
+          this.formatTaskStatus(
+            task.status
+          ),
+
+        'Priority':
+          task.priority,
+
+        'Due Date':
+          task.dueDate
+            ? this.formatExportDate(
+                task.dueDate
+              )
+            : '',
+
+        'Assigned To':
+          task.assignedTo || '',
+
+        'Created At':
+          task.createdAt
+            ? this.formatExportDateTime(
+                task.createdAt
+              )
+            : '',
+
+        'Updated At':
+          task.updatedAt
+            ? this.formatExportDateTime(
+                task.updatedAt
+              )
+            : ''
+      })
+    );
+
+  const worksheet =
+    XLSX.utils.json_to_sheet(
+      exportData
+    );
+
+  worksheet['!cols'] = [
+    { wch: 8 },
+    { wch: 30 },
+    { wch: 45 },
+    { wch: 18 },
+    { wch: 14 },
+    { wch: 16 },
+    { wch: 22 },
+    { wch: 22 },
+    { wch: 22 }
+  ];
+
+  worksheet['!autofilter'] = {
+    ref:
+      worksheet['!ref']
+      || 'A1:I1'
+  };
+
+  const workbook =
+    XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    'Wedding Tasks'
+  );
+
+  const currentDate =
+    new Date()
+      .toISOString()
+      .slice(0, 10);
+
+  XLSX.writeFile(
+    workbook,
+    `wedding-tasks-${currentDate}.xlsx`
+  );
+
+  this.notificationService.success(
+    'Tasks exported successfully.'
+  );
+}
+
+private formatTaskStatus(
+  status: WeddingTask['status']
+): string {
+
+  switch (status) {
+
+    case 'TODO':
+      return 'To Do';
+
+    case 'IN_PROGRESS':
+      return 'In Progress';
+
+    case 'DONE':
+      return 'Done';
+
+    default:
+      return status;
+  }
+}
+
+private formatExportDate(
+  value: string
+): string {
+
+  const date =
+    new Date(value);
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+    return value;
+  }
+
+  return date.toLocaleDateString(
+    'en-IN'
+  );
+}
+
+private formatExportDateTime(
+  value: string
+): string {
+
+  const date =
+    new Date(value);
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+    return value;
+  }
+
+  return date.toLocaleString(
+    'en-IN'
+  );
+}
 
 }
