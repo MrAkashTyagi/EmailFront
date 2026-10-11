@@ -18,11 +18,7 @@
 
     </div>
 
-    <button
-      mat-flat-button
-      type="button"
-      class="add-location-btn"
-      (click)="openAddLocationDialog()">
+    <button mat-flat-button type="button" class="add-location-btn" (click)="openAddLocationDialog()">
 
       <mat-icon>
         add_location_alt
@@ -56,126 +52,112 @@
 
       @if (loadingLocations()) {
 
-        <div class="panel-state">
+      <div class="panel-state">
 
-          Loading locations...
+        Loading locations...
 
-        </div>
+      </div>
 
       } @else if (locations().length === 0) {
 
-        <div class="panel-state empty-state">
+      <div class="panel-state empty-state">
 
-          <mat-icon>
-            add_location_alt
-          </mat-icon>
+        <mat-icon>
+          add_location_alt
+        </mat-icon>
 
-          <strong>
-            No stay locations
-          </strong>
+        <strong>
+          No stay locations
+        </strong>
 
-          <span>
-            Add home, hotel, rented house or dharamshala.
-          </span>
+        <span>
+          Add home, hotel, rented house or dharamshala.
+        </span>
 
-        </div>
+      </div>
 
       } @else {
 
-        <div class="location-list">
+      <div class="location-list">
 
-          @for (
-            location of locations();
-            track location.id
-          ) {
+        @for (
+        location of locations();
+        track location.id
+        ) {
 
-            <button
-              type="button"
-              class="location-card"
-              [class.selected-location]="
+        <button type="button" class="location-card" [class.selected-location]="
                 selectedLocation()?.id
                 === location.id
-              "
-              [class.inactive-card]="
+              " [class.inactive-card]="
                 !location.active
-              "
-              (click)="selectLocation(location)">
+              " (click)="selectLocation(location)">
 
-              <div class="location-icon">
+          <div class="location-icon">
 
-                <mat-icon>
-                  {{ getLocationIcon(location.type) }}
-                </mat-icon>
+            <mat-icon>
+              {{ getLocationIcon(location.type) }}
+            </mat-icon>
 
-              </div>
+          </div>
 
-              <div class="location-content">
+          <div class="location-content">
 
-                <div class="location-name">
+            <div class="location-name">
 
-                  {{ location.name }}
+              {{ location.name }}
 
-                </div>
+            </div>
 
-                <div class="location-type">
+            <div class="location-type">
 
-                  {{
-                    location.type
-                      .replaceAll('_', ' ')
-                  }}
+              {{
+              location.type
+              .replaceAll('_', ' ')
+              }}
 
-                </div>
+            </div>
 
-              </div>
+          </div>
 
-              @if (!location.active) {
+          @if (!location.active) {
 
-                <span class="inactive-chip">
-                  Inactive
-                </span>
+          <span class="inactive-chip">
+            Inactive
+          </span>
 
-              }
+          }
 
-              <div class="location-actions">
+          <div class="location-actions">
 
-                <button
-                  mat-icon-button
-                  type="button"
-                  matTooltip="Edit location"
-                  (click)="
+            <button mat-icon-button type="button" matTooltip="Edit location" (click)="
                     $event.stopPropagation();
                     openEditLocationDialog(location)
                   ">
 
-                  <mat-icon>
-                    edit
-                  </mat-icon>
+              <mat-icon>
+                edit
+              </mat-icon>
 
-                </button>
+            </button>
 
-                <button
-                  mat-icon-button
-                  type="button"
-                  class="delete-btn"
-                  matTooltip="Delete location"
-                  (click)="
+            <button mat-icon-button type="button" class="delete-btn" matTooltip="Delete location" (click)="
                     $event.stopPropagation();
                     deleteLocation(location)
                   ">
 
-                  <mat-icon>
-                    delete
-                  </mat-icon>
-
-                </button>
-
-              </div>
+              <mat-icon>
+                delete
+              </mat-icon>
 
             </button>
 
-          }
+          </div>
 
-        </div>
+        </button>
+
+        }
+
+      </div>
 
       }
 
@@ -185,257 +167,427 @@
 
       @if (!selectedLocation()) {
 
-        <div class="select-location-state">
+      <div class="select-location-state">
 
-          <mat-icon>
-            meeting_room
-          </mat-icon>
+        <mat-icon>
+          meeting_room
+        </mat-icon>
 
-          <h3>
-            Select a stay location
-          </h3>
+        <h3>
+          Select a stay location
+        </h3>
 
-          <p>
-            Rooms aur capacities dekhne ke liye left side se location select karein.
-          </p>
+        <p>
+          Rooms aur capacities dekhne ke liye left side se location select karein.
+        </p>
 
-        </div>
+      </div>
 
       } @else {
 
-        <div class="rooms-header">
+      <div class="rooms-header">
 
-          <div>
+        <div>
 
-            <span class="rooms-eyebrow">
+          <span class="rooms-eyebrow">
 
-              {{
-                selectedLocation()!
-                  .type
-                  .replaceAll('_', ' ')
-              }}
+            {{
+            selectedLocation()!
+            .type
+            .replaceAll('_', ' ')
+            }}
 
-            </span>
+          </span>
 
-            <h3>
-              {{ selectedLocation()!.name }}
-            </h3>
+          <h3>
+            {{ selectedLocation()!.name }}
+          </h3>
 
-            @if (selectedLocation()!.address) {
+          @if (selectedLocation()!.address) {
 
-              <p>
-                <mat-icon>
-                  location_on
-                </mat-icon>
-
-                {{ selectedLocation()!.address }}
-              </p>
-
-            }
-
-          </div>
-
-          <button
-            mat-flat-button
-            type="button"
-            class="add-room-btn"
-            (click)="openAddRoomDialog()">
-
+          <p>
             <mat-icon>
-              add
+              location_on
             </mat-icon>
 
-            Add Room
+            {{ selectedLocation()!.address }}
+          </p>
 
-          </button>
+          }
 
         </div>
 
-        @if (loadingRooms()) {
+        <button mat-flat-button type="button" class="add-room-btn" (click)="openAddRoomDialog()">
 
-          <div class="panel-state">
-            Loading rooms...
+          <mat-icon>
+            add
+          </mat-icon>
+
+          Add Room
+
+        </button>
+
+      </div>
+
+      @if (loadingRooms()) {
+
+      <div class="panel-state">
+        Loading rooms...
+      </div>
+
+      } @else if (rooms().length === 0) {
+
+      <div class="panel-state empty-state">
+
+        <mat-icon>
+          bed
+        </mat-icon>
+
+        <strong>
+          No rooms added
+        </strong>
+
+        <span>
+          Is location me room, bedroom ya shared hall add karein.
+        </span>
+
+      </div>
+
+      } @else {
+
+      <div class="rooms-grid">
+
+        @for (
+        room of rooms();
+        track room.id
+        ) {
+
+        <article class="room-card" [class.full-room]="room.full" [class.inactive-room]="!room.active">
+
+          <div class="room-header">
+
+            <div>
+
+              <h4>
+                {{ room.name }}
+              </h4>
+
+              <span>
+                {{ room.floor || 'Floor not set' }}
+              </span>
+
+            </div>
+
+            <div class="room-actions">
+
+              <button mat-icon-button type="button" matTooltip="Edit room" (click)="openEditRoomDialog(room)">
+
+                <mat-icon>
+                  edit
+                </mat-icon>
+
+              </button>
+
+              <button mat-icon-button type="button" class="delete-btn" matTooltip="Delete room"
+                (click)="deleteRoom(room)">
+
+                <mat-icon>
+                  delete
+                </mat-icon>
+
+              </button>
+
+            </div>
+
           </div>
 
-        } @else if (rooms().length === 0) {
+          <div class="room-capacity-row">
 
-          <div class="panel-state empty-state">
+            <div class="capacity-stat">
 
-            <mat-icon>
-              bed
-            </mat-icon>
+              <span>
+                {{ room.occupiedBeds || 0 }}
+              </span>
 
-            <strong>
-              No rooms added
-            </strong>
+              <small>
+                Occupied
+              </small>
+
+            </div>
+
+            <div class="capacity-stat">
+
+              <span>
+                {{ room.availableBeds || 0 }}
+              </span>
+
+              <small>
+                Available
+              </small>
+
+            </div>
+
+            <div class="capacity-stat">
+
+              <span>
+                {{ room.capacity }}
+              </span>
+
+              <small>
+                Capacity
+              </small>
+
+            </div>
+
+          </div>
+
+          <div class="occupancy-header">
 
             <span>
-              Is location me room, bedroom ya shared hall add karein.
+              Occupancy
             </span>
+
+            <strong>
+              {{ room.occupiedBeds || 0 }}
+              /
+              {{ room.capacity }}
+            </strong>
 
           </div>
 
-        } @else {
+          <div class="occupancy-track">
 
-          <div class="rooms-grid">
-
-            @for (
-              room of rooms();
-              track room.id
-            ) {
-
-              <article
-                class="room-card"
-                [class.full-room]="room.full"
-                [class.inactive-room]="!room.active">
-
-                <div class="room-header">
-
-                  <div>
-
-                    <h4>
-                      {{ room.name }}
-                    </h4>
-
-                    <span>
-                      {{ room.floor || 'Floor not set' }}
-                    </span>
-
-                  </div>
-
-                  <div class="room-actions">
-
-                    <button
-                      mat-icon-button
-                      type="button"
-                      matTooltip="Edit room"
-                      (click)="openEditRoomDialog(room)">
-
-                      <mat-icon>
-                        edit
-                      </mat-icon>
-
-                    </button>
-
-                    <button
-                      mat-icon-button
-                      type="button"
-                      class="delete-btn"
-                      matTooltip="Delete room"
-                      (click)="deleteRoom(room)">
-
-                      <mat-icon>
-                        delete
-                      </mat-icon>
-
-                    </button>
-
-                  </div>
-
-                </div>
-
-                <div class="room-capacity-row">
-
-                  <div class="capacity-stat">
-
-                    <span>
-                      {{ room.occupiedBeds || 0 }}
-                    </span>
-
-                    <small>
-                      Occupied
-                    </small>
-
-                  </div>
-
-                  <div class="capacity-stat">
-
-                    <span>
-                      {{ room.availableBeds || 0 }}
-                    </span>
-
-                    <small>
-                      Available
-                    </small>
-
-                  </div>
-
-                  <div class="capacity-stat">
-
-                    <span>
-                      {{ room.capacity }}
-                    </span>
-
-                    <small>
-                      Capacity
-                    </small>
-
-                  </div>
-
-                </div>
-
-                <div class="occupancy-header">
-
-                  <span>
-                    Occupancy
-                  </span>
-
-                  <strong>
-                    {{ room.occupiedBeds || 0 }}
-                    /
-                    {{ room.capacity }}
-                  </strong>
-
-                </div>
-
-                <div class="occupancy-track">
-
-                  <div
-                    class="occupancy-fill"
-                    [class.full-fill]="room.full"
-                    [style.width.%]="
+            <div class="occupancy-fill" [class.full-fill]="room.full" [style.width.%]="
                       getOccupancyPercentage(room)
                     ">
-                  </div>
+            </div>
 
-                </div>
+          </div>
 
-                <div class="room-footer">
+          <div class="room-card-actions">
 
-                  @if (room.full) {
+            <button mat-stroked-button type="button" class="occupants-btn" (click)="loadRoomAllocations(room.id!)">
 
-                    <span class="room-status full-status">
-                      FULL
-                    </span>
+              <mat-icon>
+                groups
+              </mat-icon>
 
-                  } @else if (!room.active) {
+              View Guests
 
-                    <span class="room-status inactive-status">
-                      INACTIVE
-                    </span>
+            </button>
 
-                  } @else {
+            <button mat-flat-button type="button" class="allocate-btn" [disabled]="
+      room.full
+      || !room.active
+    " (click)="openAllocateGuestsDialog(room)">
 
-                    <span class="room-status available-status">
+              <mat-icon>
+                person_add
+              </mat-icon>
 
-                      {{
-                        room.availableBeds || 0
-                      }}
-                      bed(s) available
+              Allocate
 
-                    </span>
+            </button>
 
-                  }
+          </div>
 
-                </div>
+          <div class="room-footer">
 
-              </article>
+            @if (room.full) {
+
+            <span class="room-status full-status">
+              FULL
+            </span>
+
+            } @else if (!room.active) {
+
+            <span class="room-status inactive-status">
+              INACTIVE
+            </span>
+
+            } @else {
+
+            <span class="room-status available-status">
+
+              {{
+              room.availableBeds || 0
+              }}
+              bed(s) available
+
+            </span>
 
             }
 
           </div>
 
+        </article>
+
         }
+
+        @if (roomAllocations().length > 0) {
+
+        <section class="occupants-panel">
+
+          <div class="occupants-header">
+
+            <div>
+
+              <h3>
+                Room Occupants
+              </h3>
+
+              <span>
+                {{ roomAllocations().length }}
+                active allocation(s)
+              </span>
+
+            </div>
+
+            <button mat-icon-button type="button" matTooltip="Close occupants" (click)="roomAllocations.set([])">
+
+              <mat-icon>
+                close
+              </mat-icon>
+
+            </button>
+
+          </div>
+
+          <div class="occupants-list">
+
+            @for (
+            allocation
+            of roomAllocations();
+            track allocation.id
+            ) {
+
+            <article class="occupant-row">
+
+              <div class="occupant-avatar">
+
+                {{
+                allocation.guestName
+                .charAt(0)
+                .toUpperCase()
+                }}
+
+              </div>
+
+              <div class="occupant-content">
+
+                <strong>
+                  {{ allocation.guestName }}
+                </strong>
+
+                <span>
+                  {{
+                  allocation.familyName
+                  || 'No Family'
+                  }}
+
+                  @if (allocation.checkInDate) {
+
+                  · Check-in:
+                  {{ allocation.checkInDate }}
+
+                  }
+
+                </span>
+
+              </div>
+
+              <span class="allocation-status" [class.checked-in-status]="
+              allocation.status
+              === 'CHECKED_IN'
+            ">
+
+                {{
+                allocation.status
+                .replaceAll('_', ' ')
+                }}
+
+              </span>
+
+              <div class="occupant-actions">
+
+                <button mat-icon-button type="button" matTooltip="Move or edit" (click)="
+                openEditAllocationDialog(
+                  allocation
+                )
+              ">
+
+                  <mat-icon>
+                    swap_horiz
+                  </mat-icon>
+
+                </button>
+
+                @if (
+                allocation.status
+                === 'PLANNED'
+                ) {
+
+                <button mat-icon-button type="button" class="check-in-btn" matTooltip="Check in" (click)="
+                  checkInAllocation(
+                    allocation
+                  )
+                ">
+
+                  <mat-icon>
+                    login
+                  </mat-icon>
+
+                </button>
+
+                }
+
+                @if (
+                allocation.status
+                === 'CHECKED_IN'
+                ) {
+
+                <button mat-icon-button type="button" class="check-out-btn" matTooltip="Check out" (click)="
+                  checkOutAllocation(
+                    allocation
+                  )
+                ">
+
+                  <mat-icon>
+                    logout
+                  </mat-icon>
+
+                </button>
+
+                }
+
+                <button mat-icon-button type="button" class="cancel-allocation-btn" matTooltip="Cancel allocation"
+                  (click)="
+                cancelStayAllocation(
+                  allocation
+                )
+              ">
+
+                  <mat-icon>
+                    cancel
+                  </mat-icon>
+
+                </button>
+
+              </div>
+
+            </article>
+
+            }
+
+          </div>
+
+        </section>
+
+        }
+
+      </div>
+
+      }
 
       }
 
