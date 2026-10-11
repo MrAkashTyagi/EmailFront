@@ -1,25 +1,60 @@
 <div class="tasks-page">
 
+  <!-- toolbar -->
+
   <section class="task-toolbar">
 
     <div class="task-toolbar-left">
 
-      <h2>
-        Wedding Task Board
-      </h2>
+      <div class="search-wrapper">
 
-      <p>
-        Track all wedding activities from planning to completion.
-      </p>
+        <mat-icon class="search-icon">
+          search
+        </mat-icon>
 
+        <input type="text" class="search-input" placeholder="Search Tasks..." [value]="searchText()"
+          (input)="onSearchChange($event)" />
+
+      </div>
+      
     </div>
+
+    <div class="task-overview">
+
+  <span>25 Total Tasks</span>
+
+  <span>•</span>
+
+  <span>10 Todo</span>
+
+  <span>•</span>
+
+  <span>8 In Progress</span>
+
+  <span>•</span>
+
+  <span>7 Done</span>
+
+  <span>•</span>
+
+  <span>80% Complete</span>
+
+</div>
 
     <div class="task-toolbar-right">
 
-      <button
-        mat-flat-button
-        class="add-task-btn"
-        (click)="openAddTaskDialog()">
+      
+      <button mat-stroked-button class="filter-btn" (click)="filterPanel.toggle()">
+
+        <mat-icon>
+          tune
+        </mat-icon>
+
+        Filters
+
+      </button>
+
+      <button mat-flat-button class="add-task-btn" (click)="openAddTaskDialog()">
 
         <mat-icon>
           add
@@ -33,6 +68,151 @@
 
   </section>
 
+  <mat-expansion-panel #filterPanel hideToggle>
+
+    <section class="filters-card">
+
+      <div class="filter-grid">
+
+        <mat-form-field appearance="outline" class="filter-field">
+
+          <mat-label>
+            Status
+          </mat-label>
+
+          <mat-select [value]="selectedStatus()" (selectionChange)="onStatusChange($event.value)">
+
+            <mat-option value="">
+              All Status
+            </mat-option>
+
+            <mat-option value="TODO">
+              To Do
+            </mat-option>
+
+            <mat-option value="IN_PROGRESS">
+              In Progress
+            </mat-option>
+
+            <mat-option value="DONE">
+              Done
+            </mat-option>
+
+          </mat-select>
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+
+          <mat-label>
+            Priority
+          </mat-label>
+
+          <mat-select [value]="selectedPriority()" (selectionChange)="onPriorityChange($event.value)">
+
+            <mat-option value="">
+              All Priority
+            </mat-option>
+
+            <mat-option value="HIGH">
+              High
+            </mat-option>
+
+            <mat-option value="MEDIUM">
+              Medium
+            </mat-option>
+
+            <mat-option value="LOW">
+              Low
+            </mat-option>
+
+          </mat-select>
+
+        </mat-form-field>
+
+        <div class="filter-actions">
+
+          <button mat-stroked-button type="button" class="clear-btn" (click)="clearFilters()">
+
+            Clear Filters
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </mat-expansion-panel>
+
+
+  <!-- sumamry cards -->
+  <!-- <div class="task-summary-grid">
+
+    <div class="summary-card total-card">
+
+      <div class="summary-value">
+        {{ totalTasks }}
+      </div>
+
+      <div class="summary-label">
+        Total Tasks
+      </div>
+
+    </div>
+
+    <div class="summary-card todo-summary">
+
+      <div class="summary-value">
+        {{ todoTasks().length }}
+      </div>
+
+      <div class="summary-label">
+        To Do
+      </div>
+
+    </div>
+
+    <div class="summary-card progress-summary">
+
+      <div class="summary-value">
+        {{ inProgressTasks().length }}
+      </div>
+
+      <div class="summary-label">
+        In Progress
+      </div>
+
+    </div>
+
+    <div class="summary-card done-summary">
+
+      <div class="summary-value">
+        {{ completedTasks().length }}
+      </div>
+
+      <div class="summary-label">
+        Completed
+      </div>
+
+    </div>
+
+    <div class="summary-card completion-summary">
+
+      <div class="summary-value">
+        {{ completionPercentage }}%
+      </div>
+
+      <div class="summary-label">
+        Completion Rate
+      </div>
+
+    </div>
+
+  </div> -->
+
+  <!-- task board -->
   <div class="task-board">
 
     <!-- TODO -->
@@ -52,15 +232,79 @@
       </div>
 
       @for (
-        task of todoTasks();
-        track task.id
+      task of todoTasks();
+      track task.id
       ) {
 
       <div class="task-card">
 
-        <div class="task-card-title">
+        <div class="task-card-header">
 
-          {{ task.title }}
+          <div class="task-card-title">
+            {{ task.title }}
+          </div>
+
+          <span class="priority-chip" [ngClass]="{'high-priority': task.priority === 'HIGH','medium-priority': task.priority === 'MEDIUM',
+                                                  'low-priority': task.priority === 'LOW'}">
+
+            {{ task.priority }}
+
+          </span>
+
+          <div class="task-card-actions">
+
+            <button mat-icon-button type="button" class="edit-task-btn" matTooltip="Edit task"
+              (click)="openEditTaskDialog(task)">
+
+              <mat-icon>
+                edit
+              </mat-icon>
+
+            </button>
+
+            <button mat-icon-button type="button" class="delete-task-btn" matTooltip="Delete task"
+              (click)="deleteTask(task)">
+
+              <mat-icon>
+                delete
+              </mat-icon>
+
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="task-card-body">
+
+          @if (task.dueDate) {
+
+          <div class="due-date">
+
+            <mat-icon>
+              event
+            </mat-icon>
+
+            {{ task.dueDate }}
+
+          </div>
+
+          }
+
+          <div class="task-quick-actions">
+
+            <button mat-stroked-button type="button" class="status-action-btn start-btn"
+              (click)="changeTaskStatus(task, 'IN_PROGRESS')">
+
+              <mat-icon>
+                play_arrow
+              </mat-icon>
+
+              Start
+
+            </button>
+
+          </div>
 
         </div>
 
@@ -70,7 +314,7 @@
 
     </div>
 
-    <!-- PROGRESS -->
+    <!-- In PROGRESS -->
 
     <div class="task-column progress-column">
 
@@ -87,15 +331,83 @@
       </div>
 
       @for (
-        task of inProgressTasks();
-        track task.id
+      task of inProgressTasks();
+      track task.id
       ) {
 
       <div class="task-card">
 
-        <div class="task-card-title">
+        <div class="task-card-header">
 
-          {{ task.title }}
+          <div class="task-card-title">
+            {{ task.title }}
+          </div>
+
+          <div class="task-card-actions">
+
+            <button mat-icon-button type="button" class="edit-task-btn" matTooltip="Edit task"
+              (click)="openEditTaskDialog(task)">
+
+              <mat-icon>
+                edit
+              </mat-icon>
+
+            </button>
+
+            <button mat-icon-button type="button" class="delete-task-btn" matTooltip="Delete task"
+              (click)="deleteTask(task)">
+
+              <mat-icon>
+                delete
+              </mat-icon>
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="task-card-body">
+
+          @if(task.dueDate){
+
+          <div class="due-date">
+
+            <mat-icon>
+              event
+            </mat-icon>
+
+            {{ task.dueDate }}
+
+          </div>
+
+          }
+
+          <div class="task-quick-actions">
+
+            <button mat-stroked-button type="button" class="status-action-btn back-btn"
+              (click)="changeTaskStatus(task,'TODO')">
+
+              <mat-icon>
+                arrow_back
+              </mat-icon>
+
+            </button>
+
+            <button mat-flat-button type="button" class="status-action-btn complete-btn"
+              (click)="changeTaskStatus(task,'DONE')">
+
+              <mat-icon>
+                check
+              </mat-icon>
+
+              Complete
+
+            </button>
+
+          </div>
 
         </div>
 
@@ -122,15 +434,73 @@
       </div>
 
       @for (
-        task of completedTasks();
-        track task.id
+      task of completedTasks();
+      track task.id
       ) {
-
       <div class="task-card">
 
-        <div class="task-card-title">
+        <div class="task-card-header">
 
-          {{ task.title }}
+          <div class="task-card-title">
+            {{ task.title }}
+          </div>
+
+
+
+          <div class="task-card-actions">
+
+            <button mat-icon-button type="button" class="edit-task-btn" matTooltip="Edit task"
+              (click)="openEditTaskDialog(task)">
+
+              <mat-icon>
+                edit
+              </mat-icon>
+
+            </button>
+
+            <button mat-icon-button type="button" class="delete-task-btn" matTooltip="Delete task"
+              (click)="deleteTask(task)">
+
+              <mat-icon>
+                delete
+              </mat-icon>
+
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="task-card-body">
+
+          @if(task.dueDate){
+
+          <div class="due-date">
+
+            <mat-icon>
+              event
+            </mat-icon>
+
+            {{ task.dueDate }}
+
+          </div>
+
+          }
+
+          <div class="task-quick-actions">
+
+            <button mat-stroked-button type="button" class="status-action-btn reopen-btn"
+              (click)="changeTaskStatus(task,'TODO')">
+
+              <mat-icon>
+                replay
+              </mat-icon>
+
+              Reopen
+
+            </button>
+
+          </div>
 
         </div>
 
