@@ -75,3 +75,13 @@ html, body, .main-container, .card-wrapper {
   background: #2563eb !important;
   color: white !important;
 }
+.task-dialog-panel .mat-mdc-dialog-surface {
+
+  width: 1000px !important;
+
+  max-width: 95vw !important;
+
+  border-radius: 24px !important;
+
+  padding: 24px !important;
+}
