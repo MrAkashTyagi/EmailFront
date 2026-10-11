@@ -144,7 +144,23 @@ export class TaskDialog {
       return;
     }
 
+    let formattedDueDate = null;
+
+    if (this.task.dueDate) {
+
+      const date =
+        new Date(this.task.dueDate);
+
+      formattedDueDate =
+        `${date.getFullYear()}-${String(date.getMonth() + 1)
+          .padStart(2, '0')
+        }-${String(date.getDate())
+          .padStart(2, '0')
+        }`;
+    }
+
     const payload = {
+
       title:
         this.task.title.trim(),
 
@@ -159,8 +175,7 @@ export class TaskDialog {
         this.task.priority,
 
       dueDate:
-        this.task.dueDate
-        || null,
+        formattedDueDate,
 
       assignedTo:
         this.task.assignedTo?.trim()
@@ -173,13 +188,13 @@ export class TaskDialog {
       this.isEditMode
 
         ? this.taskService.updateTask(
-            Number(this.task.id),
-            payload
-          )
+          Number(this.task.id),
+          payload
+        )
 
         : this.taskService.createTask(
-            payload
-          );
+          payload
+        );
 
     request$.subscribe({
 
