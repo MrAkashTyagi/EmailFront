@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Guest } from '../models/guest';
 
 @Injectable({
   providedIn: 'root',
@@ -164,5 +165,12 @@ export class GuestService {
       `${this.baseUrl}/guests/cash-summary`
     );
   }
+
+  getAllGuests(): Observable<Guest[]> {
+
+  return this.http.get<Guest[]>(
+    `${this.baseUrl}/guests/getAllGuests`
+  );
+}
 
 }
