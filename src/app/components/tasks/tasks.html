@@ -21,23 +21,15 @@
 
     <div class="task-overview">
 
-      <span>25 Total Tasks</span>
-
-      <span>•</span>
-
-      <span>10 Todo</span>
-
-      <span>•</span>
-
-      <span>8 In Progress</span>
-
-      <span>•</span>
-
-      <span>7 Done</span>
-
-      <span>•</span>
-
-      <span>80% Complete</span>
+      {{ totalTasks }} Tasks
+      <span class="separator">|</span>
+      {{ todoTasks().length }} Todo
+      <span class="separator">|</span>
+      {{ inProgressTasks().length }} In Progress
+      <span class="separator">|</span>
+      {{ completedTasks().length }} Done
+      <span class="separator">|</span>
+      {{ completionPercentage }}% Complete
 
     </div>
 
