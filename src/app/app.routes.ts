@@ -87,6 +87,16 @@ export const routes: Routes = [
         path: 'tasks',
         component: Tasks,
         pathMatch: "full"
+    },
+    {
+        path: 'stay-management',
+        loadComponent: () =>
+            import(
+                './components/stay-management/stay-management'
+            ).then(
+                module =>
+                    module.StayManagement
+            )
     }
 
 ];
