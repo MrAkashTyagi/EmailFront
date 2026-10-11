@@ -16,34 +16,34 @@
           (input)="onSearchChange($event)" />
 
       </div>
-      
+
     </div>
 
     <div class="task-overview">
 
-  <span>25 Total Tasks</span>
+      <span>25 Total Tasks</span>
 
-  <span>•</span>
+      <span>•</span>
 
-  <span>10 Todo</span>
+      <span>10 Todo</span>
 
-  <span>•</span>
+      <span>•</span>
 
-  <span>8 In Progress</span>
+      <span>8 In Progress</span>
 
-  <span>•</span>
+      <span>•</span>
 
-  <span>7 Done</span>
+      <span>7 Done</span>
 
-  <span>•</span>
+      <span>•</span>
 
-  <span>80% Complete</span>
+      <span>80% Complete</span>
 
-</div>
+    </div>
 
     <div class="task-toolbar-right">
 
-      
+
       <button mat-stroked-button class="filter-btn" (click)="filterPanel.toggle()">
 
         <mat-icon>
@@ -61,6 +61,13 @@
         </mat-icon>
 
         Add Task
+
+      </button>
+
+      <button type="button" class="toolbar-icon-btn toolbar-export-btn" aria-label="Export wedding tasks to Excel"
+        title="Export Excel" (click)="exportTasksToExcel()">
+
+        <img [src]="'icons/excel.png'" class="toolbar-export-icon" alt="Export Excel">
 
       </button>
 
