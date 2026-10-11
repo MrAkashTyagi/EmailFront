@@ -255,9 +255,9 @@
 
   display: flex;
 
-  align-items: center;
-
   justify-content: space-between;
+
+  align-items: flex-start;
 
   gap: 12px;
 
@@ -785,4 +785,91 @@
 .separator {
   color: #cbd5e1;
   margin: 0 8px;
+}
+.task-due-status {
+
+  padding: 3px 8px;
+
+  border-radius: 999px;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+
+  letter-spacing: .3px;
+}
+.overdue-badge {
+
+  background: #fee2e2;
+
+  color: #b91c1c;
+}
+.today-badge {
+
+  background: #ffedd5;
+
+  color: #c2410c;
+}
+.tomorrow-badge {
+
+  background: #fef3c7;
+
+  color: #b45309;
+}
+.soon-badge {
+
+  background: #dbeafe;
+
+  color: #2563eb;
+}
+.task-card.overdue-task {
+
+  border-color: #fca5a5;
+
+  box-shadow:
+    0 0 0 1px #fecaca;
+}
+.assigned-to {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+.assigned-to mat-icon {
+
+  width: 15px;
+
+  height: 15px;
+
+  font-size: 15px;
+}
+.task-meta {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
+  min-height: 56px;
+}
+.task-info-row {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  flex-wrap: wrap;
 }
