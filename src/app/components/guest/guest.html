@@ -280,16 +280,16 @@
 
   <div class="gift-plan-bar">
 
-    <!-- <span class="gift-plan-title">
-      
-       
-    </span> -->
-    <mat-icon>checklist</mat-icon>
+    <mat-icon>
+      checklist
+    </mat-icon>
 
+    <!-- Gift Summary First -->
 
-
-
-    @for (item of giftSummary(); track item.giftName) {
+    @for (
+    item of giftSummary();
+    track item.giftName
+    ) {
 
     <span class="gift-plan-chip">
 
@@ -298,6 +298,39 @@
       <span class="gift-plan-chip-count">
         {{ item.total }}
       </span>
+
+    </span>
+
+    }
+
+    <!-- Divider -->
+
+    @if (cashSummary().items.length > 0) {
+
+    <div class="gift-plan-divider"></div>
+
+    @for (
+    item of cashSummary().items;
+    track item.denomination
+    ) {
+
+    <span class="cash-plan-chip">
+
+      ₹{{ item.denomination }}
+
+      <span class="cash-plan-chip-count">
+
+        × {{ item.count }}
+
+      </span>
+
+    </span>
+
+    }
+
+    <span class="cash-total-chip">
+
+      💰 ₹{{ cashSummary().grandTotal }}
 
     </span>
 
@@ -531,39 +564,33 @@
         </ng-container>
 
         <!-- Invitation field -->
-       <ng-container matColumnDef="invitationSent">
+        <ng-container matColumnDef="invitationSent">
 
-  <th
-      mat-header-cell
-      *matHeaderCellDef
-      class="column-invitation">
+          <th mat-header-cell *matHeaderCellDef class="column-invitation">
 
-    Invitation
+            Invitation
 
-  </th>
+          </th>
 
-  <td
-      mat-cell
-      *matCellDef="let element"
-      class="column-invitation">
+          <td mat-cell *matCellDef="let element" class="column-invitation">
 
-    @if (element.invitationSent) {
+            @if (element.invitationSent) {
 
-      <span class="sent-chip">
-        Invite Opened
-      </span>
+            <span class="sent-chip">
+              Invite Opened
+            </span>
 
-    } @else {
+            } @else {
 
-      <span class="pending-chip">
-        Not Invited
-      </span>
+            <span class="pending-chip">
+              Not Invited
+            </span>
 
-    }
+            }
 
-  </td>
+          </td>
 
-</ng-container>
+        </ng-container>
 
         <!-- Gift Column -->
         <ng-container matColumnDef="gift">
@@ -641,37 +668,27 @@
           </th>
 
           <td mat-cell *matCellDef="let element" class="column-actions">
-  <div class="action-buttons">
+            <div class="action-buttons">
 
-    <button
-      mat-icon-button
-      class="edit-btn"
-      (click)="openEditGuestDialog(element)"
-      matTooltip="Edit Guest">
+              <button mat-icon-button class="edit-btn" (click)="openEditGuestDialog(element)" matTooltip="Edit Guest">
 
-      <mat-icon>edit</mat-icon>
-    </button>
+                <mat-icon>edit</mat-icon>
+              </button>
 
-    <button
-      mat-icon-button
-      class="invite-btn"
-      (click)="inviteGuest(element)"
-      [matTooltip]="element.invitationSent ? 'Resend Invitation' : 'Send Invitation'">
+              <button mat-icon-button class="invite-btn" (click)="inviteGuest(element)"
+                [matTooltip]="element.invitationSent ? 'Resend Invitation' : 'Send Invitation'">
 
-      <mat-icon>send</mat-icon>
-    </button>
+                <mat-icon>send</mat-icon>
+              </button>
 
-    <button
-      mat-icon-button
-      class="delete-btn"
-      (click)="deleteGuestRecord(element.id)"
-      matTooltip="Delete Guest">
+              <button mat-icon-button class="delete-btn" (click)="deleteGuestRecord(element.id)"
+                matTooltip="Delete Guest">
 
-      <mat-icon>delete</mat-icon>
-    </button>
+                <mat-icon>delete</mat-icon>
+              </button>
 
-  </div>
-</td>
+            </div>
+          </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
