@@ -782,3 +782,7 @@
     height: 42px;
   }
 }
+.separator {
+  color: #cbd5e1;
+  margin: 0 8px;
+}
