@@ -1,5 +1,5 @@
 <div class="dashboard-page">
-    
+
     <section class="dashboard-hero">
 
         <div class="hero-copy">
@@ -73,6 +73,8 @@
         </div>
 
     </section>
+
+    <!-- progress wrapper -->
     <div class="top-progress-wrapper">
 
         <div class="top-progress-header">
@@ -129,95 +131,96 @@
 
     </div>
 
+
     <!-- Row 1 -->
 
     <div class="cards-grid">
 
-    <!-- Total Guests -->
-    <div class="dashboard-card purple">
+        <!-- Total Guests -->
+        <div class="dashboard-card purple">
 
-        <div class="card-icon">
-            👥
-        </div>
-
-        <div class="card-content">
-
-            <div class="card-value">
-                {{ summary().totalGuests }}
+            <div class="card-icon">
+                👥
             </div>
 
-            <div class="card-label">
-                Total Guests
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary().totalGuests }}
+                </div>
+
+                <div class="card-label">
+                    Total Guests
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Shadi Guests: Shadi Only + Both -->
+        <div class="dashboard-card pink">
+
+            <div class="card-icon">
+                💍
+            </div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ shadiGuests() }}
+                </div>
+
+                <div class="card-label">
+                    Shadi Guests
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Sagai Guests: Sagai Only + Both -->
+        <div class="dashboard-card orange">
+
+            <div class="card-icon">
+                💐
+            </div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ sagaiGuests() }}
+                </div>
+
+                <div class="card-label">
+                    Sagai Guests
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Both Guests: Both Only -->
+        <div class="dashboard-card green">
+
+            <div class="card-icon">
+                🎊
+            </div>
+
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ bothGuests() }}
+                </div>
+
+                <div class="card-label">
+                    Both Events
+                </div>
+
             </div>
 
         </div>
 
     </div>
-
-    <!-- Shadi Guests: Shadi Only + Both -->
-    <div class="dashboard-card pink">
-
-        <div class="card-icon">
-            💍
-        </div>
-
-        <div class="card-content">
-
-            <div class="card-value">
-                {{ shadiGuests() }}
-            </div>
-
-            <div class="card-label">
-                Shadi Guests
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Sagai Guests: Sagai Only + Both -->
-    <div class="dashboard-card orange">
-
-        <div class="card-icon">
-            💐
-        </div>
-
-        <div class="card-content">
-
-            <div class="card-value">
-                {{ sagaiGuests() }}
-            </div>
-
-            <div class="card-label">
-                Sagai Guests
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Both Guests: Both Only -->
-    <div class="dashboard-card green">
-
-        <div class="card-icon">
-            🎊
-        </div>
-
-        <div class="card-content">
-
-            <div class="card-value">
-                {{ bothGuests() }}
-            </div>
-
-            <div class="card-label">
-                Both Events
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 
     <!-- <div class="cards-grid">
 
@@ -239,7 +242,7 @@
 
         </div> -->
 
-        <!-- <div class="dashboard-card pink">
+    <!-- <div class="dashboard-card pink">
 
             <div class="card-icon">👨‍👩‍👧</div>
 
@@ -257,9 +260,9 @@
 
         </div> -->
 
-        <!-- average family size -->
+    <!-- average family size -->
 
-        <!-- <div class="dashboard-card orange">
+    <!-- <div class="dashboard-card orange">
 
             <div class="card-icon">📊</div>
 
@@ -277,7 +280,7 @@
 
         </div> -->
 
-        <!-- <div class="dashboard-card blue">
+    <!-- <div class="dashboard-card blue">
 
             <div class="card-icon">🏠</div>
 
@@ -301,7 +304,7 @@
 
     <div class="cards-grid">
 
-        
+
         <!-- total expenses card -->
         <div class="dashboard-card green">
 
@@ -360,26 +363,26 @@
 
 
 
-            <!-- Stay Required -->
-    <div class="dashboard-card blue">
+        <!-- Stay Required -->
+        <div class="dashboard-card blue">
 
-        <div class="card-icon">
-            🏠
-        </div>
-
-        <div class="card-content">
-
-            <div class="card-value">
-                {{ summary().stayRequired }}
+            <div class="card-icon">
+                🏠
             </div>
 
-            <div class="card-label">
-                Stay Required
+            <div class="card-content">
+
+                <div class="card-value">
+                    {{ summary().stayRequired }}
+                </div>
+
+                <div class="card-label">
+                    Stay Required
+                </div>
+
             </div>
 
         </div>
-
-    </div>
 
 
         <!-- <div class="dashboard-card success">
@@ -472,6 +475,182 @@
 
     }
 
+
+    <!-- upcoming tasks -->
+
+    <section class="upcoming-tasks-widget">
+
+        <div class="upcoming-tasks-header">
+
+            <div class="upcoming-title-wrapper">
+
+                <div class="upcoming-icon">
+
+                    <mat-icon>
+                        event_upcoming
+                    </mat-icon>
+
+                </div>
+
+                <div>
+
+                    <h3>
+                        Upcoming Tasks ({{ pendingTaskCount() + activeTaskCount() }})
+                    </h3>
+
+                    <p>
+                        Your nearest wedding planning deadlines
+                    </p>
+
+                </div>
+
+            </div>
+
+            <button mat-button type="button" class="view-all-tasks-btn" (click)="openTasksPage()">
+
+                View All
+
+                <mat-icon>
+                    arrow_forward
+                </mat-icon>
+
+            </button>
+
+        </div>
+
+        <div class="upcoming-task-summary">
+
+            <span class="task-summary-pill todo-pill">
+
+                {{ pendingTaskCount() }}
+                To Do
+
+            </span>
+
+            <span class="task-summary-pill active-pill">
+
+                {{ activeTaskCount() }}
+                In Progress
+
+            </span>
+
+        </div>
+
+        @if (loadingUpcomingTasks()) {
+
+        <div class="task-widget-state">
+
+            <mat-icon class="loading-icon">
+                hourglass_top
+            </mat-icon>
+
+            <span>
+                Loading upcoming tasks...
+            </span>
+
+        </div>
+
+        } @else if (upcomingTasks().length === 0) {
+
+        <div class="task-widget-state empty-task-state">
+
+            <mat-icon>
+                task_alt
+            </mat-icon>
+
+            <strong>
+                No upcoming tasks
+            </strong>
+
+            <span>
+                Add a due date to an incomplete task to show it here.
+            </span>
+
+            <button mat-stroked-button type="button" (click)="openTasksPage()">
+
+                Open Task Board
+
+            </button>
+
+        </div>
+
+        } @else {
+
+        <div class="upcoming-task-list">
+
+            @for (
+            task of upcomingTasks();
+            track task.id
+            ) {
+
+            <button type="button" class="upcoming-task-row" (click)="openTask(task)">
+
+                <div class="task-priority-indicator" [class.priority-high]="task.priority === 'HIGH'"
+                    [class.priority-medium]="task.priority === 'MEDIUM'" [class.priority-low]="task.priority === 'LOW'">
+                </div>
+
+                <div class="upcoming-task-content">
+
+                    <div class="upcoming-task-title">
+
+                        {{ task.title }}
+
+                    </div>
+
+                    <div class="upcoming-task-meta">
+
+                        <span class="upcoming-task-date">
+
+                            <mat-icon>
+                                calendar_today
+                            </mat-icon>
+
+                            {{ formatTaskDate(task.dueDate) }}
+
+                        </span>
+
+                        @if (task.assignedTo) {
+
+                        <span class="upcoming-task-assignee">
+
+                            <mat-icon>
+                                person
+                            </mat-icon>
+
+                            {{ task.assignedTo }}
+
+                        </span>
+
+                        }
+
+                    </div>
+
+                </div>
+
+                <span class="dashboard-status-chip" [class.status-todo]="task.status === 'TODO'"
+                    [class.status-progress]="task.status === 'IN_PROGRESS'">
+
+                    {{
+                    task.status === 'IN_PROGRESS'
+                    ? 'In Progress'
+                    : 'To Do'
+                    }}
+
+                </span>
+
+                <mat-icon class="task-row-arrow">
+                    chevron_right
+                </mat-icon>
+
+            </button>
+
+            }
+
+        </div>
+
+        }
+
+    </section>
 
     <!-- Expense Distribuition -->
     <div class="charts-grid">
