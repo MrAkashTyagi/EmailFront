@@ -95,6 +95,11 @@ export class Dashboard implements OnInit {
   readonly shadiGuests = signal<number>(0);
   readonly sagaiGuests = signal<number>(0);
   readonly bothGuests = signal<number>(0);
+  readonly cashSummary = signal<any>({
+    items: [],
+    totalEnvelopes: 0,
+    grandTotal: 0
+  });
 
   readonly dashboardTasks =
     signal<WeddingTask[]>([]);
@@ -188,6 +193,7 @@ export class Dashboard implements OnInit {
     this.loadRecentGuests();
     this.loadRecentExpenses();
     this.loadUpcomingTasks();
+    this.loadCashSummary();
 
     this.navBarService
       .weddingSettingsClick$
@@ -566,72 +572,94 @@ export class Dashboard implements OnInit {
 
   openTasksPage(): void {
 
-  this.router.navigate([
-    '/tasks'
-  ]);
-}
-
-openTask(
-  task: WeddingTask
-): void {
-
-  this.router.navigate(
-    [
+    this.router.navigate([
       '/tasks'
-    ],
-    {
-      queryParams: {
-        taskId:
-          task.id
-      }
-    }
-  );
-}
-
-private toLocalDate(
-  value: string
-): Date {
-
-  const datePart =
-    value.split('T')[0];
-
-  const [
-    year,
-    month,
-    day
-  ] =
-    datePart
-      .split('-')
-      .map(Number);
-
-  return new Date(
-    year,
-    month - 1,
-    day
-  );
-}
-
-formatTaskDate(
-  dueDate?: string
-): string {
-
-  if (!dueDate) {
-    return 'No due date';
+    ]);
   }
 
-  const date =
-    this.toLocalDate(
-      dueDate
+  openTask(
+    task: WeddingTask
+  ): void {
+
+    this.router.navigate(
+      [
+        '/tasks'
+      ],
+      {
+        queryParams: {
+          taskId:
+            task.id
+        }
+      }
     );
+  }
 
-  return date.toLocaleDateString(
-    'en-IN',
-    {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
+  private toLocalDate(
+    value: string
+  ): Date {
+
+    const datePart =
+      value.split('T')[0];
+
+    const [
+      year,
+      month,
+      day
+    ] =
+      datePart
+        .split('-')
+        .map(Number);
+
+    return new Date(
+      year,
+      month - 1,
+      day
+    );
+  }
+
+  formatTaskDate(
+    dueDate?: string
+  ): string {
+
+    if (!dueDate) {
+      return 'No due date';
     }
-  );
-}
 
+    const date =
+      this.toLocalDate(
+        dueDate
+      );
+
+    return date.toLocaleDateString(
+      'en-IN',
+      {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      }
+    );
+  }
+  loadCashSummary(): void {
+
+    this.guestService
+      .getCashSummary()
+      .subscribe({
+
+        next: (response) => {
+
+          this.cashSummary.set(response);
+
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Cash summary load failed',
+            error
+          );
+
+        }
+
+      });
+  }
 }
