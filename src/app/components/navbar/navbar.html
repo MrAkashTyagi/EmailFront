@@ -85,6 +85,18 @@
 
     </a>
 
+    <a routerLink="/stay-management" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
+
+      <mat-icon>
+        hotel
+      </mat-icon>
+
+      <span>
+        Stay
+      </span>
+
+    </a>
+
   </nav>
 
   }
@@ -251,6 +263,22 @@
     </span>
 
   </button>
+
+  @if (isUser()) {
+
+  <button mat-menu-item routerLink="/stay-management" routerLinkActive="active-menu-item">
+
+    <mat-icon>
+      hotel
+    </mat-icon>
+
+    <span>
+      Stay Management
+    </span>
+
+  </button>
+
+  }
 
   @if (isUser()) {
 
