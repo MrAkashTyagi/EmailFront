@@ -1180,7 +1180,7 @@ mat-expansion-panel-header {
   width: fit-content;
   min-width: unset;
   margin: 0 auto;
-  
+
 }
 
 .column-invitation {
@@ -1268,4 +1268,53 @@ mat-expansion-panel-header {
   width: 18px !important;
   height: 18px !important;
   line-height: 18px !important;
+}
+
+.gift-plan-divider {
+
+  width: 1px;
+  height: 24px;
+
+  background: #dbe3ef;
+
+  margin: 0 12px;
+}
+
+.cash-plan-chip {
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  padding: 6px 10px;
+
+  border-radius: 12px;
+
+  background: #ecfdf5;
+
+  color: #166534;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cash-plan-chip-count {
+
+  font-weight: 700;
+}
+
+.cash-total-chip {
+
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 12px;
+
+  background: #fef3c7;
+
+  color: #92400e;
+
+  font-weight: 800;
 }
