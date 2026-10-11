@@ -158,4 +158,11 @@ export class GuestService {
 
   }
 
+  getCashSummary(): Observable<any> {
+
+    return this.http.get(
+      `${this.baseUrl}/guests/cash-summary`
+    );
+  }
+
 }
