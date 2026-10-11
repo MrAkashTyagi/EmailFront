@@ -391,174 +391,260 @@ export class Tasks
 
   exportTasksToExcel(): void {
 
-  const tasks: WeddingTask[] = [
-    ...this.todoTasks(),
-    ...this.inProgressTasks(),
-    ...this.completedTasks()
-  ];
+    const tasks: WeddingTask[] = [
+      ...this.todoTasks(),
+      ...this.inProgressTasks(),
+      ...this.completedTasks()
+    ];
 
-  if (tasks.length === 0) {
+    if (tasks.length === 0) {
 
-    this.notificationService.warning(
-      'Export ke liye koi task available nahi hai.'
-    );
+      this.notificationService.warning(
+        'Export ke liye koi task available nahi hai.'
+      );
 
-    return;
-  }
+      return;
+    }
 
-  const exportData =
-    tasks.map(
-      (
-        task: WeddingTask,
-        index: number
-      ) => ({
-        'S.No.': index + 1,
+    const exportData =
+      tasks.map(
+        (
+          task: WeddingTask,
+          index: number
+        ) => ({
+          'S.No.': index + 1,
 
-        'Task Title':
-          task.title,
+          'Task Title':
+            task.title,
 
-        'Description':
-          task.description || '',
+          'Description':
+            task.description || '',
 
-        'Status':
-          this.formatTaskStatus(
-            task.status
-          ),
+          'Status':
+            this.formatTaskStatus(
+              task.status
+            ),
 
-        'Priority':
-          task.priority,
+          'Priority':
+            task.priority,
 
-        'Due Date':
-          task.dueDate
-            ? this.formatExportDate(
+          'Due Date':
+            task.dueDate
+              ? this.formatExportDate(
                 task.dueDate
               )
-            : '',
+              : '',
 
-        'Assigned To':
-          task.assignedTo || '',
+          'Assigned To':
+            task.assignedTo || '',
 
-        'Created At':
-          task.createdAt
-            ? this.formatExportDateTime(
+          'Created At':
+            task.createdAt
+              ? this.formatExportDateTime(
                 task.createdAt
               )
-            : '',
+              : '',
 
-        'Updated At':
-          task.updatedAt
-            ? this.formatExportDateTime(
+          'Updated At':
+            task.updatedAt
+              ? this.formatExportDateTime(
                 task.updatedAt
               )
-            : ''
-      })
+              : ''
+        })
+      );
+
+    const worksheet =
+      XLSX.utils.json_to_sheet(
+        exportData
+      );
+
+    worksheet['!cols'] = [
+      { wch: 8 },
+      { wch: 30 },
+      { wch: 45 },
+      { wch: 18 },
+      { wch: 14 },
+      { wch: 16 },
+      { wch: 22 },
+      { wch: 22 },
+      { wch: 22 }
+    ];
+
+    worksheet['!autofilter'] = {
+      ref:
+        worksheet['!ref']
+        || 'A1:I1'
+    };
+
+    const workbook =
+      XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      'Wedding Tasks'
     );
 
-  const worksheet =
-    XLSX.utils.json_to_sheet(
-      exportData
+    const currentDate =
+      new Date()
+        .toISOString()
+        .slice(0, 10);
+
+    XLSX.writeFile(
+      workbook,
+      `wedding-tasks-${currentDate}.xlsx`
     );
 
-  worksheet['!cols'] = [
-    { wch: 8 },
-    { wch: 30 },
-    { wch: 45 },
-    { wch: 18 },
-    { wch: 14 },
-    { wch: 16 },
-    { wch: 22 },
-    { wch: 22 },
-    { wch: 22 }
-  ];
+    this.notificationService.success(
+      'Tasks exported successfully.'
+    );
+  }
 
-  worksheet['!autofilter'] = {
-    ref:
-      worksheet['!ref']
-      || 'A1:I1'
-  };
+  private formatTaskStatus(
+    status: WeddingTask['status']
+  ): string {
 
-  const workbook =
-    XLSX.utils.book_new();
+    switch (status) {
 
-  XLSX.utils.book_append_sheet(
-    workbook,
-    worksheet,
-    'Wedding Tasks'
-  );
+      case 'TODO':
+        return 'To Do';
+
+      case 'IN_PROGRESS':
+        return 'In Progress';
+
+      case 'DONE':
+        return 'Done';
+
+      default:
+        return status;
+    }
+  }
+
+  private formatExportDate(
+    value: string
+  ): string {
+
+    const date =
+      new Date(value);
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      return value;
+    }
+
+    return date.toLocaleDateString(
+      'en-IN'
+    );
+  }
+
+  private formatExportDateTime(
+    value: string
+  ): string {
+
+    const date =
+      new Date(value);
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      return value;
+    }
+
+    return date.toLocaleString(
+      'en-IN'
+    );
+  }
+
+  getTaskDueStatus(task: WeddingTask): string {
+
+  if (!task.dueDate) {
+    return '';
+  }
+
+  const today = new Date();
 
   const currentDate =
-    new Date()
-      .toISOString()
-      .slice(0, 10);
+    new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
 
-  XLSX.writeFile(
-    workbook,
-    `wedding-tasks-${currentDate}.xlsx`
+  const due =
+    new Date(task.dueDate);
+
+  const dueDate =
+    new Date(
+      due.getFullYear(),
+      due.getMonth(),
+      due.getDate()
+    );
+
+  const diffDays =
+    Math.round(
+      (
+        dueDate.getTime()
+        - currentDate.getTime()
+      ) /
+      (1000 * 60 * 60 * 24)
+    );
+
+  console.log(
+    task.title,
+    task.dueDate,
+    diffDays
   );
 
-  this.notificationService.success(
-    'Tasks exported successfully.'
-  );
-}
-
-private formatTaskStatus(
-  status: WeddingTask['status']
-): string {
-
-  switch (status) {
-
-    case 'TODO':
-      return 'To Do';
-
-    case 'IN_PROGRESS':
-      return 'In Progress';
-
-    case 'DONE':
-      return 'Done';
-
-    default:
-      return status;
-  }
-}
-
-private formatExportDate(
-  value: string
-): string {
-
-  const date =
-    new Date(value);
-
-  if (
-    Number.isNaN(
-      date.getTime()
-    )
-  ) {
-    return value;
+  if (diffDays < 0) {
+    return 'OVERDUE';
   }
 
-  return date.toLocaleDateString(
-    'en-IN'
-  );
-}
-
-private formatExportDateTime(
-  value: string
-): string {
-
-  const date =
-    new Date(value);
-
-  if (
-    Number.isNaN(
-      date.getTime()
-    )
-  ) {
-    return value;
+  if (diffDays === 0) {
+    return 'DUE_TODAY';
   }
 
-  return date.toLocaleString(
-    'en-IN'
-  );
+  if (diffDays === 1) {
+    return 'DUE_TOMORROW';
+  }
+
+  if (diffDays <= 7) {
+    return 'DUE_SOON';
+  }
+
+  return '';
 }
+
+
+  getTaskDueStatusLabel(
+    task: WeddingTask
+  ): string {
+
+    const status =
+      this.getTaskDueStatus(task);
+
+    switch (status) {
+
+      case 'OVERDUE':
+        return 'Overdue';
+
+      case 'DUE_TODAY':
+        return 'Today';
+
+      case 'DUE_TOMORROW':
+        return 'Tomorrow';
+
+      case 'DUE_SOON':
+        return 'Due Soon';
+
+      default:
+        return '';
+    }
+  }
 
 }
