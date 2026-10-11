@@ -1,176 +1,270 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Guest } from '../models/guest';
+import {
+  Component,
+  inject
+} from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  FormsModule
+} from '@angular/forms';
+
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+
+import {
+  MatFormFieldModule
+} from '@angular/material/form-field';
+
+import {
+  MatInputModule
+} from '@angular/material/input';
+
+import {
+  MatSelectModule
+} from '@angular/material/select';
+
+import {
+  MatButtonModule
+} from '@angular/material/button';
+
+import {
+  MatIconModule
+} from '@angular/material/icon';
+
+import {
+  MatSlideToggleModule
+} from '@angular/material/slide-toggle';
+
+import {
+  StayLocation,
+  StayLocationRequest,
+  StayLocationType
+} from '../../models/stay-location';
+
+import {
+  StayLocationService
+} from '../../service/stay-location-service';
+
+import {
+  NotificationService
+} from '../../service/notification-service';
+
+@Component({
+  selector: 'app-stay-location-dialog',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSlideToggleModule
+  ],
+  templateUrl: './stay-location-dialog.html',
+  styleUrl: './stay-location-dialog.css'
 })
-export class GuestService {
+export class StayLocationDialog {
 
-  private http =
-    inject(HttpClient);
-
-  private readonly baseUrl = 'http://localhost:8090';
-
-  save(
-    data: any
-  ): Observable<any> {
-
-    return this.http.post<any>(
-      `${this.baseUrl}/guests`,
-      data
+  private readonly dialogRef =
+    inject(
+      MatDialogRef<StayLocationDialog>
     );
 
-  }
+  private readonly locationService =
+    inject(StayLocationService);
 
-  deleteGuest(
-    id: number
-  ): Observable<any> {
+  private readonly notificationService =
+    inject(NotificationService);
 
-    return this.http.delete<any>(
-      `${this.baseUrl}/guests/${id}`
-    );
-  }
-
-  updateGuest(
-    id: number,
-    guestData: any
-  ): Observable<any> {
-
-    return this.http.put<any>(
-      `${this.baseUrl}/guests/${id}`,
-      guestData
-    );
-  }
-
-  getGuestsPaged(
-    page: number,
-    size: number,
-    search: string = '',
-    gender: string = '',
-    type: string = '',
-    category: string = '',
-    gift: string = '',
-    stay: string = '',
-    cash: string = '',
-    invitationSent: string = ''
-  ): Observable<any> {
-
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString())
-      .set('search', search)
-      .set('gender', gender)
-      .set('adultOrchild', type)
-      .set('guestCategory', category)
-      .set('gift', gift)
-      .set('stay', stay)
-      .set('cash', cash)
-      .set('invitationSent', invitationSent);
-
-    return this.http.get<any>(
-      `${this.baseUrl}/guests/guest`,
-      { params }
-    );
-  }
-
-  downloadGuests(
-    gender: string = '',
-    adultOrchild: string = '',
-    gift: string = '',
-    cash: string = '',
-    guestCategory: string = '',
-    stay: string = '',
-    invitationSent: string = '',
-    search: string = ''
-  ): Observable<Blob> {
-
-    let params = new HttpParams()
-      .set('search', search || '')
-      .set('gender', gender || '')
-      .set('adultOrchild', adultOrchild || '')
-      .set('gift', gift || '')
-      .set('cash', cash || '')
-      .set('guestCategory', guestCategory || '')
-      .set('stay', stay || '');
-
-    if (
-      invitationSent !== null &&
-      invitationSent !== undefined &&
-      invitationSent !== ''
-    ) {
-
-      params = params.set(
-        'invitationSent',
-        invitationSent
-      );
-    }
-
-    return this.http.get(
-      `${this.baseUrl}/guests/download`,
+  readonly dialogData =
+    inject<StayLocation | null>(
+      MAT_DIALOG_DATA,
       {
-        params,
-        responseType: 'blob'
+        optional: true
       }
     );
-  }
 
-  getGuestSummary(): Observable<any> {
-
-    return this.http.get<any>(
-      `${this.baseUrl}/guests/summary`
+  readonly isEditMode =
+    Boolean(
+      this.dialogData?.id
     );
 
+  saving = false;
+
+  locationTypes: {
+    value: StayLocationType;
+    label: string;
+  }[] = [
+    {
+      value: 'HOME',
+      label: 'Own Home'
+    },
+    {
+      value: 'RENTED_HOUSE',
+      label: 'Rented House'
+    },
+    {
+      value: 'DHARAMSHALA',
+      label: 'Dharamshala'
+    },
+    {
+      value: 'HOTEL',
+      label: 'Hotel'
+    },
+    {
+      value: 'OTHER',
+      label: 'Other'
+    }
+  ];
+
+  form: StayLocationRequest = {
+    name:
+      this.dialogData?.name
+      ?? '',
+
+    type:
+      this.dialogData?.type
+      ?? 'HOME',
+
+    address:
+      this.dialogData?.address
+      ?? '',
+
+    contactPerson:
+      this.dialogData?.contactPerson
+      ?? '',
+
+    contactNumber:
+      this.dialogData?.contactNumber
+      ?? '',
+
+    notes:
+      this.dialogData?.notes
+      ?? '',
+
+    active:
+      this.dialogData?.active
+      ?? true
+  };
+
+  save(): void {
+
+    if (!this.form.name.trim()) {
+
+      this.notificationService.warning(
+        'Location name is required.'
+      );
+
+      return;
+    }
+
+    const payload: StayLocationRequest = {
+      name:
+        this.form.name.trim(),
+
+      type:
+        this.form.type,
+
+      address:
+        this.cleanValue(
+          this.form.address
+        ),
+
+      contactPerson:
+        this.cleanValue(
+          this.form.contactPerson
+        ),
+
+      contactNumber:
+        this.cleanValue(
+          this.form.contactNumber
+        ),
+
+      notes:
+        this.cleanValue(
+          this.form.notes
+        ),
+
+      active:
+        this.form.active
+    };
+
+    this.saving = true;
+
+    const request$ =
+      this.isEditMode
+
+        ? this.locationService
+          .updateLocation(
+            this.dialogData!.id!,
+            payload
+          )
+
+        : this.locationService
+          .createLocation(
+            payload
+          );
+
+    request$.subscribe({
+
+      next: savedLocation => {
+
+        this.notificationService.success(
+          this.isEditMode
+            ? 'Stay location updated successfully.'
+            : 'Stay location added successfully.'
+        );
+
+        this.dialogRef.close(
+          savedLocation
+        );
+      },
+
+      error: error => {
+
+        console.error(
+          'Stay location save failed:',
+          error
+        );
+
+        this.saving = false;
+
+        this.notificationService.error(
+          error?.error?.message
+          || error?.error?.detail
+          || (
+            this.isEditMode
+              ? 'Stay location update nahi ho paya.'
+              : 'Stay location add nahi ho paya.'
+          )
+        );
+      }
+    });
   }
 
-  getGuestCategorySummary(): Observable<any[]> {
+  close(): void {
 
-    return this.http.get<any[]>(
-      `${this.baseUrl}/guests/category-summary`
-    );
+    this.dialogRef.close();
   }
 
-  // import guest data
+  private cleanValue(
+    value?: string | null
+  ): string | null {
 
-  importGuestDump(
-    file: File
-  ): Observable<any> {
+    const cleaned =
+      value?.trim();
 
-    const formData = new FormData();
-
-    formData.append(
-      'file',
-      file
-    );
-
-    return this.http.post(
-      `${this.baseUrl}/datadump/upload`,
-      formData
-    );
-
+    return cleaned
+      ? cleaned
+      : null;
   }
-
-  getGiftSummary(): Observable<any[]> {
-
-    return this.http.get<any[]>(
-      `${this.baseUrl}/guests/gift-summary`
-    );
-
-  }
-
-  getCashSummary(): Observable<any> {
-
-    return this.http.get(
-      `${this.baseUrl}/guests/cash-summary`
-    );
-  }
-
-  getAllGuests(): Observable<Guest[]> {
-
-  return this.http.get<Guest[]>(
-    `${this.baseUrl}/guests/getAllGuests`
-  );
-}
-
 }
