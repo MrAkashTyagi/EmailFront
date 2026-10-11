@@ -146,71 +146,6 @@
   </mat-expansion-panel>
 
 
-  <!-- sumamry cards -->
-  <!-- <div class="task-summary-grid">
-
-    <div class="summary-card total-card">
-
-      <div class="summary-value">
-        {{ totalTasks }}
-      </div>
-
-      <div class="summary-label">
-        Total Tasks
-      </div>
-
-    </div>
-
-    <div class="summary-card todo-summary">
-
-      <div class="summary-value">
-        {{ todoTasks().length }}
-      </div>
-
-      <div class="summary-label">
-        To Do
-      </div>
-
-    </div>
-
-    <div class="summary-card progress-summary">
-
-      <div class="summary-value">
-        {{ inProgressTasks().length }}
-      </div>
-
-      <div class="summary-label">
-        In Progress
-      </div>
-
-    </div>
-
-    <div class="summary-card done-summary">
-
-      <div class="summary-value">
-        {{ completedTasks().length }}
-      </div>
-
-      <div class="summary-label">
-        Completed
-      </div>
-
-    </div>
-
-    <div class="summary-card completion-summary">
-
-      <div class="summary-value">
-        {{ completionPercentage }}%
-      </div>
-
-      <div class="summary-label">
-        Completion Rate
-      </div>
-
-    </div>
-
-  </div> -->
-
   <!-- task board -->
   <div class="task-board">
 
@@ -230,12 +165,9 @@
 
       </div>
 
-      @for (
-      task of todoTasks();
-      track task.id
-      ) {
+      @for (task of todoTasks(); track task.id) {
 
-      <div class="task-card">
+      <div class="task-card" [class.overdue-task]="getTaskDueStatus(task) === 'OVERDUE'">
 
         <div class="task-card-header">
 
@@ -273,22 +205,61 @@
           </div>
 
         </div>
-
+        <!-- card body of TO DO -->
         <div class="task-card-body">
 
-          @if (task.dueDate) {
 
-          <div class="due-date">
+          <div class="task-info-row">
 
-            <mat-icon>
-              event
-            </mat-icon>
 
-            {{ task.dueDate }}
+            @if(task.dueDate){
+
+            <div class="due-date">
+
+              <mat-icon>
+                event
+              </mat-icon>
+
+              {{ task.dueDate }}
+
+            </div>
+
+            }
+
+            <div class="assigned-to">
+
+              <mat-icon>
+                person
+              </mat-icon>
+
+              {{ task.assignedTo || 'Unassigned' }}
+
+            </div>
+
+
+            @if (getTaskDueStatus(task)) {
+
+            <span class="task-due-status" [ngClass]="{
+        'overdue-badge':
+          getTaskDueStatus(task) === 'OVERDUE',
+
+        'today-badge':
+          getTaskDueStatus(task) === 'DUE_TODAY',
+
+        'tomorrow-badge':
+          getTaskDueStatus(task) === 'DUE_TOMORROW',
+
+        'soon-badge':
+          getTaskDueStatus(task) === 'DUE_SOON'
+      }">
+
+              {{ getTaskDueStatusLabel(task) }}
+
+            </span>
+
+            }
 
           </div>
-
-          }
 
           <div class="task-quick-actions">
 
@@ -334,13 +305,25 @@
       track task.id
       ) {
 
-      <div class="task-card">
+      <div class="task-card" [class.overdue-task]="
+    getTaskDueStatus(task) === 'OVERDUE'
+  ">
 
         <div class="task-card-header">
 
           <div class="task-card-title">
             {{ task.title }}
           </div>
+
+          <span class="priority-chip" [ngClass]="{
+    'high-priority': task.priority === 'HIGH',
+    'medium-priority': task.priority === 'MEDIUM',
+    'low-priority': task.priority === 'LOW'
+  }">
+
+            {{ task.priority }}
+
+          </span>
 
           <div class="task-card-actions">
 
@@ -370,19 +353,55 @@
 
         <div class="task-card-body">
 
-          @if(task.dueDate){
+          <div class="task-info-row">
 
-          <div class="due-date">
+            @if(task.dueDate){
 
-            <mat-icon>
-              event
-            </mat-icon>
+            <div class="task-info-row">
 
-            {{ task.dueDate }}
+              <mat-icon>
+                event
+              </mat-icon>
+
+              {{ task.dueDate }}
+
+            </div>
+
+            }
+            <!-- assigned to -->
+            <div class="assigned-to">
+
+              <mat-icon>
+                person
+              </mat-icon>
+
+              {{ task.assignedTo || 'Unassigned' }}
+
+            </div>
+
+            @if (getTaskDueStatus(task)) {
+
+            <span class="task-due-status" [ngClass]="{
+        'overdue-badge':
+          getTaskDueStatus(task) === 'OVERDUE',
+
+        'today-badge':
+          getTaskDueStatus(task) === 'DUE_TODAY',
+
+        'tomorrow-badge':
+          getTaskDueStatus(task) === 'DUE_TOMORROW',
+
+        'soon-badge':
+          getTaskDueStatus(task) === 'DUE_SOON'
+      }">
+
+              {{ getTaskDueStatusLabel(task) }}
+
+            </span>
+
+            }
 
           </div>
-
-          }
 
           <div class="task-quick-actions">
 
