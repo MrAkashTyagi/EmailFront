@@ -399,3 +399,161 @@
     width: 100%;
   }
 }
+.room-card-actions {
+  display: flex;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.room-card-actions button {
+  flex: 1;
+  min-height: 35px;
+  border-radius: 9px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+}
+
+.room-card-actions mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+}
+
+.allocate-btn {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+.occupants-panel {
+  margin-top: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 15px;
+  background: #ffffff;
+}
+
+.occupants-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.occupants-header h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 15px;
+}
+
+.occupants-header span {
+  color: #64748b;
+  font-size: 10px;
+}
+
+.occupants-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.occupant-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 13px;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.occupant-row:last-child {
+  border-bottom: none;
+}
+
+.occupant-avatar {
+  display: grid;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.occupant-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.occupant-content strong {
+  display: block;
+  color: #172033;
+  font-size: 12px;
+}
+
+.occupant-content span {
+  color: #64748b;
+  font-size: 10px;
+}
+
+.allocation-status {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.checked-in-status {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.occupant-actions {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.occupant-actions button {
+  width: 31px !important;
+  height: 31px !important;
+  min-width: 31px !important;
+  padding: 0 !important;
+}
+
+.occupant-actions mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+}
+
+.check-in-btn {
+  color: #15803d !important;
+}
+
+.check-out-btn {
+  color: #2563eb !important;
+}
+
+.cancel-allocation-btn {
+  color: #be123c !important;
+}
+
+@media (max-width: 700px) {
+
+  .occupant-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .occupant-content {
+    min-width: calc(100% - 50px);
+  }
+
+  .occupant-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
