@@ -1,0 +1,65 @@
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.dialog-header h2 {
+  margin: 4px 0;
+  color: #172033;
+  font-size: 24px;
+}
+
+.dialog-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.dialog-eyebrow {
+  color: #7c3aed;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px 24px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 24px 20px;
+  border-top: 1px solid #eef2f7;
+}
+
+.save-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #7c3aed,
+      #4f46e5
+    ) !important;
+  color: #ffffff !important;
+}
+
+@media (max-width: 650px) {
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
