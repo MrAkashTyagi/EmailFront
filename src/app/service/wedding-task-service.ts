@@ -27,12 +27,48 @@ export class WeddingTaskService {
   private readonly apiUrl =
     'http://localhost:8090/api/wedding-tasks';
 
-  getTasks(): Observable<any> {
+ getTasks(
+  search?: string,
+  status?: string,
+  priority?: string
+): Observable<any> {
 
-    return this.http.get(
-      this.apiUrl
-    );
+  let params = new HttpParams();
+
+  if (search) {
+
+    params =
+      params.set(
+        'search',
+        search
+      );
   }
+
+  if (status) {
+
+    params =
+      params.set(
+        'status',
+        status
+      );
+  }
+
+  if (priority) {
+
+    params =
+      params.set(
+        'priority',
+        priority
+      );
+  }
+
+  return this.http.get(
+    this.apiUrl,
+    {
+      params
+    }
+  );
+}
 
   createTask(
     task: any
