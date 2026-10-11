@@ -49,6 +49,18 @@
 
     </a>
 
+    <a routerLink="/tasks" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
+
+      <mat-icon>
+        checklist
+      </mat-icon>
+
+      <span>
+        Tasks
+      </span>
+
+    </a>
+
     <a routerLink="/expenses" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
 
       <mat-icon>payments</mat-icon>
@@ -172,6 +184,22 @@
     <mat-icon>diversity_3</mat-icon>
     <span>Family List</span>
   </button>
+  }
+
+  @if (isUser()) {
+
+  <button mat-menu-item routerLink="/tasks" routerLinkActive="active-menu-item">
+
+    <mat-icon>
+      checklist
+    </mat-icon>
+
+    <span>
+      Tasks
+    </span>
+
+  </button>
+
   }
 
   @if (isUser()) {
