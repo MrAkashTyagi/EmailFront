@@ -1,0 +1,145 @@
+<div class="dialog-header">
+
+  <div>
+
+    <span class="dialog-eyebrow">
+      {{ data.locationName }}
+    </span>
+
+    <h2>
+      {{
+        isEditMode
+          ? 'Edit Room'
+          : 'Add Room'
+      }}
+    </h2>
+
+    <p>
+      Room, bedroom or shared hall capacity maintain karein.
+    </p>
+
+  </div>
+
+  <button
+    mat-icon-button
+    type="button"
+    aria-label="Close dialog"
+    (click)="close()">
+
+    <mat-icon>
+      close
+    </mat-icon>
+
+  </button>
+
+</div>
+
+<div class="dialog-content">
+
+  <div class="form-row">
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Room / Unit Name
+      </mat-label>
+
+      <input
+        matInput
+        [(ngModel)]="form.name"
+        placeholder="Room 1, Hall A, Main Bedroom">
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+
+      <mat-label>
+        Capacity
+      </mat-label>
+
+      <input
+        matInput
+        type="number"
+        min="1"
+        max="500"
+        [(ngModel)]="form.capacity">
+
+    </mat-form-field>
+
+  </div>
+
+  <mat-form-field appearance="outline">
+
+    <mat-label>
+      Floor
+    </mat-label>
+
+    <input
+      matInput
+      [(ngModel)]="form.floor"
+      placeholder="Ground Floor, First Floor">
+
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+
+    <mat-label>
+      Notes
+    </mat-label>
+
+    <textarea
+      matInput
+      rows="3"
+      [(ngModel)]="form.notes"
+      placeholder="Attached bathroom, extra mattress, shared hall">
+    </textarea>
+
+  </mat-form-field>
+
+  <mat-slide-toggle
+    [(ngModel)]="form.active">
+
+    Active Room
+
+  </mat-slide-toggle>
+
+</div>
+
+<div class="dialog-actions">
+
+  <button
+    mat-stroked-button
+    type="button"
+    [disabled]="saving"
+    (click)="close()">
+
+    Cancel
+
+  </button>
+
+  <button
+    mat-flat-button
+    type="button"
+    class="save-btn"
+    [disabled]="saving"
+    (click)="save()">
+
+    <mat-icon>
+      {{
+        isEditMode
+          ? 'save'
+          : 'add'
+      }}
+    </mat-icon>
+
+    {{
+      saving
+        ? 'Saving...'
+        : isEditMode
+          ? 'Update Room'
+          : 'Add Room'
+    }}
+
+  </button>
+
+</div>
