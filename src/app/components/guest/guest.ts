@@ -102,6 +102,11 @@ export class GuestComponent implements OnInit, OnDestroy {
   readonly selectedInvitationStatus = signal<string>('');
   readonly guestCategorySummary = signal<any[]>([]);
   readonly giftSummary = signal<any[]>([]);
+  readonly cashSummary = signal<any>({
+    items: [],
+    totalEnvelopes: 0,
+    grandTotal: 0
+  });
 
   selectedFile: File | null = null;
 
@@ -298,6 +303,7 @@ export class GuestComponent implements OnInit, OnDestroy {
     this.loadGuestSummary();
     this.loadGuestCategorySummary();
     this.loadGiftSummary();
+    this.loadCashSummary();
 
     this.exportSubscription =
       this.navBarService.exportClick$
@@ -624,26 +630,26 @@ export class GuestComponent implements OnInit, OnDestroy {
   }
 
 
-inviteGuest(guest: any): void {
-console.log("Clicked!!");
-  const mobile =
-    guest.whatsapp_Number
-    || guest.phoneNumber;
+  inviteGuest(guest: any): void {
+    console.log("Clicked!!");
+    const mobile =
+      guest.whatsapp_Number
+      || guest.phoneNumber;
 
-  if (!mobile) {
+    if (!mobile) {
 
-    this.notificationService.error(
-      'WhatsApp number not available.'
-    );
+      this.notificationService.error(
+        'WhatsApp number not available.'
+      );
 
-    return;
-  }
+      return;
+    }
 
-  const videoUrl =
-    'PASTE_CLOUDINARY_VIDEO_URL_HERE';
+    const videoUrl =
+      'PASTE_CLOUDINARY_VIDEO_URL_HERE';
 
-  const message =
-`Hi ${guest.name},
+    const message =
+      `Hi ${guest.name},
 
 You are warmly invited to our wedding 💍
 
@@ -656,20 +662,45 @@ ${videoUrl}
 
 Looking forward to celebrating with you ❤️`;
 
-  const cleanNumber =
-  mobile.replace(/\D/g, '');
+    const cleanNumber =
+      mobile.replace(/\D/g, '');
 
-const whatsappUrl =
-  'https://wa.me/'
-  + cleanNumber
-  + '?text='
-  + encodeURIComponent(message);
+    const whatsappUrl =
+      'https://wa.me/'
+      + cleanNumber
+      + '?text='
+      + encodeURIComponent(message);
 
-window.open(
-  whatsappUrl,
-  '_blank'
-);
+    window.open(
+      whatsappUrl,
+      '_blank'
+    );
 
-}
+  }
+
+  loadCashSummary(): void {
+
+    this.guestService
+      .getCashSummary()
+      .subscribe({
+
+        next: (response: any) => {
+
+          this.cashSummary.set(
+            response
+          );
+
+        },
+
+        error: (error: any) => {
+
+          console.error(
+            'Cash summary load failed',
+            error
+          );
+        }
+
+      });
+  }
 
 }
