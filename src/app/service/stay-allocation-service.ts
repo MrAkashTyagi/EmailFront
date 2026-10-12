@@ -160,4 +160,13 @@ export class StayAllocationService {
       `${this.apiUrl}/rooms/${roomId}/capacity`
     );
   }
+
+  exportStayAllocations(): Observable<Blob> {
+    return this.http.get(
+      `${this.apiUrl}/export`,
+      {
+        responseType: 'blob'
+      }
+    );
+  }
 }
