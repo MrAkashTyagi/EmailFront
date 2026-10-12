@@ -113,7 +113,7 @@ type RoomFilter =
     MatChipsModule,
     MatSelectModule,
     MatExpansionPanel
-],
+  ],
   templateUrl: './stay-management.html',
   styleUrl: './stay-management.css'
 })
@@ -642,11 +642,12 @@ export class StayManagement
       this.dialog.open(
         StayRoomDialog,
         {
-          width: '720px',
+          width: '760px',
           maxWidth: '95vw',
           maxHeight: '90vh',
           autoFocus: false,
           disableClose: true,
+          panelClass: 'stay-room-dialog-container',
           data: {
             locationId:
               location.id,
