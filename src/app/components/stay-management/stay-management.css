@@ -40,11 +40,9 @@
 .add-room-btn {
   border-radius: 11px !important;
   background:
-    linear-gradient(
-      135deg,
+    linear-gradient(135deg,
       #7c3aed,
-      #4f46e5
-    ) !important;
+      #4f46e5) !important;
   color: #ffffff !important;
 }
 
@@ -207,10 +205,8 @@
 .rooms-grid {
   display: grid;
   grid-template-columns:
-    repeat(
-      auto-fill,
-      minmax(240px, 1fr)
-    );
+    repeat(auto-fill,
+      minmax(240px, 1fr));
   gap: 12px;
 }
 
@@ -220,8 +216,7 @@
   border-radius: 15px;
   background: #ffffff;
   box-shadow:
-    0 3px 12px
-    rgba(15, 23, 42, 0.05);
+    0 3px 12px rgba(15, 23, 42, 0.05);
 }
 
 .full-room {
@@ -295,11 +290,9 @@
   height: 100%;
   border-radius: inherit;
   background:
-    linear-gradient(
-      90deg,
+    linear-gradient(90deg,
       #8b5cf6,
-      #22c55e
-    );
+      #22c55e);
 }
 
 .full-fill {
@@ -379,10 +372,8 @@
   .location-list {
     display: grid;
     grid-template-columns:
-      repeat(
-        auto-fit,
-        minmax(240px, 1fr)
-      );
+      repeat(auto-fit,
+        minmax(240px, 1fr));
   }
 }
 
@@ -399,6 +390,7 @@
     width: 100%;
   }
 }
+
 .room-card-actions {
   display: flex;
   gap: 7px;
@@ -425,7 +417,7 @@
 }
 
 .occupants-panel {
-  margin-top: 16px;
+  margin-top: 10px;
   border: 1px solid #e2e8f0;
   border-radius: 15px;
   background: #ffffff;
@@ -435,7 +427,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -453,14 +445,15 @@
 .occupants-list {
   display: flex;
   flex-direction: column;
+  gap: 0;
 }
 
 .occupant-row {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 13px;
-  border-bottom: 1px solid #eef2f7;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .occupant-row:last-child {
@@ -481,8 +474,9 @@
 }
 
 .occupant-content {
-  min-width: 0;
   flex: 1;
+  min-width: 0;
+  
 }
 
 .occupant-content strong {
@@ -497,12 +491,23 @@
 }
 
 .allocation-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   padding: 4px 8px;
-  border-radius: 999px;
+
+  border-radius: 6px;
+
   background: #fef3c7;
   color: #b45309;
-  font-size: 9px;
-  font-weight: 800;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  flex-shrink: 0;
 }
 
 .checked-in-status {
@@ -513,7 +518,12 @@
 .occupant-actions {
   display: flex;
   align-items: center;
-  gap: 3px;
+  justify-content: flex-end;
+  gap: 4px;
+
+  margin-left: auto;
+
+  flex-shrink: 0;
 }
 
 .occupant-actions button {
