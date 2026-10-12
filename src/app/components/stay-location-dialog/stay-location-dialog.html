@@ -1,291 +1,189 @@
 <div class="dialog-header">
 
-    <div>
+  <div>
 
-        <span class="dialog-eyebrow">
-            STAY ALLOCATION
-        </span>
+    <span class="dialog-eyebrow">
+      STAY MANAGEMENT
+    </span>
 
-        <h2>
-            {{
-            isEditMode
-            ? 'Move / Edit Allocation'
-            : 'Allocate Guests'
-            }}
-        </h2>
+    <h2>
+      {{
+        isEditMode
+          ? 'Edit Location'
+          : 'Add Location'
+      }}
+    </h2>
 
-        <p>
-            Family members ko location aur room assign karein.
-        </p>
+    <p>
+      Hotel, house, dharamshala or other stay location maintain karein.
+    </p>
 
-    </div>
+  </div>
 
-    <button mat-icon-button type="button" aria-label="Close dialog" (click)="close()">
+  <button
+    mat-icon-button
+    type="button"
+    aria-label="Close dialog"
+    (click)="close()">
 
-        <mat-icon>
-            close
-        </mat-icon>
+    <mat-icon>
+      close
+    </mat-icon>
 
-    </button>
-
-</div>
-
-@if (loading) {
-
-<div class="dialog-loading">
-
-    Loading allocation data...
+  </button>
 
 </div>
-
-} @else {
 
 <div class="dialog-content">
 
-    <section class="allocation-target">
+  <div class="form-row">
 
-        <div class="form-row">
+    <mat-form-field appearance="outline">
 
-            <mat-form-field appearance="outline">
+      <mat-label>
+        Location Name
+      </mat-label>
 
-                <mat-label>
-                    Stay Location
-                </mat-label>
+      <input
+        matInput
+        [(ngModel)]="form.name"
+        placeholder="For example, Tyagi House">
 
-                <mat-select [ngModel]="selectedLocationId" (ngModelChange)="onLocationChange($event)">
+    </mat-form-field>
 
-                    @for (
-                    location of locations();
-                    track location.id
-                    ) {
+    <mat-form-field appearance="outline">
 
-                    <mat-option [value]="location.id">
+      <mat-label>
+        Location Type
+      </mat-label>
 
-                        {{ location.name }}
+      <mat-select
+        [(ngModel)]="form.type">
 
-                        (
-                        {{
-                        location.type
-                        .replaceAll('_', ' ')
-                        }}
-                        )
+        @for (
+          type of locationTypes;
+          track type.value
+        ) {
 
-                    </mat-option>
+          <mat-option
+            [value]="type.value">
 
-                    }
+            {{ type.label }}
 
-                </mat-select>
-
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-
-                <mat-label>
-                    Room / Unit
-                </mat-label>
-
-                <mat-select [disabled]="!selectedLocationId" [ngModel]="selectedRoomId"
-                    (ngModelChange)="onRoomChange($event)">
-
-                    @for (
-                    room of rooms();
-                    track room.id
-                    ) {
-
-                    <mat-option [value]="room.id">
-
-                        {{ room.name }}
-
-                        | Capacity:
-                        {{ room.capacity }}
-
-                    </mat-option>
-
-                    }
-
-                </mat-select>
-
-            </mat-form-field>
-
-        </div>
-
-        @if (roomCapacity()) {
-
-        <div class="capacity-preview" [class.capacity-full]="
-            roomCapacity()!.full
-          ">
-
-            <div>
-
-                <span>
-                    Capacity
-                </span>
-
-                <strong>
-                    {{ roomCapacity()!.capacity }}
-                </strong>
-
-            </div>
-
-            <div>
-
-                <span>
-                    Occupied
-                </span>
-
-                <strong>
-                    {{ roomCapacity()!.occupiedBeds }}
-                </strong>
-
-            </div>
-
-            <div>
-
-                <span>
-                    Available
-                </span>
-
-                <strong>
-                    {{ roomCapacity()!.availableBeds }}
-                </strong>
-
-            </div>
-
-            <div>
-
-                <span>
-                    Selected
-                </span>
-
-                <strong>
-                    {{ selectedGuestCount() }}
-                </strong>
-
-            </div>
-
-        </div>
+          </mat-option>
 
         }
 
-    </section>
+      </mat-select>
 
-    <section class="guest-selector">
+    </mat-form-field>
 
-        <mat-form-field appearance="outline">
+  </div>
 
-            <mat-label>
-                Guests
-            </mat-label>
+  <mat-form-field appearance="outline">
 
-            <mat-select multiple [ngModel]="selectedGuestIds()" (ngModelChange)="selectedGuestIds.set($event)">
+    <mat-label>
+      Address
+    </mat-label>
 
-                @for (
-                guest of availableGuests();
-                track guest.id
-                ) {
+    <textarea
+      matInput
+      rows="2"
+      [(ngModel)]="form.address"
+      placeholder="Location address">
+    </textarea>
 
-                <mat-option [value]="guest.id">
+  </mat-form-field>
 
-                    {{ guest.name }}
+  <div class="form-row">
 
-                </mat-option>
+    <mat-form-field appearance="outline">
 
-                }
+      <mat-label>
+        Contact Person
+      </mat-label>
 
-            </mat-select>
+      <input
+        matInput
+        [(ngModel)]="form.contactPerson"
+        placeholder="Caretaker or hotel manager">
 
-        </mat-form-field>
+    </mat-form-field>
 
-    </section>
+    <mat-form-field appearance="outline">
 
+      <mat-label>
+        Contact Number
+      </mat-label>
 
-    <section class="allocation-details">
+      <input
+        matInput
+        [(ngModel)]="form.contactNumber"
+        placeholder="Phone number">
 
-        <div class="form-row">
+    </mat-form-field>
 
-            <mat-form-field appearance="outline">
+  </div>
 
-                <mat-label>
-                    Check-in Date
-                </mat-label>
+  <mat-form-field appearance="outline">
 
-                <input matInput [matDatepicker]="checkInPicker" [(ngModel)]="checkInDate">
+    <mat-label>
+      Notes
+    </mat-label>
 
-                <mat-datepicker-toggle matIconSuffix [for]="checkInPicker">
-                </mat-datepicker-toggle>
+    <textarea
+      matInput
+      rows="3"
+      [(ngModel)]="form.notes"
+      placeholder="Additional details">
+    </textarea>
 
-                <mat-datepicker #checkInPicker>
-                </mat-datepicker>
+  </mat-form-field>
 
-            </mat-form-field>
+  <mat-slide-toggle
+    [(ngModel)]="form.active">
 
-            <mat-form-field appearance="outline">
+    Active Location
 
-                <mat-label>
-                    Check-out Date
-                </mat-label>
-
-                <input matInput [matDatepicker]="checkOutPicker" [(ngModel)]="checkOutDate">
-
-                <mat-datepicker-toggle matIconSuffix [for]="checkOutPicker">
-                </mat-datepicker-toggle>
-
-                <mat-datepicker #checkOutPicker>
-                </mat-datepicker>
-
-            </mat-form-field>
-
-        </div>
-
-        <mat-form-field appearance="outline">
-
-            <mat-label>
-                Notes
-            </mat-label>
-
-            <textarea matInput rows="2" [(ngModel)]="notes"
-                placeholder="Arrival time, elderly guest, extra mattress etc.">
-        </textarea>
-
-        </mat-form-field>
-
-    </section>
+  </mat-slide-toggle>
 
 </div>
 
-}
-
 <div class="dialog-actions">
 
-    <button mat-stroked-button type="button" [disabled]="saving" (click)="close()">
+  <button
+    mat-stroked-button
+    type="button"
+    [disabled]="saving"
+    (click)="close()">
 
-        Cancel
+    Cancel
 
-    </button>
+  </button>
 
-    <button mat-flat-button type="button" class="save-btn" [disabled]="
+  <button
+    mat-flat-button
+    type="button"
+    class="save-btn"
+    [disabled]="saving"
+    (click)="save()">
+
+    <mat-icon>
+      {{
+        isEditMode
+          ? 'save'
+          : 'add_location_alt'
+      }}
+    </mat-icon>
+
+    {{
       saving
-      || loading
-      || selectedGuestCount() === 0
-      || !selectedRoomId
-    " (click)="save()">
-
-        <mat-icon>
-            {{
-            isEditMode
-            ? 'swap_horiz'
-            : 'hotel'
-            }}
-        </mat-icon>
-
-        {{
-        saving
         ? 'Saving...'
         : isEditMode
-        ? 'Update Allocation'
-        : 'Allocate Guests'
-        }}
+          ? 'Update Location'
+          : 'Add Location'
+    }}
 
-    </button>
+  </button>
 
 </div>
