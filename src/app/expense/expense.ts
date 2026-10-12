@@ -448,7 +448,7 @@ export class Expense implements OnInit {
       width: '680px',
       maxWidth: '95vw',
       maxHeight: '90vh',
-      disableClose: false,
+      disableClose: true,
       autoFocus: false
     });
 
