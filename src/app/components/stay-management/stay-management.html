@@ -741,6 +741,35 @@
 
           }
 
+          @if (selectedLocation()!.contactPerson) {
+
+  <p class="location-contact">
+
+    <mat-icon>
+      person
+    </mat-icon>
+
+    {{ selectedLocation()!.contactPerson }}
+
+  </p>
+
+}
+
+@if (selectedLocation()!.contactNumber) {
+
+  <p class="location-contact">
+
+    <mat-icon>
+      call
+    </mat-icon>
+
+    {{ selectedLocation()!.contactNumber }}
+
+  </p>
+
+}
+
+
         </div>
 
         <button mat-flat-button type="button" class="add-room-btn" (click)="openAddRoomDialog()">
