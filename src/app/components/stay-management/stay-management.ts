@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   inject,
   OnInit,
   signal
@@ -65,17 +66,54 @@ import {
 import {
   StayAllocationDialog
 } from '../stay-allocation-dialog/stay-allocation-dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
+
+import {
+  FormsModule
+} from '@angular/forms';
+
+import {
+  MatChipsModule
+} from '@angular/material/chips';
+
+import {
+  forkJoin,
+  map,
+  of,
+  switchMap
+} from 'rxjs';
+
+import {
+  MatSelectModule
+} from '@angular/material/select';
+import { MatExpansionPanel } from '@angular/material/expansion';
+
+
+type RoomFilter =
+  | 'ALL'
+  | 'AVAILABLE'
+  | 'FULL'
+  | 'INACTIVE'
+  | 'OCCUPIED';
 
 @Component({
   selector: 'app-stay-management',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    MatDialogModule
-  ],
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatChipsModule,
+    MatSelectModule,
+    MatExpansionPanel
+],
   templateUrl: './stay-management.html',
   styleUrl: './stay-management.css'
 })
@@ -117,6 +155,226 @@ export class StayManagement
   readonly roomAllocations =
     signal<StayAllocation[]>([]);
 
+  readonly dashboardRooms =
+    signal<StayRoom[]>([]);
+
+  readonly dashboardAllocations =
+    signal<StayAllocation[]>([]);
+
+  readonly loadingDashboard =
+    signal(false);
+
+  readonly roomFilter =
+    signal<RoomFilter>('ALL');
+
+  readonly globalSearchTerm =
+    signal<string>('');
+
+  occupantSearchTerm = '';
+
+  readonly totalLocations =
+    computed(
+      () =>
+        this.locations()
+          .length
+    );
+
+  readonly totalRooms =
+    computed(
+      () =>
+        this.dashboardRooms()
+          .length
+    );
+
+  readonly totalCapacity =
+    computed(
+      () =>
+        this.dashboardRooms()
+          .reduce(
+            (
+              total,
+              room
+            ) =>
+              total
+              + (
+                room.capacity
+                || 0
+              ),
+            0
+          )
+    );
+
+  readonly totalOccupiedBeds =
+    computed(
+      () =>
+        this.dashboardRooms()
+          .reduce(
+            (
+              total,
+              room
+            ) =>
+              total
+              + (
+                room.occupiedBeds
+                || 0
+              ),
+            0
+          )
+    );
+
+  readonly totalAvailableBeds =
+    computed(
+      () =>
+        Math.max(
+          this.totalCapacity()
+          - this.totalOccupiedBeds(),
+          0
+        )
+    );
+
+  readonly totalCheckedIn =
+    computed(
+      () =>
+        this.dashboardAllocations()
+          .filter(
+            allocation =>
+              allocation.status
+              === 'CHECKED_IN'
+          )
+          .length
+    );
+
+  readonly plannedOccupantCount =
+    computed(
+      () =>
+        this.roomAllocations()
+          .filter(
+            allocation =>
+              allocation.status
+              === 'PLANNED'
+          )
+          .length
+    );
+
+  readonly checkedInOccupantCount =
+    computed(
+      () =>
+        this.roomAllocations()
+          .filter(
+            allocation =>
+              allocation.status
+              === 'CHECKED_IN'
+          )
+          .length
+    );
+
+  readonly globalSearchResults =
+    computed(() => {
+
+      const searchTerm =
+        this.globalSearchTerm()
+          .trim()
+          .toLowerCase();
+
+      const selectedLocation =
+        this.selectedLocationFilter();
+
+      const selectedStatus =
+        this.selectedStatusFilter();
+
+      return this.dashboardAllocations()
+        .filter(
+          allocation => {
+
+            const guestName =
+              allocation.guestName
+                ?.toLowerCase() || '';
+
+            const familyName =
+              allocation.familyName
+                ?.toLowerCase() || '';
+
+            const roomName =
+              allocation.roomName
+                ?.toLowerCase() || '';
+
+            const locationName =
+              allocation.locationName
+                ?.toLowerCase() || '';
+
+            const status =
+              allocation.status || '';
+
+            const matchesSearch =
+              !searchTerm
+              || guestName.includes(searchTerm)
+              || familyName.includes(searchTerm)
+              || roomName.includes(searchTerm)
+              || locationName.includes(searchTerm)
+              || status
+                .toLowerCase()
+                .includes(searchTerm);
+
+            const matchesLocation =
+              selectedLocation === 'ALL'
+              || allocation.locationName
+              === selectedLocation;
+
+            const matchesStatus =
+              selectedStatus === 'ALL'
+              || allocation.status
+              === selectedStatus;
+
+            return (
+              matchesSearch
+              && matchesLocation
+              && matchesStatus
+            );
+          }
+        );
+    });
+
+  readonly globalSearchResultCount =
+    computed<number>(
+      () =>
+        this.globalSearchResults()
+          .length
+    );
+
+  readonly selectedLocationFilter =
+    signal<string>('ALL');
+
+  readonly selectedStatusFilter =
+    signal<string>('ALL');
+
+  readonly locationFilterOptions =
+    computed(() => {
+
+      const locations =
+        this.dashboardAllocations()
+          .map(
+            allocation =>
+              allocation.locationName
+          )
+          .filter(Boolean);
+
+      return [
+        'ALL',
+        ...new Set(locations)
+      ];
+    });
+
+  readonly statusFilterOptions =
+    computed(() => [
+
+      'ALL',
+      'PLANNED',
+      'CHECKED_IN',
+      'CHECKED_OUT',
+      'CANCELLED'
+
+    ]);
+
   constructor(
     private stayAllocationService: StayAllocationService
   ) { }
@@ -125,6 +383,7 @@ export class StayManagement
   ngOnInit(): void {
 
     this.loadLocations();
+    this.loadDashboardSummary();
   }
 
   loadLocations(): void {
@@ -824,6 +1083,8 @@ export class StayManagement
     this.loadRoomAllocations(
       roomId
     );
+
+    this.loadDashboardSummary();
   }
 
   exportStayAllocations(): void {
@@ -855,5 +1116,259 @@ export class StayManagement
         }
       });
   }
+
+  readonly filteredRooms =
+    computed<StayRoom[]>(
+      () => {
+
+        const filter =
+          this.roomFilter();
+
+        return this.rooms()
+          .filter(
+            room => {
+
+              switch (filter) {
+
+                case 'AVAILABLE':
+
+                  return (
+                    room.active
+                    && !room.full
+                    && (
+                      room.availableBeds
+                      || 0
+                    ) > 0
+                  );
+
+                case 'FULL':
+
+                  return Boolean(
+                    room.full
+                  );
+
+                case 'INACTIVE':
+
+                  return !room.active;
+
+                case 'OCCUPIED':
+
+                  return (
+                    room.occupiedBeds
+                    || 0
+                  ) > 0;
+
+                case 'ALL':
+                default:
+
+                  return true;
+              }
+            }
+          );
+      }
+    );
+
+  readonly filteredRoomAllocations =
+    computed<StayAllocation[]>(
+      () => {
+
+        const searchTerm =
+          this.occupantSearchTerm
+            .trim()
+            .toLowerCase();
+
+        if (!searchTerm) {
+
+          return this.roomAllocations();
+        }
+
+        return this.roomAllocations()
+          .filter(
+            allocation => {
+
+              const guestName =
+                allocation.guestName
+                  ?.toLowerCase()
+                || '';
+
+              const familyName =
+                allocation.familyName
+                  ?.toLowerCase()
+                || '';
+
+              const status =
+                allocation.status
+                  ?.replaceAll(
+                    '_',
+                    ' '
+                  )
+                  .toLowerCase()
+                || '';
+
+              return (
+                guestName.includes(
+                  searchTerm
+                )
+                || familyName.includes(
+                  searchTerm
+                )
+                || status.includes(
+                  searchTerm
+                )
+              );
+            }
+          );
+      }
+    );
+
+  loadDashboardSummary(): void {
+
+    this.loadingDashboard.set(
+      true
+    );
+
+    forkJoin({
+      rooms:
+        this.roomService
+          .getRooms(
+            undefined,
+            false
+          ),
+
+      allocations:
+        this.allocationService
+          .getAllocations()
+    })
+      .pipe(
+        switchMap(
+          response => {
+
+            this.dashboardAllocations.set(
+              response.allocations
+            );
+
+            if (
+              response.rooms.length
+              === 0
+            ) {
+
+              return of(
+                []
+              );
+            }
+
+            const capacityRequests =
+              response.rooms
+                .map(
+                  room => {
+
+                    if (!room.id) {
+
+                      return of(
+                        room
+                      );
+                    }
+
+                    return this.allocationService
+                      .getRoomCapacity(
+                        room.id
+                      )
+                      .pipe(
+                        map(
+                          capacity => ({
+                            ...room,
+
+                            occupiedBeds:
+                              capacity.occupiedBeds,
+
+                            availableBeds:
+                              capacity.availableBeds,
+
+                            full:
+                              capacity.full
+                          })
+                        )
+                      );
+                  }
+                );
+
+            return forkJoin(
+              capacityRequests
+            );
+          }
+        )
+      )
+      .subscribe({
+
+        next: rooms => {
+
+          this.dashboardRooms.set(
+            rooms
+          );
+
+          this.loadingDashboard.set(
+            false
+          );
+        },
+
+        error: error => {
+
+          console.error(
+            'Stay dashboard summary load failed:',
+            error
+          );
+
+          this.loadingDashboard.set(
+            false
+          );
+
+          this.notificationService.error(
+            'Stay dashboard summary load nahi ho paya.'
+          );
+        }
+      });
+  }
+
+  getOccupancyColorClass(
+    room: StayRoom
+  ): string {
+
+    const percentage =
+      this.getOccupancyPercentage(
+        room
+      );
+
+    if (percentage >= 80) {
+
+      return 'occupancy-high';
+    }
+
+    if (percentage >= 50) {
+
+      return 'occupancy-medium';
+    }
+
+    return 'occupancy-low';
+  }
+
+  clearGlobalSearch(): void {
+
+    this.globalSearchTerm.set('');
+  }
+
+  clearSearchFilters(): void {
+
+    this.globalSearchTerm.set('');
+
+    this.selectedLocationFilter.set(
+      'ALL'
+    );
+
+    this.selectedStatusFilter.set(
+      'ALL'
+    );
+
+  }
+
 
 }
