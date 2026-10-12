@@ -1,43 +1,5 @@
 <div class="stay-page">
 
-  <!-- <section class="stay-toolbar">
-
-    <button mat-icon-button class="export-btn" matTooltip="Export Stay Report" (click)="exportStayAllocations()">
-
-      <mat-icon>
-        download
-      </mat-icon>
-
-    </button>
-
-    <div>
-
-      <span class="page-eyebrow">
-        ACCOMMODATION
-      </span>
-
-      <h2>
-        Stay Management
-      </h2>
-
-      <p>
-        Houses, hotels, dharamshalas and room capacities manage karein.
-      </p>
-
-    </div>
-
-    <button mat-flat-button type="button" class="add-location-btn" (click)="openAddLocationDialog()">
-
-      <mat-icon>
-        add_location_alt
-      </mat-icon>
-
-      Add Location
-
-    </button>
-
-  </section> -->
-
   <section class="stay-toolbar">
 
     <div>
@@ -56,7 +18,8 @@
 
     <div class="toolbar-actions">
 
-      <button class="toolbar-icon-btn toolbar-export-btn" matTooltip="Export Stay Report" (click)="exportStayAllocations()">
+      <button class="toolbar-icon-btn toolbar-export-btn" matTooltip="Export Stay Report"
+        (click)="exportStayAllocations()">
 
         <img [src]="'icons/excel.png'" class="export-icon" alt="Export" />
 
@@ -75,6 +38,523 @@
     </div>
 
   </section>
+
+  <section class="stay-summary-grid">
+
+    <article class="summary-card summary-location">
+
+      <div class="summary-icon">
+
+        <mat-icon>
+          location_on
+        </mat-icon>
+
+      </div>
+
+      <div class="summary-content">
+
+        <span>
+          Locations
+        </span>
+
+        <strong>
+          {{ totalLocations() }}
+        </strong>
+
+      </div>
+
+    </article>
+
+    <article class="summary-card summary-room">
+
+      <div class="summary-icon">
+
+        <mat-icon>
+          meeting_room
+        </mat-icon>
+
+      </div>
+
+      <div class="summary-content">
+
+        <span>
+          Rooms
+        </span>
+
+        <strong>
+          {{ totalRooms() }}
+        </strong>
+
+      </div>
+
+    </article>
+
+    <article class="summary-card summary-capacity">
+
+      <div class="summary-icon">
+
+        <mat-icon>
+          bed
+        </mat-icon>
+
+      </div>
+
+      <div class="summary-content">
+
+        <span>
+          Capacity
+        </span>
+
+        <strong>
+          {{ totalCapacity() }}
+        </strong>
+
+      </div>
+
+    </article>
+
+    <article class="summary-card summary-occupied">
+
+      <div class="summary-icon">
+
+        <mat-icon>
+          groups
+        </mat-icon>
+
+      </div>
+
+      <div class="summary-content">
+
+        <span>
+          Occupied
+        </span>
+
+        <strong>
+          {{ totalOccupiedBeds() }}
+        </strong>
+
+      </div>
+
+    </article>
+
+    <article class="summary-card summary-available">
+
+      <div class="summary-icon">
+
+        <mat-icon>
+          event_available
+        </mat-icon>
+
+      </div>
+
+      <div class="summary-content">
+
+        <span>
+          Available
+        </span>
+
+        <strong>
+          {{ totalAvailableBeds() }}
+        </strong>
+
+      </div>
+
+    </article>
+
+    <article class="summary-card summary-checkin">
+
+      <div class="summary-icon">
+
+        <mat-icon>
+          login
+        </mat-icon>
+
+      </div>
+
+      <div class="summary-content">
+
+        <span>
+          Checked In
+        </span>
+
+        <strong>
+          {{ totalCheckedIn() }}
+        </strong>
+
+      </div>
+
+    </article>
+
+  </section>
+
+  <!-- Global Search -->
+
+  <section class="global-search-panel">
+
+    <section class="page-toolbar">
+
+      <div class="page-toolbar-left">
+
+        <div class="search-wrapper">
+
+          <mat-icon class="search-icon">
+            search
+          </mat-icon>
+
+          <input type="text" class="search-input" placeholder="Search Guest, Family, Room..."
+            [value]="globalSearchTerm()" (input)="
+          globalSearchTerm.set(
+            $any($event.target).value
+          )
+        ">
+
+        </div>
+
+      </div>
+
+      <div class="page-toolbar-right">
+
+        <button mat-stroked-button type="button" class="toolbar-filter-btn" (click)="stayFilterPanel.toggle()">
+
+          <mat-icon>
+            tune
+          </mat-icon>
+
+          Filters
+
+        </button>
+
+
+      </div>
+
+    </section>
+
+    <!-- <div class="global-search-header">
+
+      <div>
+
+        <span class="global-search-eyebrow">
+          QUICK FIND
+        </span>
+
+        <h3>
+          Find Stay Allocation
+        </h3>
+
+      </div>
+
+      @if (
+      globalSearchTerm()
+      || selectedLocationFilter() !== 'ALL'
+      || selectedStatusFilter() !== 'ALL'
+      ) {
+
+      <span class="global-result-count">
+
+        {{ globalSearchResultCount() }}
+        result(s)
+
+      </span>
+
+      }
+
+    </div> -->
+
+    <!-- <mat-form-field appearance="outline" class="global-search-field">
+
+      <mat-label>
+        Search Guest, Family, Room . . .
+      </mat-label>
+
+      <mat-icon matPrefix>
+        search
+      </mat-icon>
+
+      <input matInput type="search" autocomplete="off" [ngModel]="globalSearchTerm()" (ngModelChange)="
+        globalSearchTerm.set($event)
+      " placeholder="For example: Akash, Tyagi, Room 101 or Hotel">
+
+      @if (
+      globalSearchTerm()
+      || selectedLocationFilter() !== 'ALL'
+      || selectedStatusFilter() !== 'ALL'
+      ) {
+
+      <button mat-icon-button matSuffix type="button" aria-label="Clear global search" matTooltip="Clear search"
+        (click)="clearGlobalSearch()">
+
+        <mat-icon>
+          close
+        </mat-icon>
+
+      </button>
+
+      }
+
+    </mat-form-field> -->
+
+
+  </section>
+
+
+  <mat-expansion-panel #stayFilterPanel hideToggle>
+
+    <section class="filters-card">
+
+      <div class="filter-grid">
+
+        <!-- Location Filter -->
+
+        <mat-form-field appearance="outline" class="filter-field">
+
+          <mat-label>
+            Location
+          </mat-label>
+
+          <mat-select [value]="selectedLocationFilter()" (selectionChange)="
+            selectedLocationFilter.set(
+              $event.value
+            )
+          ">
+
+            @for (
+            location of locationFilterOptions();
+            track location
+            ) {
+
+            <mat-option [value]="location">
+
+              {{
+              location === 'ALL'
+              ? 'All Locations'
+              : location
+              }}
+
+            </mat-option>
+
+            }
+
+          </mat-select>
+
+        </mat-form-field>
+
+        <!-- Status Filter -->
+
+        <mat-form-field appearance="outline" class="filter-field">
+
+          <mat-label>
+            Status
+          </mat-label>
+
+          <mat-select [value]="selectedStatusFilter()" (selectionChange)="
+            selectedStatusFilter.set(
+              $event.value
+            )
+          ">
+
+            @for (
+            status of statusFilterOptions();
+            track status
+            ) {
+
+            <mat-option [value]="status">
+
+              {{
+              status === 'ALL'
+              ? 'All Status'
+              : status.replaceAll('_', ' ')
+              }}
+
+            </mat-option>
+
+            }
+
+          </mat-select>
+
+        </mat-form-field>
+
+        <!-- Clear -->
+
+        <div class="filter-actions">
+
+          <button mat-stroked-button type="button" class="clear-btn" (click)="clearSearchFilters()">
+
+            Clear Filters
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </mat-expansion-panel>
+
+  @if (
+  globalSearchTerm()
+  || selectedLocationFilter() !== 'ALL'
+  || selectedStatusFilter() !== 'ALL'
+  ) {
+
+  <section class="global-search-results">
+
+    @if (globalSearchResults().length === 0) {
+
+    <div class="global-search-empty">
+
+      <mat-icon>
+        person_search
+      </mat-icon>
+
+      <strong>
+        No stay allocation found
+      </strong>
+
+      <span>
+        Guest, family, room ya location ka naam change karke try karein.
+      </span>
+
+    </div>
+
+    } @else {
+
+    <div class="global-result-grid">
+
+      @for (
+      allocation of globalSearchResults();
+      track allocation.id
+      ) {
+
+      <article class="global-result-card">
+
+        <div class="global-result-avatar">
+
+          {{
+          allocation.guestName
+          .charAt(0)
+          .toUpperCase()
+          }}
+
+        </div>
+
+        <div class="global-result-content">
+
+          <div class="global-result-title">
+
+            <strong>
+              {{ allocation.guestName }}
+            </strong>
+
+            <span class="global-status-chip" [class.global-checked-in]="
+                    allocation.status === 'CHECKED_IN'
+                  " [class.global-checked-out]="
+                    allocation.status === 'CHECKED_OUT'
+                  " [class.global-cancelled]="
+                    allocation.status === 'CANCELLED'
+                  ">
+
+              {{
+              allocation.status
+              .replaceAll('_', ' ')
+              }}
+
+            </span>
+
+          </div>
+
+          <span class="global-family-name">
+
+            {{
+            allocation.familyName
+            || 'No Family'
+            }}
+
+          </span>
+
+          <div class="global-result-stay">
+
+            <span>
+
+              <mat-icon>
+                location_on
+              </mat-icon>
+
+              {{ allocation.locationName }}
+
+            </span>
+
+            <span>
+
+              <mat-icon>
+                meeting_room
+              </mat-icon>
+
+              {{ allocation.roomName }}
+
+            </span>
+
+          </div>
+
+          @if (
+          allocation.checkInDate
+          || allocation.checkOutDate
+          ) {
+
+          <div class="global-result-dates">
+
+            @if (allocation.checkInDate) {
+
+            <span>
+              In: {{ allocation.checkInDate }}
+            </span>
+
+            }
+
+            @if (allocation.checkOutDate) {
+
+            <span>
+              Out: {{ allocation.checkOutDate }}
+            </span>
+
+            }
+
+          </div>
+
+          }
+
+        </div>
+
+        @if (
+        allocation.status === 'PLANNED'
+        || allocation.status === 'CHECKED_IN'
+        ) {
+
+        <button mat-icon-button type="button" class="global-view-room-btn" matTooltip="View room occupants" (click)="
+                  loadRoomAllocations(
+                    allocation.roomId
+                  )
+                ">
+
+          <mat-icon>
+            groups
+          </mat-icon>
+
+        </button>
+
+        }
+
+      </article>
+
+      }
+
+    </div>
+
+    }
+
+  </section>
+
+  }
 
   <div class="stay-layout">
 
@@ -275,6 +755,64 @@
 
       </div>
 
+
+      <div class="room-filter-bar">
+
+        <button type="button" class="room-filter-chip" [class.active-filter]="
+      roomFilter() === 'ALL'
+    " (click)="roomFilter.set('ALL')">
+
+          All
+
+        </button>
+
+        <button type="button" class="room-filter-chip" [class.active-filter]="
+      roomFilter() === 'AVAILABLE'
+    " (click)="
+      roomFilter.set('AVAILABLE')
+    ">
+
+          Available
+
+        </button>
+
+        <button type="button" class="room-filter-chip" [class.active-filter]="
+      roomFilter() === 'OCCUPIED'
+    " (click)="
+      roomFilter.set('OCCUPIED')
+    ">
+
+          Occupied
+
+        </button>
+
+        <button type="button" class="room-filter-chip" [class.active-filter]="
+      roomFilter() === 'FULL'
+    " (click)="roomFilter.set('FULL')">
+
+          Full
+
+        </button>
+
+        <button type="button" class="room-filter-chip" [class.active-filter]="
+      roomFilter() === 'INACTIVE'
+    " (click)="
+      roomFilter.set('INACTIVE')
+    ">
+
+          Inactive
+
+        </button>
+
+        <span class="filter-result-count">
+
+          {{ filteredRooms().length }}
+          room(s)
+
+        </span>
+
+      </div>
+
       @if (loadingRooms()) {
 
       <div class="panel-state">
@@ -304,7 +842,7 @@
       <div class="rooms-grid">
 
         @for (
-        room of rooms();
+        room of filteredRooms();
         track room.id
         ) {
 
@@ -403,9 +941,11 @@
 
           <div class="occupancy-track">
 
-            <div class="occupancy-fill" [class.full-fill]="room.full" [style.width.%]="
-                      getOccupancyPercentage(room)
-                    ">
+            <div class="occupancy-fill" [ngClass]="
+    getOccupancyColorClass(room)
+  " [style.width.%]="
+    getOccupancyPercentage(room)
+  ">
             </div>
 
           </div>
@@ -470,9 +1010,43 @@
 
         }
 
+        @if (
+        rooms().length > 0
+        && filteredRooms().length === 0
+        ) {
+
+        <div class="room-filter-empty">
+
+          <mat-icon>
+            filter_alt_off
+          </mat-icon>
+
+          <strong>
+            No matching rooms
+          </strong>
+
+          <span>
+            Dusra room filter select karein.
+          </span>
+
+        </div>
+
+        }
+
         @if (roomAllocations().length > 0) {
 
         <section class="occupants-panel">
+
+          <mat-form-field appearance="outline">
+
+            <mat-label>
+              Search Guest
+            </mat-label>
+
+            <input matInput [(ngModel)]="occupantSearchTerm">
+
+          </mat-form-field>
+
 
           <div class="occupants-header">
 
@@ -483,8 +1057,24 @@
               </h3>
 
               <span>
+
                 {{ roomAllocations().length }}
-                active allocation(s)
+                Guest(s)
+
+                <span class="header-separator">
+                  •
+                </span>
+
+                {{ checkedInOccupantCount() }}
+                Checked In
+
+                <span class="header-separator">
+                  •
+                </span>
+
+                {{ plannedOccupantCount() }}
+                Planned
+
               </span>
 
             </div>
@@ -499,11 +1089,42 @@
 
           </div>
 
+          <div class="occupants-search">
+
+            <mat-form-field appearance="outline" class="occupants-search-field">
+
+              <mat-icon matPrefix>
+                search
+              </mat-icon>
+
+              <mat-label>
+                Search guest or family
+              </mat-label>
+
+              <input matInput type="search" [(ngModel)]="occupantSearchTerm" autocomplete="off">
+
+              @if (occupantSearchTerm) {
+
+              <button mat-icon-button matSuffix type="button" aria-label="Clear occupant search"
+                (click)="occupantSearchTerm = ''">
+
+                <mat-icon>
+                  close
+                </mat-icon>
+
+              </button>
+
+              }
+
+            </mat-form-field>
+
+          </div>
+
+
           <div class="occupants-list">
 
             @for (
-            allocation
-            of roomAllocations();
+            allocation of filteredRoomAllocations();
             track allocation.id
             ) {
 
@@ -612,6 +1233,29 @@
               </div>
 
             </article>
+
+            }
+
+            @if (
+            roomAllocations().length > 0
+            && filteredRoomAllocations().length === 0
+            ) {
+
+            <div class="occupant-search-empty">
+
+              <mat-icon>
+                person_search
+              </mat-icon>
+
+              <strong>
+                Guest not found
+              </strong>
+
+              <span>
+                Search term change karke try karein.
+              </span>
+
+            </div>
 
             }
 
