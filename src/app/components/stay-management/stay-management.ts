@@ -117,6 +117,11 @@ export class StayManagement
   readonly roomAllocations =
     signal<StayAllocation[]>([]);
 
+  constructor(
+    private stayAllocationService: StayAllocationService
+  ) { }
+
+
   ngOnInit(): void {
 
     this.loadLocations();
@@ -819,6 +824,36 @@ export class StayManagement
     this.loadRoomAllocations(
       roomId
     );
+  }
+
+  exportStayAllocations(): void {
+
+    this.stayAllocationService
+      .exportStayAllocations()
+      .subscribe({
+
+        next: (blob) => {
+
+          const url =
+            window.URL.createObjectURL(blob);
+
+          const anchor =
+            document.createElement('a');
+
+          anchor.href = url;
+          anchor.download =
+            'stay-allocation-report.xlsx';
+
+          anchor.click();
+
+          window.URL.revokeObjectURL(url);
+        },
+
+        error: error => {
+
+          console.error(error);
+        }
+      });
   }
 
 }
