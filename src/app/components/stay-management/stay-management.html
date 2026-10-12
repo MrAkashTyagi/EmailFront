@@ -1,6 +1,14 @@
 <div class="stay-page">
 
-  <section class="stay-toolbar">
+  <!-- <section class="stay-toolbar">
+
+    <button mat-icon-button class="export-btn" matTooltip="Export Stay Report" (click)="exportStayAllocations()">
+
+      <mat-icon>
+        download
+      </mat-icon>
+
+    </button>
 
     <div>
 
@@ -27,6 +35,44 @@
       Add Location
 
     </button>
+
+  </section> -->
+
+  <section class="stay-toolbar">
+
+    <div>
+      <span class="page-eyebrow">
+        ACCOMMODATION
+      </span>
+
+      <h2>
+        Stay Management
+      </h2>
+
+      <p>
+        Houses, hotels, dharamshalas and room capacities manage karein.
+      </p>
+    </div>
+
+    <div class="toolbar-actions">
+
+      <button class="toolbar-icon-btn toolbar-export-btn" matTooltip="Export Stay Report" (click)="exportStayAllocations()">
+
+        <img [src]="'icons/excel.png'" class="export-icon" alt="Export" />
+
+      </button>
+
+      <button mat-flat-button type="button" class="add-location-btn" (click)="openAddLocationDialog()">
+
+        <mat-icon>
+          add_location_alt
+        </mat-icon>
+
+        Add Location
+
+      </button>
+
+    </div>
 
   </section>
 
@@ -496,7 +542,7 @@
                 </div>
 
               </div>
-              
+
 
               <div class="occupant-actions">
 
