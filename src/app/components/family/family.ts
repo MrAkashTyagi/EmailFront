@@ -494,7 +494,7 @@ export class Family {
           maxWidth: '95vw',
           maxHeight: '90vh',
           autoFocus: false,
-          disableClose: false,
+          disableClose: true,
           data: guestToEdit
         }
       );
@@ -773,7 +773,7 @@ export class Family {
           maxWidth: '95vw',
           maxHeight: '90vh',
           autoFocus: false,
-          disableClose: false,
+          disableClose: true,
 
           data: {
             family: {
