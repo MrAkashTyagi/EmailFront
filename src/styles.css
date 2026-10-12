@@ -23,12 +23,17 @@
 } */
 
 /* FIX FIXED: Pure wrapper block ka size dynamic kiya aur space khali dikhna band kiya */
-html, body, .main-container, .card-wrapper {
+html,
+body,
+.main-container,
+.card-wrapper {
   margin: 0;
   padding: 0;
-  min-height: auto !important; /* Fixed 100vh height ko hamesha ke liye toda */
+  min-height: auto !important;
+  /* Fixed 100vh height ko hamesha ke liye toda */
   height: auto !important;
-  background-color: #ffffff !important; /* Grey background ko pure white card match me badla */
+  background-color: #ffffff !important;
+  /* Grey background ko pure white card match me badla */
   background: #ffffff !important;
 }
 
@@ -47,15 +52,14 @@ html, body, .main-container, .card-wrapper {
 .mat-mdc-snackbar-surface {
   border-radius: 12px !important;
   box-shadow:
-    0 8px 24px rgba(
+    0 8px 24px rgba(0,
       0,
       0,
-      0,
-      0.16
-    ) !important;
+      0.16) !important;
 
   min-width: 340px !important;
 }
+
 .success-snackbar .mat-mdc-snackbar-surface {
   background: #31bc60 !important;
   color: white !important;
@@ -75,6 +79,7 @@ html, body, .main-container, .card-wrapper {
   background: #2563eb !important;
   color: white !important;
 }
+
 .task-dialog-panel .mat-mdc-dialog-surface {
 
   width: 1000px !important;
@@ -84,4 +89,15 @@ html, body, .main-container, .card-wrapper {
   border-radius: 24px !important;
 
   padding: 24px !important;
+}
+
+body {
+  background:
+    radial-gradient(circle at top right,
+      rgba(124, 58, 237, 0.05),
+      transparent 35%),
+    radial-gradient(circle at bottom left,
+      rgba(234, 179, 8, 0.05),
+      transparent 35%),
+    #f8fafc;
 }
