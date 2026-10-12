@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 20px;
+  padding: 12px 18px;
   border: 1px solid #e2e8f0;
   border-radius: 18px;
   background: #ffffff;
@@ -25,8 +25,9 @@
 
 .stay-toolbar h2,
 .rooms-header h3 {
-  margin: 4px 0;
+  margin: 2px 0;
   color: #172033;
+  font-size: 24px;
 }
 
 .stay-toolbar p,
@@ -34,6 +35,8 @@
   margin: 0;
   color: #64748b;
   font-size: 13px;
+  line-height: 1.2;
+
 }
 
 .add-location-btn,
@@ -476,7 +479,7 @@
 .occupant-content {
   flex: 1;
   min-width: 0;
-  
+
 }
 
 .occupant-content strong {
@@ -566,4 +569,60 @@
     width: 100%;
     justify-content: flex-end;
   }
+}
+
+.export-btn {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.excel-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.toolbar-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 42px;
+
+  width: 42px;
+  height: 42px;
+  padding: 0;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.toolbar-import-btn mat-icon {
+  margin: 0 !important;
+  color: #2563eb;
+}
+
+.export-icon {
+  display: block;
+
+  width: 25px;
+  height: 25px;
+
+  object-fit: contain;
 }
