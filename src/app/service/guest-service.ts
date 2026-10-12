@@ -166,10 +166,10 @@ export class GuestService {
     );
   }
 
-  getAllGuests(): Observable<Guest[]> {
+getStayGuests(): Observable<Guest[]> {
 
   return this.http.get<Guest[]>(
-    `${this.baseUrl}/guests/getAllGuests`
+    `${this.baseUrl}/guests/stay-guests`
   );
 }
 
