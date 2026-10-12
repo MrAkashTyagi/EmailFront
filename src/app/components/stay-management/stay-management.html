@@ -484,29 +484,19 @@
                   allocation.familyName
                   || 'No Family'
                   }}
-
-                  @if (allocation.checkInDate) {
-
-                  · Check-in:
-                  {{ allocation.checkInDate }}
-
-                  }
-
                 </span>
 
+                <div class="allocation-status" [class.checked-in-status]="allocation.status === 'CHECKED_IN'">
+
+                  {{
+                  allocation.status
+                  .replaceAll('_', ' ')
+                  }}
+
+                </div>
+
               </div>
-
-              <span class="allocation-status" [class.checked-in-status]="
-              allocation.status
-              === 'CHECKED_IN'
-            ">
-
-                {{
-                allocation.status
-                .replaceAll('_', ' ')
-                }}
-
-              </span>
+              
 
               <div class="occupant-actions">
 
