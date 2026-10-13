@@ -323,7 +323,17 @@
           </th>
 
           <td mat-cell *matCellDef="let element">
+
             {{ element.expenseName }}
+
+            @if (element.systemGenerated) {
+
+            <span class="system-expense-chip">
+              Auto
+            </span>
+
+            }
+
           </td>
 
         </ng-container>
@@ -434,6 +444,7 @@
           </th>
 
           <td mat-cell *matCellDef="let element">
+            <!-- 
             <button mat-icon-button color="primary" (click)="editExpense(element)" matTooltip="Edit Expense">
 
               <mat-icon>edit</mat-icon>
@@ -444,7 +455,36 @@
 
               <mat-icon>delete</mat-icon>
 
+            </button> -->
+
+            @if (!element.systemGenerated) {
+
+            <button mat-icon-button color="primary" matTooltip="Edit Expense" (click)="editExpense(element)">
+
+              <mat-icon>
+                edit
+              </mat-icon>
+
             </button>
+
+            <button mat-icon-button color="warn" matTooltip="Delete Expense" (click)="deleteExpense(element)">
+
+              <mat-icon>
+                delete
+              </mat-icon>
+
+            </button>
+
+            } @else {
+
+            <span class="system-action-label">
+
+              Managed Automatically
+
+            </span>
+
+            }
+
           </td>
         </ng-container>
 
