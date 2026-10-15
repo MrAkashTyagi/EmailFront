@@ -11,6 +11,8 @@ import {
   Observable
 } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 export interface WallMedia {
 
   id: number;
@@ -32,6 +34,7 @@ export interface WallMedia {
   uploadedByName: string;
 }
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -41,7 +44,7 @@ export class WallService {
     inject(HttpClient);
 
   private readonly baseUrl =
-    'http://localhost:8090';
+    environment.apiUrl;
 
   uploadMedia(
     file: File,
