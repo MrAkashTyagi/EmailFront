@@ -16,6 +16,8 @@ import {
   WeddingTask
 } from '../models/wedding-task';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,93 +27,93 @@ export class WeddingTaskService {
     inject(HttpClient);
 
   private readonly apiUrl =
-    'http://localhost:8090/api/wedding-tasks';
+    `${environment.apiUrl}/api/wedding-tasks`;
 
-//  getTasks(
-//   search?: string,
-//   status?: string,
-//   priority?: string
-// ): Observable<any> {
+  //  getTasks(
+  //   search?: string,
+  //   status?: string,
+  //   priority?: string
+  // ): Observable<any> {
 
-//   let params = new HttpParams();
+  //   let params = new HttpParams();
 
-//   if (search) {
+  //   if (search) {
 
-//     params =
-//       params.set(
-//         'search',
-//         search
-//       );
-//   }
+  //     params =
+  //       params.set(
+  //         'search',
+  //         search
+  //       );
+  //   }
 
-//   if (status) {
+  //   if (status) {
 
-//     params =
-//       params.set(
-//         'status',
-//         status
-//       );
-//   }
+  //     params =
+  //       params.set(
+  //         'status',
+  //         status
+  //       );
+  //   }
 
-//   if (priority) {
+  //   if (priority) {
 
-//     params =
-//       params.set(
-//         'priority',
-//         priority
-//       );
-//   }
+  //     params =
+  //       params.set(
+  //         'priority',
+  //         priority
+  //       );
+  //   }
 
-//   return this.http.get(
-//     this.apiUrl,
-//     {
-//       params
-//     }
-//   );
-// }
+  //   return this.http.get(
+  //     this.apiUrl,
+  //     {
+  //       params
+  //     }
+  //   );
+  // }
 
-getTasks(
-  search = '',
-  status = '',
-  priority = ''
-): Observable<any> {
+  getTasks(
+    search = '',
+    status = '',
+    priority = ''
+  ): Observable<any> {
 
-  let params =
-    new HttpParams()
-      .set('page', '0')
-      .set('size', '1000');
+    let params =
+      new HttpParams()
+        .set('page', '0')
+        .set('size', '1000');
 
-  if (search.trim()) {
-    params =
-      params.set(
-        'search',
-        search.trim()
-      );
-  }
-
-  if (status) {
-    params =
-      params.set(
-        'status',
-        status
-      );
-  }
-
-  if (priority) {
-    params =
-      params.set(
-        'priority',
-        priority
-      );
-  }
-
-  return this.http.get(
-    this.apiUrl,
-    {
-      params
+    if (search.trim()) {
+      params =
+        params.set(
+          'search',
+          search.trim()
+        );
     }
-  );
-}
+
+    if (status) {
+      params =
+        params.set(
+          'status',
+          status
+        );
+    }
+
+    if (priority) {
+      params =
+        params.set(
+          'priority',
+          priority
+        );
+    }
+
+    return this.http.get(
+      this.apiUrl,
+      {
+        params
+      }
+    );
+  }
 
   createTask(
     task: any
