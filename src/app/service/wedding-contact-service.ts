@@ -12,6 +12,8 @@ import {
   Observable
 } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +23,8 @@ export class WeddingContactService {
     inject(HttpClient);
 
   private readonly apiUrl =
-    'http://localhost:8090/api/wedding-contacts';
+    `${environment.apiUrl}/api/wedding-contacts`;
+
 
   getContacts(
     page: number,
