@@ -1,99 +1,45 @@
-import {
-  HttpClient,
-  HttpParams
-} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
-import {
-  inject,
-  Injectable
-} from '@angular/core';
+export interface GuestAccountRequest {
 
-import {
-  Observable
-} from 'rxjs';
+  name: string;
 
-import {
-  StayLocation,
-  StayLocationRequest,
-  StayLocationType
-} from '../models/stay-location';
+  email: string;
+
+  password: string;
+}
+
+export interface GuestAccountResponse {
+
+  id: number;
+
+  name: string;
+
+  email: string;
+
+  role: string;
+
+  ownerUserId: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class StayLocationService {
+export class GuestAccountService {
 
-  private readonly http =
-    inject(HttpClient);
+  private http = inject(HttpClient);
 
-  private readonly apiUrl =
-    'http://localhost:8090/stay-locations';
+  createGuestAccount(
+    request: GuestAccountRequest
+  ): Observable<GuestAccountResponse> {
 
-  getLocations(
-    type?: StayLocationType | '',
-    activeOnly = false
-  ): Observable<StayLocation[]> {
-
-    let params =
-      new HttpParams()
-        .set(
-          'activeOnly',
-          activeOnly
-        );
-
-    if (type) {
-
-      params =
-        params.set(
-          'type',
-          type
-        );
-    }
-
-    return this.http.get<StayLocation[]>(
-      this.apiUrl,
-      {
-        params
-      }
-    );
-  }
-
-  getLocationById(
-    locationId: number
-  ): Observable<StayLocation> {
-
-    return this.http.get<StayLocation>(
-      `${this.apiUrl}/${locationId}`
-    );
-  }
-
-  createLocation(
-    request: StayLocationRequest
-  ): Observable<StayLocation> {
-
-    return this.http.post<StayLocation>(
-      this.apiUrl,
+    return this.http.post<GuestAccountResponse>(
+      `${environment.apiUrl}/auth/guest`,
       request
     );
-  }
 
-  updateLocation(
-    locationId: number,
-    request: StayLocationRequest
-  ): Observable<StayLocation> {
-
-    return this.http.put<StayLocation>(
-      `${this.apiUrl}/${locationId}`,
-      request
-    );
-  }
-
-  deleteLocation(
-    locationId: number
-  ): Observable<void> {
-
-    return this.http.delete<void>(
-      `${this.apiUrl}/${locationId}`
-    );
   }
 }
