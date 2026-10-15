@@ -873,3 +873,24 @@
 
   flex-wrap: wrap;
 }
+.toolbar-import-btn {
+  color: #2563eb;
+  border-color: #93c5fd;
+}
+
+.toolbar-import-btn:hover:not(:disabled) {
+  border-color: #60a5fa;
+  background: #eff6ff;
+}
+
+.toolbar-import-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.toolbar-import-btn mat-icon {
+  width: 21px;
+  height: 21px;
+  font-size: 21px;
+  line-height: 21px;
+}
