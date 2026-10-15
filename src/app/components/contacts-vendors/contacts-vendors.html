@@ -80,10 +80,15 @@
 
             </button>
 
-            <!-- <button type="button" class="toolbar-icon-btn toolbar-export-btn" (click)="exportContacts()">
+            <input #contactImportInput type="file" accept=".xlsx" hidden (change)="importContacts($event)" />
 
-                <img [src]="'icons/excel.png'" class="toolbar-export-icon" alt="Export" />
-            </button> -->
+            <button type="button" class="toolbar-icon-btn toolbar-import-btn" (click)="contactImportInput.click()">
+
+                <mat-icon>
+                    upload
+                </mat-icon>
+
+            </button>
 
             <button type="button" class="toolbar-icon-btn toolbar-export-btn" (click)="exportContacts()">
 
