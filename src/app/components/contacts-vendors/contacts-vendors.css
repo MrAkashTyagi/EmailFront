@@ -420,3 +420,11 @@ mat-paginator {
 
   white-space: nowrap;
 }
+
+.toolbar-import-btn {
+  border-color: #93c5fd;
+}
+
+.toolbar-import-btn:hover {
+  background: #eff6ff;
+}
