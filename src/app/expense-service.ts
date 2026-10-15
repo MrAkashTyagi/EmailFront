@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from './service/auth-service';
+import { environment } from '../environments/environment';
+
 
 
 @Injectable({
@@ -9,7 +11,8 @@ import { AuthService } from './service/auth-service';
 })
 export class ExpenseService {
 
-  private readonly baseUrl = 'http://localhost:8090';
+  private readonly baseUrl =
+    environment.apiUrl;
 
   private authService =
     inject(AuthService);
