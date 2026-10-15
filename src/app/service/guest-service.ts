@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Guest } from '../models/guest';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,8 @@ export class GuestService {
   private http =
     inject(HttpClient);
 
-  private readonly baseUrl = 'http://localhost:8090';
+  private readonly baseUrl =
+    environment.apiUrl;
 
   save(
     data: any
@@ -166,11 +168,11 @@ export class GuestService {
     );
   }
 
-getStayGuests(): Observable<Guest[]> {
+  getStayGuests(): Observable<Guest[]> {
 
-  return this.http.get<Guest[]>(
-    `${this.baseUrl}/guests/stay-guests`
-  );
-}
+    return this.http.get<Guest[]>(
+      `${this.baseUrl}/guests/stay-guests`
+    );
+  }
 
 }
