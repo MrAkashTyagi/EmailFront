@@ -11,6 +11,9 @@ import {
   isPlatformBrowser
 } from '@angular/common';
 
+import { environment } from '../../environments/environment';
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +29,8 @@ export class AuthService {
     signal<any>(null);
 
   private readonly baseUrl =
-    'http://localhost:8090/auth';
+    `${environment.apiUrl}/auth`;
+
 
   private isBrowser(): boolean {
 
