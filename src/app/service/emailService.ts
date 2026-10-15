@@ -3,23 +3,25 @@ import { Injectable } from '@angular/core';
 import test from 'node:test';
 import { Observable } from 'rxjs';
 import { text } from 'stream/consumers';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmailService {
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient) { }
 
-  private baseUrl:string = "http://localhost:8090"
+  private baseUrl: string =
+    environment.apiUrl;
 
-  sendEmail(data:any){
-    return this.http.post(`${this.baseUrl}/sendemail`,data)
+  sendEmail(data: any) {
+    return this.http.post(`${this.baseUrl}/sendemail`, data)
   }
 
 
-getData(): Observable<string> {
-    return this.http.get(`${this.baseUrl}/guests/getAllGuests`,{ responseType:'text' });
+  getData(): Observable<string> {
+    return this.http.get(`${this.baseUrl}/guests/getAllGuests`, { responseType: 'text' });
   }
 
 }
