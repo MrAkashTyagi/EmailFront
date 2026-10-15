@@ -20,6 +20,8 @@ import {
   StayRoomCapacity
 } from '../models/stay-allocation';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -29,7 +31,7 @@ export class StayAllocationService {
     inject(HttpClient);
 
   private readonly apiUrl =
-    'http://localhost:8090/stay-allocations';
+    `${environment.apiUrl}/stay-allocations`;
 
   allocateGuest(
     request: StayAllocationRequest
