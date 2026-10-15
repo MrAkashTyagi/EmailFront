@@ -56,6 +56,17 @@
 
       </button>
 
+      <input #taskImportInput type="file" accept=".xlsx" hidden (change)="importTasks($event)" />
+
+      <button type="button" class="toolbar-icon-btn toolbar-import-btn" aria-label="Import wedding tasks from Excel"
+        title="Import Excel" [disabled]="importLoading()" (click)="taskImportInput.click()">
+
+        <mat-icon>
+          {{ importLoading() ? 'hourglass_top' : 'upload_file' }}
+        </mat-icon>
+
+      </button>
+
       <button type="button" class="toolbar-icon-btn toolbar-export-btn" aria-label="Export wedding tasks to Excel"
         title="Export Excel" (click)="exportTasksToExcel()">
 
