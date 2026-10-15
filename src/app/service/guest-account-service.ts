@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface GuestAccountRequest {
 
@@ -36,8 +37,9 @@ export class GuestAccountService {
   ): Observable<GuestAccountResponse> {
 
     return this.http.post<GuestAccountResponse>(
-      'http://localhost:8090/auth/guest',
+      `${environment.apiUrl}/auth/guest`,
       request
     );
+
   }
 }
