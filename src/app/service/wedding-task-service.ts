@@ -155,4 +155,32 @@ export class WeddingTaskService {
       `${this.apiUrl}/${id}`
     );
   }
+  uploadTasksExcel(
+    file: File
+  ): Observable<any> {
+
+    const formData =
+      new FormData();
+
+    formData.append(
+      'file',
+      file
+    );
+
+    return this.http.post(
+      `${this.apiUrl}/dump/upload`,
+      formData
+    );
+  }
+
+  downloadTasksExcel(): Observable<Blob> {
+
+    return this.http.get(
+      `${this.apiUrl}/dump/download`,
+      {
+        responseType: 'blob'
+      }
+    );
+  }
+
 }
