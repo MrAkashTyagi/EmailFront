@@ -344,7 +344,7 @@ export class Dashboard implements OnInit {
                   '#f59e0b',
                   '#10b981',
                   '#3b82f6',
-                  '#e2e2e2',
+                  '#14b8a6',
                   '#d52fda',
                   '#ee0057'
                 ]
