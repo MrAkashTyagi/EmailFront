@@ -11,24 +11,26 @@ import {
   Observable
 } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 export interface WeddingSettings {
 
   id: number;
 
   partnerName:
-    string | null;
+  string | null;
 
   weddingDateTime:
-    string;
+  string;
 }
 
 export interface WeddingSettingsRequest {
 
   partnerName:
-    string | null;
+  string | null;
 
   weddingDateTime:
-    string;
+  string;
 }
 
 @Injectable({
@@ -40,7 +42,7 @@ export class WeddingSettingsService {
     inject(HttpClient);
 
   private readonly baseUrl =
-    'http://localhost:8090';
+    environment.apiUrl;
 
   getSettings():
     Observable<WeddingSettings> {
