@@ -35,7 +35,7 @@ import {
   MatDialogModule
 } from '@angular/material/dialog';
 
-
+import { finalize } from 'rxjs/operators';
 
 import {
   NotificationService
@@ -395,66 +395,90 @@ export class ContactsVendors
       );
   }
 
-exportContacts(): void {
+  exportContacts(): void {
 
-  const contacts =
-    this.contacts();
+    this.contactService
+      .downloadContactsExcel()
+      .subscribe({
 
-  const headers = [
-    'Name',
-    'Category',
-    'Contact Person',
-    'Mobile',
-    'Advance Paid',
-    'Pending Amount'
-  ];
+        next: (blob) => {
 
-  const rows =
-    contacts.map(contact => [
+          const url =
+            window.URL.createObjectURL(
+              blob
+            );
 
-      contact.name,
-      contact.category,
-      contact.contactPerson,
-      contact.mobileNumber,
-      contact.advancePaid,
-      contact.pendingAmount
+          const link =
+            document.createElement('a');
 
-    ]);
+          link.href = url;
 
-  const csvContent = [
+          link.download =
+            'wedding-contacts.xlsx';
 
-    headers.join(','),
+          link.click();
 
-    ...rows.map(row =>
-      row.join(',')
-    )
+          window.URL.revokeObjectURL(
+            url
+          );
+        },
 
-  ].join('\n');
+        error: (error) => {
 
-  const blob =
-    new Blob(
-      [csvContent],
-      {
-        type: 'text/csv;charset=utf-8;'
-      }
-    );
+          console.error(error);
 
-  const url =
-    window.URL.createObjectURL(blob);
+          this.notificationService.error(
+            'Export failed.'
+          );
+        }
+      });
+  }
 
-  const link =
-    document.createElement('a');
+  importContacts(
+    event: Event
+  ): void {
 
-  link.href = url;
+    const file =
+      (event.target as HTMLInputElement)
+        ?.files?.[0];
 
-  link.download =
-    'contacts-vendors.csv';
+    if (!file) {
+      return;
+    }
 
-  link.click();
+    this.loading.set(true);
 
-  window.URL.revokeObjectURL(url);
-}
+    this.contactService
+      .uploadContactsExcel(file)
+      .pipe(
+        finalize(() =>
+          this.loading.set(false)
+        )
+      )
+      .subscribe({
 
+        next: (response) => {
 
+          this.notificationService.success(
+            response?.message
+            || 'Contacts imported successfully.'
+          );
+
+          this.currentPage.set(0);
+
+          this.loadContacts();
+        },
+
+        error: (error) => {
+
+          console.error(error);
+
+          this.notificationService.error(
+            error?.error?.message
+            || 'Import failed.'
+          );
+        }
+      });
+  }
 
 }
