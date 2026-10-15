@@ -12,6 +12,7 @@ import {
   Observable
 } from 'rxjs';
 
+
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -95,6 +96,34 @@ export class WeddingContactService {
 
     return this.http.delete<void>(
       `${this.apiUrl}/${id}`
+    );
+  }
+
+  uploadContactsExcel(
+    file: File
+  ): Observable<any> {
+
+    const formData =
+      new FormData();
+
+    formData.append(
+      'file',
+      file
+    );
+
+    return this.http.post(
+      `${this.apiUrl}/dump/upload`,
+      formData
+    );
+  }
+
+  downloadContactsExcel(): Observable<Blob> {
+
+    return this.http.get(
+      `${this.apiUrl}/dump/download`,
+      {
+        responseType: 'blob'
+      }
     );
   }
 }
