@@ -1,45 +1,101 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  HttpClient,
+  HttpParams
+} from '@angular/common/http';
+
+import {
+  inject,
+  Injectable
+} from '@angular/core';
+
+import {
+  Observable
+} from 'rxjs';
+
+import {
+  StayLocation,
+  StayLocationRequest,
+  StayLocationType
+} from '../models/stay-location';
+
 import { environment } from '../../environments/environment';
-
-export interface GuestAccountRequest {
-
-  name: string;
-
-  email: string;
-
-  password: string;
-}
-
-export interface GuestAccountResponse {
-
-  id: number;
-
-  name: string;
-
-  email: string;
-
-  role: string;
-
-  ownerUserId: number;
-}
 
 @Injectable({
   providedIn: 'root'
 })
-export class GuestAccountService {
+export class StayLocationService {
 
-  private http = inject(HttpClient);
+  private readonly http =
+    inject(HttpClient);
 
-  createGuestAccount(
-    request: GuestAccountRequest
-  ): Observable<GuestAccountResponse> {
+  private readonly apiUrl =
+  `${environment.apiUrl}/stay-locations`;
 
-    return this.http.post<GuestAccountResponse>(
-      `${environment.apiUrl}/auth/guest`,
+  getLocations(
+    type?: StayLocationType | '',
+    activeOnly = false
+  ): Observable<StayLocation[]> {
+
+    let params =
+      new HttpParams()
+        .set(
+          'activeOnly',
+          activeOnly
+        );
+
+    if (type) {
+
+      params =
+        params.set(
+          'type',
+          type
+        );
+    }
+
+    return this.http.get<StayLocation[]>(
+      this.apiUrl,
+      {
+        params
+      }
+    );
+  }
+
+  getLocationById(
+    locationId: number
+  ): Observable<StayLocation> {
+
+    return this.http.get<StayLocation>(
+      `${this.apiUrl}/${locationId}`
+    );
+  }
+
+  createLocation(
+    request: StayLocationRequest
+  ): Observable<StayLocation> {
+
+    return this.http.post<StayLocation>(
+      this.apiUrl,
       request
     );
+  }
 
+  updateLocation(
+    locationId: number,
+    request: StayLocationRequest
+  ): Observable<StayLocation> {
+
+    return this.http.put<StayLocation>(
+      `${this.apiUrl}/${locationId}`,
+      request
+    );
+  }
+
+  deleteLocation(
+    locationId: number
+  ): Observable<void> {
+
+    return this.http.delete<void>(
+      `${this.apiUrl}/${locationId}`
+    );
   }
 }
