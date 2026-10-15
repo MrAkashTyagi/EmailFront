@@ -22,6 +22,8 @@ import {
   StayRoomRequest
 } from '../models/stay-room';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -31,10 +33,10 @@ export class StayRoomService {
     inject(HttpClient);
 
   private readonly roomApiUrl =
-    'http://localhost:8090/stay-rooms';
+    `${environment.apiUrl}/stay-rooms`;
 
   private readonly allocationApiUrl =
-    'http://localhost:8090/stay-allocations';
+    `${environment.apiUrl}/stay-allocations`;
 
   getRooms(
     locationId?: number,
