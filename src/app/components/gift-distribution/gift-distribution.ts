@@ -58,6 +58,7 @@ import {
 import { AddGiftDistributionDialog } from '../../add-gift-distribution-dialog/add-gift-distribution-dialog';
 import { NavbarActionService } from '../../service/navbar-action-service';
 import { NotificationService } from '../../service/notification-service';
+import { GiftDistributionService } from '../../service/gift-distribution.service';
 
 
 
@@ -127,7 +128,7 @@ export class GiftDistribution
     signal(0);
 
   private readonly giftService =
-    inject(GiftDistribution);
+    inject(GiftDistributionService);
 
   private readonly dialog =
     inject(MatDialog);
