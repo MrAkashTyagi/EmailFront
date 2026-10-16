@@ -17,7 +17,9 @@ import {
 import { ContactsVendors } from './components/contacts-vendors/contacts-vendors';
 import { WeddingTaskService } from './service/wedding-task-service';
 import { Tasks } from './components/tasks/tasks';
-import { GiftDistribution } from './service/gift-distribution.service.ts';
+import { GiftDistribution } from './components/gift-distribution/gift-distribution';
+
+
 
 export const routes: Routes = [
 
