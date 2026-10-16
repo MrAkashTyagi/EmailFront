@@ -1,0 +1,253 @@
+<div class="dialog-container">
+
+  <div class="dialog-header">
+
+    <div class="header-icon">
+      🎁
+    </div>
+
+    <div>
+
+      <h2 mat-dialog-title>
+
+        @if (isEditMode) {
+          Edit Gift Distribution
+        } @else {
+          Add Gift Distribution
+        }
+
+      </h2>
+
+      <p>
+
+        Enter gift details below
+
+      </p>
+
+    </div>
+
+  </div>
+
+  <mat-dialog-content>
+
+    <form
+      id="giftForm"
+      class="gift-form"
+      [formGroup]="giftForm"
+      (ngSubmit)="saveGift()">
+
+      <!-- Recipient Name -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Recipient Name
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="recipientName"
+          placeholder="Enter recipient name"
+        />
+
+        @if (
+          giftForm.get('recipientName')?.touched
+          &&
+          giftForm.get('recipientName')?.hasError('required')
+        ) {
+
+          <mat-error>
+            Recipient Name is required
+          </mat-error>
+
+        }
+
+      </mat-form-field>
+
+      <!-- Mobile -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Mobile Number
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="mobileNumber"
+          placeholder="Optional"
+        />
+
+      </mat-form-field>
+
+      <!-- Gift Type -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Gift Type
+        </mat-label>
+
+        <mat-select
+          formControlName="giftType">
+
+          @for (
+            type of giftTypes;
+            track type.value
+          ) {
+
+            <mat-option
+              [value]="type.value">
+
+              {{ type.label }}
+
+            </mat-option>
+
+          }
+
+        </mat-select>
+
+      </mat-form-field>
+
+      <!-- Amount -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Amount
+        </mat-label>
+
+        <span matTextPrefix>
+          ₹&nbsp;
+        </span>
+
+        <input
+          matInput
+          type="number"
+          min="0"
+          formControlName="amount"
+          placeholder="0"
+        />
+
+        @if (
+          giftForm.get('amount')?.touched
+          &&
+          giftForm.get('amount')?.hasError('required')
+        ) {
+
+          <mat-error>
+            Amount is required
+          </mat-error>
+
+        }
+
+      </mat-form-field>
+
+      <!-- Quantity -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Quantity
+        </mat-label>
+
+        <input
+          matInput
+          type="number"
+          min="1"
+          formControlName="quantity"
+        />
+
+      </mat-form-field>
+
+      <!-- Total -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Total Amount
+        </mat-label>
+
+        <span matTextPrefix>
+          ₹&nbsp;
+        </span>
+
+        <input
+          matInput
+          [value]="calculatedTotal"
+          readonly
+        />
+
+      </mat-form-field>
+
+      <!-- Notes -->
+
+      <mat-form-field
+        appearance="outline"
+        class="full-width">
+
+        <mat-label>
+          Notes
+        </mat-label>
+
+        <textarea
+          matInput
+          rows="3"
+          formControlName="notes"
+          placeholder="Additional notes">
+
+        </textarea>
+
+      </mat-form-field>
+
+      @if (saveError) {
+
+        <div class="error-message">
+
+          {{ saveError }}
+
+        </div>
+
+      }
+
+    </form>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+
+    <button
+      mat-button
+      type="button"
+      (click)="close()">
+
+      Cancel
+
+    </button>
+
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      form="giftForm"
+      [disabled]="giftForm.invalid || isSaving">
+
+      @if (isSaving) {
+
+        Saving...
+
+      } @else {
+
+        @if (isEditMode) {
+          Update Gift
+        } @else {
+          Save Gift
+        }
+
+      }
+
+    </button>
+
+  </mat-dialog-actions>
+
+</div>
