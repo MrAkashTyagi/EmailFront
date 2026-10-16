@@ -17,6 +17,7 @@ import {
 import { ContactsVendors } from './components/contacts-vendors/contacts-vendors';
 import { WeddingTaskService } from './service/wedding-task-service';
 import { Tasks } from './components/tasks/tasks';
+import { GiftDistribution } from './service/gift-distribution.service.ts';
 
 export const routes: Routes = [
 
@@ -97,6 +98,12 @@ export const routes: Routes = [
                 module =>
                     module.StayManagement
             )
+    },
+    {
+        path: 'gift-distribution',
+        component: GiftDistribution,
+        pathMatch: 'full',
+        canActivate: [authGuard, guestAccessGuard]
     }
 
 ];
