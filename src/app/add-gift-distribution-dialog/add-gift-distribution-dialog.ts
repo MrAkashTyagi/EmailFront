@@ -44,7 +44,7 @@ import {
 
 import {
   GiftDistributionService
-} from '../gift-distribution.service';
+} from '../service/gift-distribution.service';
 
 import {
   NotificationService
