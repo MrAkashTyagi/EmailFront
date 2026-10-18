@@ -17,7 +17,7 @@
 }
 
 .wall-hero {
-    max-width: 1600px;
+    max-width: 2200px;
     min-height: 180px;
     margin: 0 auto 24px;
     padding: 28px 36px;
@@ -83,11 +83,9 @@
 .hero-copy h1 {
 
     font-size:
-      clamp(
-        28px,
-        4vw,
-        48px
-      );
+        clamp(28px,
+            4vw,
+            48px);
 
     line-height: 1.05;
 }
@@ -144,7 +142,7 @@
 
 .upload-panel,
 .gallery-section {
-    max-width: 1500px;
+    max-width: 2200px;
     margin-inline: auto;
 }
 
@@ -758,6 +756,7 @@
         font-size: 40px;
     }
 }
+
 .wall-actions {
 
     display: flex;
@@ -768,6 +767,7 @@
 
     margin-bottom: 24px;
 }
+
 .download-all-btn {
 
     border: none;
@@ -789,11 +789,9 @@
     font-weight: 700;
 
     background:
-      linear-gradient(
-        135deg,
-        #f12cd3,
-        #06b6d4
-      );
+        linear-gradient(135deg,
+            #f12cd3,
+            #06b6d4);
 }
 
 .upload-date {
@@ -806,6 +804,7 @@
 
     font-size: 12px;
 }
+
 .wall-stats {
     display: flex;
     gap: 16px;
@@ -822,16 +821,15 @@
     border-radius: 16px;
 
     background:
-      rgba(
-        255,
-        255,
-        255,
-        0.15
-      );
+        rgba(255,
+            255,
+            255,
+            0.15);
 
     backdrop-filter:
-      blur(8px);
+        blur(8px);
 }
+
 .download-media-button {
 
     color: #ffffff;
@@ -841,6 +839,7 @@
 
     margin-right: 8px;
 }
+
 .wall-card-overlay {
 
     padding: 12px;
@@ -860,89 +859,130 @@
     opacity: 0;
 
     background:
-        linear-gradient(
-            180deg,
+        linear-gradient(180deg,
             rgba(15, 23, 42, 0.36),
-            transparent 42%
-        );
+            transparent 42%);
 
     transition:
         opacity 180ms ease;
 }
+
 .download-media-button:hover {
 
     background:
         rgb(247, 203, 60);
 }
+
 .uploaded-by-chip {
 
-  display: inline-flex;
+    display: inline-flex;
 
-  align-items: center;
+    align-items: center;
 
-  gap: 6px;
+    gap: 6px;
 
-  margin-top: 8px;
+    margin-top: 8px;
 
-  padding: 4px 10px;
+    padding: 4px 10px;
 
-  border-radius: 999px;
+    border-radius: 999px;
 
-  background: #f8fafc;
+    background: #f8fafc;
 
-  color: #475569;
+    color: #475569;
 
-  font-size: 12px;
+    font-size: 12px;
 
-  font-weight: 500;
+    font-weight: 500;
 
-  border: 1px solid #e2e8f0;
+    border: 1px solid #e2e8f0;
 }
 
 .uploaded-by-chip mat-icon {
 
-  width: 14px;
+    width: 14px;
 
-  height: 14px;
+    height: 14px;
 
-  font-size: 14px;
+    font-size: 14px;
 
-  color: #7c3aed;
+    color: #7c3aed;
 }
 
 .uploaded-by-chip strong {
 
-  color: #4338ca;
+    color: #4338ca;
 }
+
 .preview-uploader {
 
-  display: flex;
+    display: flex;
 
-  align-items: center;
+    align-items: center;
 
-  gap: 8px;
+    gap: 8px;
 
-  margin-top: 12px;
+    margin-top: 12px;
 
-  color: rgba(255,255,255,0.75);
+    color: rgba(255, 255, 255, 0.75);
 
-  font-size: 14px;
+    font-size: 14px;
 }
 
 .preview-uploader mat-icon {
 
-  color: #c4b5fd;
+    color: #c4b5fd;
 
-  width: 18px;
+    width: 18px;
 
-  height: 18px;
+    height: 18px;
 
-  font-size: 18px;
+    font-size: 18px;
 }
 
 .preview-uploader strong {
 
-  color: #ffffff;
+    color: #ffffff;
 
-  font-weight: 600;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+
+    .wall-card-overlay {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+
+        position: absolute;
+        top: 8px;
+        right: 8px;
+
+        z-index: 20;
+
+        display: flex !important;
+        gap: 6px;
+    }
+
+    .delete-media-button,
+    .download-media-button {
+        position: relative;
+        z-index: 21;
+
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+
+        pointer-events: auto !important;
+
+        width: 40px !important;
+        height: 40px !important;
+
+        min-width: 40px !important;
+    }
+
+    .wall-card-media img,
+    .wall-card-media video {
+        position: relative;
+        z-index: 1;
+    }
 }
