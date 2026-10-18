@@ -117,11 +117,6 @@ export class Tasks
 
         next: (response: any) => {
 
-          console.log(
-            'TASK RESPONSE',
-            response
-          );
-
           const tasks: WeddingTask[] =
             response?.content || [];
 
@@ -481,12 +476,6 @@ export class Tasks
         ) /
         (1000 * 60 * 60 * 24)
       );
-
-    console.log(
-      task.title,
-      task.dueDate,
-      diffDays
-    );
 
     if (diffDays < 0) {
       return 'OVERDUE';
