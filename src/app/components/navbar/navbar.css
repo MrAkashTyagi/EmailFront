@@ -14,8 +14,8 @@
   z-index: 1000;
 
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 16px;
 
   min-height: 64px;
   padding: 0 24px;
@@ -23,7 +23,8 @@
   background: #1e293b !important;
   color: #ffffff !important;
 
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18) !important;
+  box-shadow:
+    0 4px 14px rgba(15, 23, 42, 0.18) !important;
 }
 
 .navbar-spacer {
@@ -80,42 +81,15 @@
    RIGHT SECTION
    ========================================== */
 
-/* .navbar-right-section {
+.navbar-right-section {
   display: flex;
-  min-width: 0;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-} */
 
-.navbar-right-section {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+  flex: 0 0 auto;
 
-@media (max-width: 768px) {
-
-    .dashboard-nav-links {
-        display: none;
-    }
-
-    .user-name {
-        display: none;
-    }
-
-    .brand-count {
-        display: none;
-    }
-
-}
-@media (max-width: 768px) {
-
-    .logout-icon-btn {
-        display: none;
-    }
-
+  min-width: max-content;
 }
 
 /* ==========================================
@@ -123,16 +97,42 @@
    ========================================== */
 
 .dashboard-nav-links {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  flex: 1 1 0;
+  min-width: 0;
+
+  padding: 0 8px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  white-space: nowrap;
+
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.dashboard-nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.dashboard-nav-links::-webkit-scrollbar {
+  display: none;
 }
 
 .dashboard-nav-link {
   display: inline-flex;
+
+  flex: 0 0 auto;
+
   min-height: 40px;
+
   align-items: center;
   justify-content: center;
   gap: 7px;
@@ -150,13 +150,6 @@
   line-height: 1;
   text-decoration: none;
   white-space: nowrap;
-
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
 .dashboard-nav-link:hover {
@@ -258,7 +251,7 @@
 
 .navbar-add-button {
   min-height: 38px !important;
-  padding: 0 8px !important;
+  padding: 0 10px !important;
 
   border: 1px solid #cbd5e1 !important;
   border-radius: 8px !important;
@@ -271,7 +264,6 @@
 
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
 }
-
 
 .navbar-add-button:hover {
   border-color: #a78bfa !important;
@@ -288,6 +280,7 @@
   font-size: 18px !important;
   line-height: 18px !important;
 }
+
 /* ==========================================
    EXPORT BUTTON
    ========================================== */
@@ -410,8 +403,14 @@
    ========================================== */
 
 @media (max-width: 980px) {
+
   .main-navbar {
     padding: 0 16px;
+    gap: 10px;
+  }
+
+  .dashboard-nav-links {
+    justify-content: flex-start;
   }
 
   .dashboard-nav-link span {
@@ -419,7 +418,9 @@
   }
 
   .dashboard-nav-link {
+    flex: 0 0 40px;
     width: 40px;
+    min-width: 40px;
     padding: 0;
   }
 
@@ -429,6 +430,21 @@
 }
 
 @media (max-width: 720px) {
+
+  .main-navbar {
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  .navbar-brand-section {
+    min-width: auto;
+    gap: 4px;
+  }
+
+  .brand-content {
+    display: none;
+  }
+
   .brand-count {
     display: none;
   }
@@ -452,12 +468,66 @@
   }
 
   .dashboard-nav-links {
-    gap: 5px;
+  flex: 1 1 0;
+  min-width: 0;
+
+  justify-content: flex-start;
+
+  gap: 6px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  padding: 0 4px;
+
+  scroll-snap-type: x proximity;
+
+  scrollbar-width: none;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.dashboard-nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.dashboard-nav-link {
+  flex: 0 0 36px;
+
+  width: 36px;
+  min-width: 36px;
+  min-height: 36px;
+
+  padding: 0;
+
+  scroll-snap-align: start;
+}
+
+  .dashboard-nav-link span {
+    display: none;
   }
 
-  .dashboard-nav-link {
-    width: 36px;
-    min-height: 36px;
+  .navbar-right-section {
+    flex: 0 0 auto;
+
+    gap: 2px;
+  }
+
+  .logged-user {
+    margin: 0 2px;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .user-avatar {
+    width: 22px;
+    height: 22px;
+  }
+
+  .logout-icon-btn {
+    margin-left: 0 !important;
   }
 }
 
