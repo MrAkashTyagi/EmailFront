@@ -631,7 +631,6 @@ export class GuestComponent implements OnInit, OnDestroy {
 
 
   inviteGuest(guest: any): void {
-    console.log("Clicked!!");
     const mobile =
       guest.whatsapp_Number
       || guest.phoneNumber;
