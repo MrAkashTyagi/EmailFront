@@ -186,9 +186,6 @@ export class Navbar {
       .subscribe({
 
         next: (response) => {
-
-          console.log(response);
-
           alert(
             'Guest dump imported successfully'
           );
@@ -283,19 +280,19 @@ export class Navbar {
 
   isGuest(): boolean {
 
-  console.log(
-    'ROLE =>',
-    this.authService.currentUser()
-  );
+    console.log(
+      'ROLE =>',
+      this.authService.currentUser()
+    );
 
-  return this.authService.isGuest();
-}
+    return this.authService.isGuest();
+  }
 
-openWeddingSettings(): void {
+  openWeddingSettings(): void {
 
-  this.navBarService
+    this.navBarService
       .triggerWeddingSettingsClick();
 
-}
+  }
 
 }
