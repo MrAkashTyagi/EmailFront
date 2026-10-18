@@ -126,11 +126,6 @@ export class ContactsVendors
 
         next: response => {
 
-          console.log(
-            'CONTACT RESPONSE',
-            response
-          );
-
           this.contacts.set(
             response?.content
             || []
