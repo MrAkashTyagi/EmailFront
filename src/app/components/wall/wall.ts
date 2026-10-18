@@ -203,53 +203,53 @@ export class Wall
       });
   }
 
-private loadMediaContent(
-  mediaList: WallMedia[]
-): void {
+  private loadMediaContent(
+    mediaList: WallMedia[]
+  ): void {
 
-  this.revokeWallDisplayUrls();
+    this.revokeWallDisplayUrls();
 
-  if (mediaList.length === 0) {
+    if (mediaList.length === 0) {
 
-    this.wallMedia.set([]);
+      this.wallMedia.set([]);
 
-    this.loading.set(false);
+      this.loading.set(false);
 
-    return;
-  }
+      return;
+    }
 
-  const layouts = [
-    'hero',
-    'tall',
-    'wide',
-    'square'
-  ] as const;
+    const layouts = [
+      'hero',
+      'tall',
+      'wide',
+      'square'
+    ] as const;
 
-  const displayMedia:
-    DisplayWallMedia[] =
-    mediaList.map(media => ({
+    const displayMedia:
+      DisplayWallMedia[] =
+      mediaList.map(media => ({
 
-      ...media,
+        ...media,
 
-      displayUrl:
-        media.mediaUrl,
+        displayUrl:
+          media.mediaUrl,
 
-      layoutClass:
-        layouts[
+        layoutClass:
+          layouts[
           Math.floor(
             Math.random() *
             layouts.length
           )
-        ]
-    }));
+          ]
+      }));
 
-  this.wallMedia.set(
-    displayMedia
-  );
+    this.wallMedia.set(
+      displayMedia
+    );
 
-  this.loading.set(false);
-}
-  
+    this.loading.set(false);
+  }
+
   // private loadMediaContent(
   //   mediaList: WallMedia[]
   // ): void {
@@ -594,10 +594,6 @@ private loadMediaContent(
       .subscribe({
         next: () => {
 
-          URL.revokeObjectURL(
-            media.displayUrl
-          );
-
           this.wallMedia.update(
             items =>
               items.filter(
@@ -679,82 +675,185 @@ private loadMediaContent(
       });
   }
 
-  // private revokeWallDisplayUrls():
-  //   void {
+  private revokeWallDisplayUrls():
+    void {
 
-  //   this.wallMedia()
-  //     .forEach(media => {
+    this.wallMedia.set([]);
 
-  //       URL.revokeObjectURL(
-  //         media.displayUrl
-  //       );
-  //     });
-  // }
+  }
 
-private revokeWallDisplayUrls():
-  void {
-
-  this.wallMedia.set([]);
-
-}
-
-  downloadMedia(
+  async downloadMedia(
     media: DisplayWallMedia,
     event: Event
-  ): void {
+  ): Promise<void> {
 
     event.stopPropagation();
 
-    const link =
-      document.createElement('a');
+    try {
 
-    link.href =
-      media.displayUrl;
+      const response =
+        await fetch(
+          media.displayUrl
+        );
 
-    link.download =
-      media.originalFileName;
+      if (!response.ok) {
 
-    link.click();
-  }
-  downloadAllMedia(): void {
+        throw new Error(
+          `Media download failed with status: ${response.status}`
+        );
+      }
 
-    this.wallService
-      .downloadAllMedia()
-      .subscribe({
+      const blob =
+        await response.blob();
 
-        next: blob => {
+      const objectUrl =
+        URL.createObjectURL(
+          blob
+        );
 
-          const url =
-            URL.createObjectURL(
-              blob
-            );
+      const link =
+        document.createElement(
+          'a'
+        );
 
-          const link =
-            document.createElement(
-              'a'
-            );
+      link.href =
+        objectUrl;
 
-          link.href =
-            url;
+      link.download =
+        media.originalFileName
+        || (
+          media.mediaType === 'VIDEO'
+            ? 'wedding-video'
+            : 'wedding-image'
+        );
 
-          link.download =
-            'WeddingWall.zip';
+      link.style.display =
+        'none';
 
-          link.click();
+      document.body.appendChild(
+        link
+      );
+
+      link.click();
+
+      link.remove();
+
+      setTimeout(
+        () => {
 
           URL.revokeObjectURL(
-            url
+            objectUrl
           );
-        },
 
-        error: () => {
+        },
+        1000
+      );
+
+    } catch (error) {
+
+      console.error(
+        'Media download failed:',
+        error
+      );
+
+      this.notificationService.error(
+        'Media download nahi ho paya.'
+      );
+    }
+  }
+
+
+  downloadAllMedia(): void {
+
+  console.log(
+    'DOWNLOAD ALL CLICKED'
+  );
+
+  this.wallService
+    .downloadAllMedia()
+    .pipe(
+      takeUntilDestroyed(
+        this.destroyRef
+      )
+    )
+    .subscribe({
+
+      next: (blob: Blob) => {
+
+        console.log(
+          'DOWNLOAD ALL RESPONSE:',
+          blob,
+          blob.size,
+          blob.type
+        );
+
+        if (
+          !blob
+          || blob.size === 0
+        ) {
 
           this.notificationService.error(
-            'Download failed.'
+            'Downloaded ZIP is empty.'
           );
+
+          return;
         }
-      });
-  }
+
+        const url =
+          URL.createObjectURL(
+            blob
+          );
+
+        const link =
+          document.createElement(
+            'a'
+          );
+
+        link.href =
+          url;
+
+        link.download =
+          'WeddingWall.zip';
+
+        link.style.display =
+          'none';
+
+        document.body.appendChild(
+          link
+        );
+
+        link.click();
+
+        link.remove();
+
+        setTimeout(
+          () => {
+
+            URL.revokeObjectURL(
+              url
+            );
+
+          },
+          2000
+        );
+      },
+
+      error: (error: any) => {
+
+        console.error(
+          'DOWNLOAD ALL FAILED:',
+          error
+        );
+
+        this.notificationService.error(
+          error?.error?.message
+          || error?.error?.detail
+          || 'Download failed.'
+        );
+      }
+
+    });
+}
 
   readonly imageCount =
     computed(
