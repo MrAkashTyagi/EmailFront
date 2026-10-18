@@ -53,7 +53,7 @@ export class AddGuestComponent implements OnInit {
     email: '',
     guestCategory: '',
     gift: '',
-    cash: '',
+    cash: '0',
     stay: '',
     invitationSent: false,
     family: {
