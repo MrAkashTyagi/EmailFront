@@ -7,7 +7,7 @@ import { MatAnchor, MatButtonModule } from "@angular/material/button";
 import { JsonPipe, NgIf } from '@angular/common';
 import { EmailService } from '../../service/emailService';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs/operators';
 import { response } from 'express';
 import { error } from 'console';
@@ -25,8 +25,8 @@ import { error } from 'console';
     JsonPipe,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    NgIf,    
-],
+    NgIf,
+  ],
   templateUrl: './email.html',
   styleUrl: './email.css',
 })
@@ -34,20 +34,8 @@ export class Email {
 
   constructor(private email: EmailService, private snack: MatSnackBar, private cdr: ChangeDetectorRef, private zone: NgZone) { }
 
-  //   ngOnInit(): void {
-  //   // App ke load hote hi yeh automatic trigger ho jayega
-  //   this.email.getData().subscribe({
-  //     next: (response: any) => {
-  //       console.log('Data loaded successfully:', response);
-  //     },
-  //     error: (error: any) => {
-  //       console.error('Error loading data:', error);
-  //     }
-  //   });
-  // }
 
-
-  flag:boolean= false;
+  flag: boolean = false;
 
   data = {
     "to": "",
@@ -56,30 +44,26 @@ export class Email {
   }
 
   doSubmitForm() {
-    console.log("try to submit form !!");
-    console.log("data", this.data);
 
     if (this.data.to == '' || this.data.subject == '' || this.data.message == '') {
-      console.log("inside if")
       this.snack.open("Fields can not be empty !!", "OK");
       return;
     }
 
-    this.flag=true;
-      this.email.sendEmail(this.data).subscribe(
+    this.flag = true;
+    this.email.sendEmail(this.data).subscribe(
       response => {
-        
-        this.snack.open("Send success...","OK")
-        console.log(response);
-        window.location.reload(); 
+
+        this.snack.open("Send success...", "OK")
+        window.location.reload();
 
         setTimeout(() => {
           this.flag = false;
         }, 100);
       },
       error => {
-        
-        this.snack.open("Error","OK");
+
+        this.snack.open("Error", "OK");
         console.log(error);
         setTimeout(() => {
           this.flag = false;
@@ -88,14 +72,6 @@ export class Email {
       }
 
     )
-
-    // this.email.getData().subscribe(
-    //   response =>{
-    //     console.log(response)
-    //   },error => {
-    //     console.log(error)
-    //   } 
-    // )
 
   }
 }
