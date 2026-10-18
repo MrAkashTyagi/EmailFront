@@ -247,10 +247,8 @@ export class WeddingCountdown
         }
       );
   }
-  
-  private startTimer(): void {
 
-    console.log('TIMER START');
+  private startTimer(): void {
 
     this.stopTimer();
 
