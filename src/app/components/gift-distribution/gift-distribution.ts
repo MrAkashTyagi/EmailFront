@@ -199,6 +199,18 @@ export class GiftDistribution
 
       });
 
+    this.navbarService.exportClick$
+      .pipe(
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
+      .subscribe(() => {
+
+        this.exportGifts();
+
+      });
+
   }
 
   onSearch(
@@ -427,6 +439,78 @@ export class GiftDistribution
 
     this.fetchGiftDistributions();
 
+  }
+
+  exportGifts(): void {
+
+    this.giftService
+      .exportGiftDistributions(
+        this.searchQuery(),
+        this.selectedGiftType(),
+        this.minAmount(),
+        this.maxAmount()
+      )
+      .pipe(
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
+      .subscribe({
+
+        next: (blob: Blob) => {
+
+          const url =
+            URL.createObjectURL(
+              blob
+            );
+
+          const link =
+            document.createElement(
+              'a'
+            );
+
+          link.href =
+            url;
+
+          link.download =
+            'Gift-Distribution.xlsx';
+
+          link.style.display =
+            'none';
+
+          document.body.appendChild(
+            link
+          );
+
+          link.click();
+
+          link.remove();
+
+          setTimeout(
+            () => {
+
+              URL.revokeObjectURL(
+                url
+              );
+
+            },
+            1000
+          );
+        },
+
+        error: (error: any) => {
+
+          console.error(
+            'Gift distribution export failed:',
+            error
+          );
+
+          this.notificationService.error(
+            'Gift distribution export nahi ho paya.'
+          );
+        }
+
+      });
   }
 
 }
