@@ -19,6 +19,39 @@
 
     </div>
 
+
+    @if (envelopeSummary().items.length > 0) {
+
+    <div class="toolbar-envelope-summary">
+
+      @for (
+      item of envelopeSummary().items;
+      track item.amount
+      ) {
+
+      <span class="toolbar-envelope-chip">
+
+        ₹{{ item.amount }}
+
+        <strong>
+          × {{ item.count }}
+        </strong>
+
+      </span>
+
+      }
+
+      <span class="toolbar-envelope-total">
+
+        📦 {{ envelopeSummary().totalEnvelopes }}
+
+      </span>
+
+    </div>
+
+    }
+
+
     <div class="page-toolbar-right">
 
       <button mat-stroked-button type="button" class="toolbar-filter-btn" (click)="filterPanel.toggle()">
@@ -199,6 +232,7 @@
     </div>
 
   </div>
+
 
   <!-- Table -->
 
