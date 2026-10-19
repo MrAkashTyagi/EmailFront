@@ -139,3 +139,47 @@ table {
   }
 
 }
+.toolbar-export-btn {
+
+  width: 44px;
+  height: 44px;
+
+  min-width: 44px;
+
+  padding: 0;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: all .2s ease;
+}
+
+.toolbar-export-btn:hover {
+
+  border-color: #86efac;
+
+  background: #f0fdf4;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 12px rgba(15, 23, 42, 0.14);
+}
+
+.toolbar-export-icon {
+
+  width: 26px;
+  height: 26px;
+
+  object-fit: contain;
+
+  display: block;
+}
