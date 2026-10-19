@@ -114,4 +114,54 @@ export class GiftDistributionService {
     );
   }
 
+  exportGiftDistributions(
+    search: string,
+    giftType: string,
+    minAmount: string,
+    maxAmount: string
+  ): Observable<Blob> {
+
+    let params =
+      new HttpParams()
+        .set(
+          'search',
+          search.trim()
+        );
+
+    if (giftType) {
+
+      params =
+        params.set(
+          'giftType',
+          giftType
+        );
+    }
+
+    if (minAmount) {
+
+      params =
+        params.set(
+          'minAmount',
+          minAmount
+        );
+    }
+
+    if (maxAmount) {
+
+      params =
+        params.set(
+          'maxAmount',
+          maxAmount
+        );
+    }
+
+    return this.http.get(
+      `${this.baseUrl}/api/gift-distributions/export`,
+      {
+        params,
+        responseType: 'blob'
+      }
+    );
+  }
+
 }
