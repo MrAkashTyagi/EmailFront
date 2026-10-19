@@ -1,516 +1,332 @@
-import {
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal
-} from '@angular/core';
+.gift-page {
+  padding: 16px;
+}
 
-import { CommonModule } from '@angular/common';
+.page-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
 
-import {
-  MatExpansionPanel,
-  MatExpansionPanelHeader,
-  MatExpansionPanelTitle
-} from '@angular/material/expansion';
+.page-toolbar-left {
+  flex: 1;
+}
 
-import {
-  MatPaginatorModule,
-  PageEvent
-} from '@angular/material/paginator';
+.page-toolbar-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
-import {
-  MatFormFieldModule
-} from '@angular/material/form-field';
+.search-wrapper {
+  position: relative;
+  max-width: 420px;
+}
 
-import {
-  MatSelectModule
-} from '@angular/material/select';
+.search-input {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  padding-left: 42px;
+  padding-right: 12px;
+  font-size: 14px;
+}
 
-import {
-  MatTableModule
-} from '@angular/material/table';
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  color: gray;
+}
 
-import {
-  MatButtonModule
-} from '@angular/material/button';
+.summary-cards {
+  display: grid;
+  gap: 16px;
+  margin: 20px 0;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(220px, 1fr)
+  );
+}
 
-import {
-  MatDialog,
-  MatDialogModule
-} from '@angular/material/dialog';
+.summary-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow:
+    0 2px 10px rgba(0,0,0,.08);
+}
 
-import {
-  MatInputModule
-} from '@angular/material/input';
+.summary-card .value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #4f46e5;
+}
 
-import {
-  MatIconModule
-} from '@angular/material/icon';
+.summary-card .label {
+  margin-top: 4px;
+  color: #6b7280;
+}
 
-import {
-  takeUntilDestroyed
-} from '@angular/core/rxjs-interop';
+.filters-card {
+  padding: 16px;
+}
 
-import {
-  toObservable
-} from '@angular/core/rxjs-interop';
-import { AddGiftDistributionDialog } from '../../add-gift-distribution-dialog/add-gift-distribution-dialog';
-import { NavbarActionService } from '../../service/navbar-action-service';
-import { NotificationService } from '../../service/notification-service';
-import { GiftDistributionService } from '../../service/gift-distribution.service';
-
-
-
-@Component({
-  selector: 'app-gift-distribution',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
-    MatExpansionPanelTitle,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatTableModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatInputModule,
-    MatIconModule
-  ],
-  templateUrl: './gift-distribution.html',
-  styleUrl: './gift-distribution.css'
-})
-export class GiftDistribution
-  implements OnInit {
-
-  readonly displayedColumns = [
-    'recipientName',
-    'mobileNumber',
-    'giftType',
-    'amount',
-    'quantity',
-    'totalAmount',
-    'notes',
-    'actions'
-  ];
-
-  readonly gifts =
-    signal<any[]>([]);
-
-  readonly summary =
-    signal<any>({
-      totalRecords: 0,
-      totalQuantity: 0,
-      totalAmount: 0
-    });
-
-  readonly searchQuery =
-    signal('');
-
-  readonly selectedGiftType =
-    signal('');
-
-  readonly minAmount =
-    signal('');
-
-  readonly maxAmount =
-    signal('');
-
-  readonly currentPage =
-    signal(0);
-
-  readonly pageSize =
-    signal(10);
-
-  readonly totalElements =
-    signal(0);
-
-  private readonly giftService =
-    inject(GiftDistributionService);
-
-  private readonly dialog =
-    inject(MatDialog);
-
-  private readonly destroyRef =
-    inject(DestroyRef);
-
-  private readonly navbarService =
-    inject(NavbarActionService);
-
-  private readonly notificationService =
-    inject(NotificationService);
-
-  constructor() {
-
-    toObservable(
-      this.navbarService.searchQuery
-    )
-      .pipe(
-        takeUntilDestroyed(
-          this.destroyRef
-        )
-      )
-      .subscribe(search => {
-
-        const value =
-          search?.trim() || '';
-
-        if (
-          value ===
-          this.searchQuery()
-        ) {
-          return;
-        }
-
-        this.searchQuery.set(
-          value
-        );
-
-        this.currentPage.set(
-          0
-        );
-
-        this.fetchGiftDistributions();
-      });
-
-  }
-
-  ngOnInit(): void {
-
-    this.loadSummary();
-
-    this.fetchGiftDistributions();
-
-    this.navbarService.countLabel.set(
-      'Total Gifts'
+.filter-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(220px,1fr)
     );
+}
 
-    this.navbarService.addClick$
-      .pipe(
-        takeUntilDestroyed(
-          this.destroyRef
-        )
-      )
-      .subscribe(() => {
+.filter-actions {
+  display: flex;
+  align-items: center;
+}
 
-        this.openAddDialog();
+.table-section {
+  overflow: auto;
+  border-radius: 16px;
+  background: white;
+}
 
-      });
+table {
+  width: 100%;
+}
 
-    this.navbarService.exportClick$
-      .pipe(
-        takeUntilDestroyed(
-          this.destroyRef
-        )
-      )
-      .subscribe(() => {
+.mat-mdc-header-row {
+  background: #f8fafc;
+}
 
-        this.exportGifts();
+.mat-mdc-header-cell {
+  font-weight: 600;
+}
 
-      });
+.mat-column-actions {
+  width: 120px;
+}
 
+.toolbar-add-btn {
+  background: #4f46e5 !important;
+  color: white !important;
+}
+
+.toolbar-filter-btn {
+  border-radius: 8px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 32px;
+  color: #777;
+}
+
+@media (max-width: 768px) {
+
+  .page-toolbar {
+    flex-direction: column;
   }
 
-  onSearch(
-    event: Event
-  ): void {
-
-    const value =
-      (event.target as HTMLInputElement)
-        .value;
-
-    this.navbarService
-      .searchQuery
-      .set(value);
-
+  .page-toolbar-right {
+    width: 100%;
+    justify-content: space-between;
   }
 
-  openAddDialog(): void {
+}
+.toolbar-export-btn {
 
-    const dialogRef =
-      this.dialog.open(
-        AddGiftDistributionDialog,
-        {
-          width: '700px',
-          maxWidth: '95vw',
-          disableClose: true
-        }
-      );
+  width: 44px;
+  height: 44px;
 
-    dialogRef
-      .afterClosed()
-      .subscribe(result => {
+  min-width: 44px;
 
-        if (!result) {
-          return;
-        }
+  padding: 0;
 
-        this.fetchGiftDistributions();
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
 
-        this.loadSummary();
+  background: #ffffff;
 
-      });
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  }
+  cursor: pointer;
 
-  editGift(
-    gift: any
-  ): void {
+  transition: all .2s ease;
+}
 
-    const dialogRef =
-      this.dialog.open(
-        AddGiftDistributionDialog,
-        {
-          width: '700px',
-          maxWidth: '95vw',
-          data: gift
-        }
-      );
+.toolbar-export-btn:hover {
 
-    dialogRef
-      .afterClosed()
-      .subscribe(result => {
+  border-color: #86efac;
 
-        if (!result) {
-          return;
-        }
+  background: #f0fdf4;
 
-        this.fetchGiftDistributions();
+  transform: translateY(-1px);
 
-        this.loadSummary();
+  box-shadow:
+    0 5px 12px rgba(15, 23, 42, 0.14);
+}
 
-      });
+.toolbar-export-icon {
 
-  }
+  width: 26px;
+  height: 26px;
 
-  deleteGift(
-    gift: any
-  ): void {
+  object-fit: contain;
 
-    const confirmed =
-      confirm(
-        `Delete gift for ${gift.recipientName}?`
-      );
+  display: block;
+}
+.envelope-summary-bar {
 
-    if (!confirmed) {
-      return;
-    }
+  margin-top: 18px;
 
-    this.giftService
-      .deleteGiftDistribution(
-        gift.id
-      )
-      .subscribe({
+  padding: 18px;
 
-        next: () => {
+  border-radius: 18px;
 
-          this.notificationService.success(
-            'Gift deleted successfully.'
-          );
+  background: linear-gradient(
+    135deg,
+    #fff7ed,
+    #fffbeb
+  );
 
-          this.fetchGiftDistributions();
+  border: 1px solid #fed7aa;
+}
 
-          this.loadSummary();
+.envelope-summary-title {
 
-        },
+  display: block;
 
-        error: () => {
+  margin-bottom: 12px;
 
-          this.notificationService.error(
-            'Unable to delete gift.'
-          );
+  color: #9a3412;
 
-        }
+  font-weight: 700;
+}
 
-      });
+.envelope-summary-list {
 
-  }
+  display: flex;
 
-  loadSummary(): void {
+  flex-wrap: wrap;
 
-    this.giftService
-      .getGiftDistributionSummary()
-      .subscribe({
+  gap: 10px;
 
-        next: response => {
+  align-items: center;
+}
 
-          this.summary.set(
-            response
-          );
+.envelope-chip {
 
-        }
+  padding: 8px 14px;
 
-      });
+  border-radius: 999px;
 
-  }
+  background: #ffffff;
 
-  fetchGiftDistributions(): void {
+  border: 1px solid #fdba74;
 
-    this.giftService
-      .getGiftDistributionsPaged(
-        this.currentPage(),
-        this.pageSize(),
-        this.searchQuery(),
-        this.selectedGiftType(),
-        this.minAmount(),
-        this.maxAmount()
-      )
-      .subscribe({
+  font-weight: 600;
 
-        next: response => {
+  color: #9a3412;
+}
 
-          this.gifts.set(
-            response.content || []
-          );
+.envelope-chip-count {
 
-          this.totalElements.set(
-            response.totalElements || 0
-          );
+  margin-left: 6px;
 
-          this.navbarService
-            .totalGuestCount
-            .set(
-              response.totalElements || 0
-            );
+  font-weight: 700;
+}
 
-        },
+.envelope-final-section {
 
-        error: error => {
+  display: flex;
 
-          console.error(
-            error
-          );
+  gap: 10px;
 
-        }
+  margin-left: auto;
+}
 
-      });
+.envelope-total-chip {
 
-  }
+  padding: 8px 14px;
 
-  onPageChange(
-    event: PageEvent
-  ): void {
+  border-radius: 999px;
 
-    this.currentPage.set(
-      event.pageIndex
-    );
+  background: #ea580c;
 
-    this.pageSize.set(
-      event.pageSize
-    );
+  color: white;
 
-    this.fetchGiftDistributions();
+  font-weight: 700;
+}
 
-  }
+.envelope-amount-chip {
 
-  onGiftTypeChange(
-    value: string
-  ): void {
+  padding: 8px 14px;
 
-    this.selectedGiftType.set(
-      value
-    );
+  border-radius: 999px;
 
-    this.currentPage.set(
-      0
-    );
+  background: #059669;
 
-    this.fetchGiftDistributions();
+  color: white;
 
-  }
+  font-weight: 700;
+}
+.toolbar-envelope-summary {
 
-  clearFilters(): void {
+  display: flex;
 
-    this.selectedGiftType.set('');
+  flex-wrap: wrap;
 
-    this.minAmount.set('');
+  align-items: center;
 
-    this.maxAmount.set('');
+  gap: 8px;
 
-    this.searchQuery.set('');
+  flex: 1;
 
-    this.navbarService
-      .searchQuery
-      .set('');
+  justify-content: center;
 
-    this.currentPage.set(0);
+  min-width: 200px;
+}
 
-    this.fetchGiftDistributions();
+.toolbar-envelope-chip {
 
-  }
+  padding: 6px 12px;
 
-  exportGifts(): void {
+  border-radius: 999px;
 
-    this.giftService
-      .exportGiftDistributions(
-        this.searchQuery(),
-        this.selectedGiftType(),
-        this.minAmount(),
-        this.maxAmount()
-      )
-      .pipe(
-        takeUntilDestroyed(
-          this.destroyRef
-        )
-      )
-      .subscribe({
+  background: #fff7ed;
 
-        next: (blob: Blob) => {
+  border: 1px solid #fdba74;
 
-          const url =
-            URL.createObjectURL(
-              blob
-            );
+  color: #9a3412;
 
-          const link =
-            document.createElement(
-              'a'
-            );
+  font-size: 13px;
 
-          link.href =
-            url;
+  font-weight: 600;
 
-          link.download =
-            'Gift-Distribution.xlsx';
+  white-space: nowrap;
+}
 
-          link.style.display =
-            'none';
+.toolbar-envelope-total {
 
-          document.body.appendChild(
-            link
-          );
+  padding: 7px 14px;
 
-          link.click();
+  border-radius: 999px;
 
-          link.remove();
+  background: #ea580c;
 
-          setTimeout(
-            () => {
+  color: white;
 
-              URL.revokeObjectURL(
-                url
-              );
+  font-size: 13px;
 
-            },
-            1000
-          );
-        },
+  font-weight: 700;
 
-        error: (error: any) => {
-
-          console.error(
-            'Gift distribution export failed:',
-            error
-          );
-
-          this.notificationService.error(
-            'Gift distribution export nahi ho paya.'
-          );
-        }
-
-      });
-  }
-
+  white-space: nowrap;
 }
