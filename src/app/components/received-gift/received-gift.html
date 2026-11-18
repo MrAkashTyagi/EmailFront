@@ -1,0 +1,635 @@
+<div class="received-gift-page">
+
+  <!-- Toolbar -->
+
+  <section class="page-toolbar">
+
+    <div class="page-toolbar-left">
+
+      <div class="search-wrapper">
+
+        <mat-icon class="search-icon">
+          search
+        </mat-icon>
+
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search Received Gifts..."
+          [value]="searchQuery()"
+          (input)="onSearch($event)"
+          aria-label="Search received gifts"
+        />
+
+      </div>
+
+    </div>
+
+    <div class="page-toolbar-right">
+
+      <button
+        mat-stroked-button
+        type="button"
+        class="toolbar-filter-btn"
+        (click)="filterPanel.toggle()">
+
+        <mat-icon>
+          tune
+        </mat-icon>
+
+        Filters
+
+      </button>
+
+      <button
+        mat-flat-button
+        type="button"
+        class="toolbar-add-btn"
+        (click)="openAddDialog()">
+
+        <mat-icon>
+          add
+        </mat-icon>
+
+        Add Received Gift
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- Filters -->
+
+  <mat-expansion-panel
+    #filterPanel
+    hideToggle>
+
+    <section class="filters-card">
+
+      <div class="filter-grid">
+
+        <!-- Gift Type -->
+
+        <mat-form-field
+          appearance="outline"
+          class="filter-field">
+
+          <mat-label>
+            Gift Type
+          </mat-label>
+
+          <mat-select
+            [value]="selectedGiftType()"
+            (selectionChange)="
+              onGiftTypeChange(
+                $event.value
+              )
+            ">
+
+            <mat-option value="">
+              All Gift Types
+            </mat-option>
+
+            <mat-option value="CASH">
+              Cash
+            </mat-option>
+
+            <mat-option value="JEWELLERY">
+              Jewellery
+            </mat-option>
+
+            <mat-option value="APPLIANCE">
+              Appliance
+            </mat-option>
+
+            <mat-option value="CLOTHING">
+              Clothing
+            </mat-option>
+
+            <mat-option value="HOME_ITEM">
+              Home Item
+            </mat-option>
+
+            <mat-option value="ELECTRONICS">
+              Electronics
+            </mat-option>
+
+            <mat-option value="DECORATION">
+              Decoration
+            </mat-option>
+
+            <mat-option value="OTHER">
+              Other
+            </mat-option>
+
+          </mat-select>
+
+        </mat-form-field>
+
+
+        <!-- Minimum Cash Amount -->
+
+        <mat-form-field
+          appearance="outline"
+          class="filter-field">
+
+          <mat-label>
+            Min Cash Amount
+          </mat-label>
+
+          <span matTextPrefix>
+            ₹&nbsp;
+          </span>
+
+          <input
+            matInput
+            type="number"
+            min="0"
+            [value]="minCashAmount()"
+            (input)="onMinCashAmountChange($event)"
+          />
+
+        </mat-form-field>
+
+
+        <!-- Maximum Cash Amount -->
+
+        <mat-form-field
+          appearance="outline"
+          class="filter-field">
+
+          <mat-label>
+            Max Cash Amount
+          </mat-label>
+
+          <span matTextPrefix>
+            ₹&nbsp;
+          </span>
+
+          <input
+            matInput
+            type="number"
+            min="0"
+            [value]="maxCashAmount()"
+            (input)="onMaxCashAmountChange($event)"
+          />
+
+        </mat-form-field>
+
+
+        <!-- Clear -->
+
+        <div class="filter-actions">
+
+          <button
+            mat-stroked-button
+            type="button"
+            class="clear-btn"
+            (click)="clearFilters()">
+
+            <mat-icon>
+              refresh
+            </mat-icon>
+
+            Clear Filters
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </mat-expansion-panel>
+
+
+  <!-- Summary Cards -->
+
+  <div class="summary-cards">
+
+    <!-- Total Records -->
+
+    <div class="summary-card purple-card">
+
+      <div class="summary-icon">
+        🎁
+      </div>
+
+      <div class="value">
+        {{ summary().totalRecords }}
+      </div>
+
+      <div class="label">
+        Gifts Received
+      </div>
+
+    </div>
+
+
+    <!-- Total Quantity -->
+
+    <div class="summary-card blue-card">
+
+      <div class="summary-icon">
+        📦
+      </div>
+
+      <div class="value">
+        {{ summary().totalQuantity }}
+      </div>
+
+      <div class="label">
+        Total Quantity
+      </div>
+
+    </div>
+
+
+    <!-- Cash Gifts -->
+
+    <div class="summary-card green-card">
+
+      <div class="summary-icon">
+        💵
+      </div>
+
+      <div class="value">
+        {{ summary().cashGiftRecords }}
+      </div>
+
+      <div class="label">
+        Cash Gifts
+      </div>
+
+    </div>
+
+
+    <!-- Cash Received -->
+
+    <div class="summary-card cash-card">
+
+      <div class="summary-icon">
+        💰
+      </div>
+
+      <div class="value">
+        ₹ {{ summary().totalCashReceived }}
+      </div>
+
+      <div class="label">
+        Cash Received
+      </div>
+
+    </div>
+
+
+    <!-- Physical Gifts -->
+
+    <div class="summary-card orange-card">
+
+      <div class="summary-icon">
+        🛍️
+      </div>
+
+      <div class="value">
+        {{ summary().physicalGiftQuantity }}
+      </div>
+
+      <div class="label">
+        Physical Gifts
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Received Gifts Table -->
+
+  <div class="table-section mat-elevation-z4">
+
+    <table
+      mat-table
+      [dataSource]="receivedGifts()">
+
+
+      <!-- Giver Name -->
+
+      <ng-container matColumnDef="giverName">
+
+        <th
+          mat-header-cell
+          *matHeaderCellDef>
+
+          Received From
+
+        </th>
+
+        <td
+          mat-cell
+          *matCellDef="let gift">
+
+          <strong>
+            {{ gift.giverName }}
+          </strong>
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- Mobile Number -->
+
+      <ng-container matColumnDef="mobileNumber">
+
+        <th
+          mat-header-cell
+          *matHeaderCellDef>
+
+          Mobile
+
+        </th>
+
+        <td
+          mat-cell
+          *matCellDef="let gift">
+
+          {{ gift.mobileNumber || '-' }}
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- Gift Type -->
+
+      <ng-container matColumnDef="giftType">
+
+        <th
+          mat-header-cell
+          *matHeaderCellDef>
+
+          Gift Type
+
+        </th>
+
+        <td
+          mat-cell
+          *matCellDef="let gift">
+
+          <span
+            class="gift-type-chip"
+            [class.cash-type]="gift.giftType === 'CASH'">
+
+            {{ formatGiftType(gift.giftType) }}
+
+          </span>
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- Gift -->
+
+      <ng-container matColumnDef="gift">
+
+        <th
+          mat-header-cell
+          *matHeaderCellDef>
+
+          Gift / Amount
+
+        </th>
+
+        <td
+          mat-cell
+          *matCellDef="let gift">
+
+          @if (gift.giftType === 'CASH') {
+
+            <span class="cash-value">
+
+              ₹ {{ gift.cashAmount }}
+
+            </span>
+
+          } @else {
+
+            <span class="gift-description">
+
+              {{ gift.giftDescription || '-' }}
+
+            </span>
+
+          }
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- Quantity -->
+
+      <ng-container matColumnDef="quantity">
+
+        <th
+          mat-header-cell
+          *matHeaderCellDef>
+
+          Qty
+
+        </th>
+
+        <td
+          mat-cell
+          *matCellDef="let gift">
+
+          <span class="quantity-chip">
+
+            {{ gift.quantity }}
+
+          </span>
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- Received At -->
+
+      <ng-container matColumnDef="receivedAt">
+
+        <th
+          mat-header-cell
+          *matHeaderCellDef>
+
+          Received At
+
+        </th>
+
+        <td
+          mat-cell
+          *matCellDef="let gift">
+
+          {{
+            gift.receivedAt
+              | date:'dd MMM yyyy'
+          }}
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- Notes -->
+
+      <ng-container matColumnDef="notes">
+
+        <th
+          mat-header-cell
+          *matHeaderCellDef>
+
+          Notes
+
+        </th>
+
+        <td
+          mat-cell
+          *matCellDef="let gift">
+
+          {{ gift.notes || '-' }}
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- Actions -->
+
+      <ng-container matColumnDef="actions">
+
+        <th
+          mat-header-cell
+          *matHeaderCellDef>
+
+          Actions
+
+        </th>
+
+        <td
+          mat-cell
+          *matCellDef="let gift">
+
+          <button
+            mat-icon-button
+            type="button"
+            color="primary"
+            title="Edit received gift"
+            (click)="editGift(gift)">
+
+            <mat-icon>
+              edit
+            </mat-icon>
+
+          </button>
+
+          <button
+            mat-icon-button
+            type="button"
+            color="warn"
+            title="Delete received gift"
+            (click)="deleteGift(gift)">
+
+            <mat-icon>
+              delete
+            </mat-icon>
+
+          </button>
+
+        </td>
+
+      </ng-container>
+
+
+      <!-- Rows -->
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns">
+      </tr>
+
+      <tr
+        mat-row
+        *matRowDef="
+          let row;
+          columns: displayedColumns
+        ">
+      </tr>
+
+    </table>
+
+
+    <!-- Empty State -->
+
+    @if (
+      receivedGifts().length === 0
+    ) {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          🎁
+        </div>
+
+        <h3>
+          No received gifts yet
+        </h3>
+
+        <p>
+          Add the gifts and cash you receive during
+          your wedding celebrations.
+        </p>
+
+        <button
+          mat-flat-button
+          type="button"
+          class="empty-add-btn"
+          (click)="openAddDialog()">
+
+          <mat-icon>
+            add
+          </mat-icon>
+
+          Add First Gift
+
+        </button>
+
+      </div>
+
+    }
+
+
+    <!-- Pagination -->
+
+    <mat-paginator
+      [length]="totalElements()"
+      [pageSize]="pageSize()"
+      [pageIndex]="currentPage()"
+      [pageSizeOptions]="[
+        10,
+        25,
+        50,
+        100
+      ]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+
+    </mat-paginator>
+
+  </div>
+
+</div>
