@@ -1,0 +1,234 @@
+.dialog-container {
+  padding: 8px;
+}
+
+
+/* ==========================================
+   HEADER
+   ========================================== */
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 6px 8px 12px;
+}
+
+.header-icon {
+  width: 52px;
+  height: 52px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ede9fe;
+
+  font-size: 27px;
+}
+
+.dialog-header h2 {
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  color: #111827;
+
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.dialog-header p {
+  margin: 3px 0 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+
+/* ==========================================
+   FORM
+   ========================================== */
+
+.received-gift-form {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 10px 16px;
+
+  padding-top: 8px;
+}
+
+.received-gift-form mat-form-field {
+  width: 100%;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+
+/* ==========================================
+   CASH PREVIEW
+   ========================================== */
+
+.cash-preview {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+
+  background: #f0fdf4;
+}
+
+.cash-preview-icon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #dcfce7;
+
+  font-size: 22px;
+}
+
+.cash-preview div:last-child {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.cash-preview span {
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+.cash-preview strong {
+  color: #047857;
+
+  font-size: 20px;
+  font-weight: 750;
+}
+
+
+/* ==========================================
+   ERROR
+   ========================================== */
+
+.error-message {
+  grid-column: 1 / -1;
+
+  padding: 10px 12px;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  background: #fef2f2;
+  color: #b91c1c;
+
+  font-size: 13px;
+  font-weight: 550;
+}
+
+
+/* ==========================================
+   DIALOG CONTENT / ACTIONS
+   ========================================== */
+
+mat-dialog-content {
+  padding-top: 4px !important;
+}
+
+mat-dialog-actions {
+  gap: 8px;
+
+  padding-top: 10px;
+}
+
+.save-button {
+  min-width: 125px;
+
+  border-radius: 9px !important;
+
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+
+  font-weight: 650;
+}
+
+.save-button:disabled {
+  opacity: 0.55;
+}
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+@media (max-width: 600px) {
+
+  .dialog-container {
+    padding: 2px;
+  }
+
+  .dialog-header {
+    gap: 10px;
+
+    padding: 4px 4px 10px;
+  }
+
+  .header-icon {
+    width: 44px;
+    height: 44px;
+
+    font-size: 23px;
+  }
+
+  .dialog-header h2 {
+    font-size: 18px;
+  }
+
+  .dialog-header p {
+    font-size: 12px;
+  }
+
+  .received-gift-form {
+    grid-template-columns: 1fr;
+
+    gap: 8px;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+  .cash-preview {
+    grid-column: auto;
+  }
+}
