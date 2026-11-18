@@ -19,6 +19,9 @@ import { WeddingTaskService } from './service/wedding-task-service';
 import { Tasks } from './components/tasks/tasks';
 import { GiftDistribution } from './components/gift-distribution/gift-distribution';
 
+import {
+    ReceivedGift
+} from './components/received-gift/received-gift';
 
 
 export const routes: Routes = [
@@ -106,6 +109,15 @@ export const routes: Routes = [
         component: GiftDistribution,
         pathMatch: 'full',
         canActivate: [authGuard, guestAccessGuard]
+    },
+    {
+        path: 'received-gifts',
+        component: ReceivedGift,
+        pathMatch: 'full',
+        canActivate: [
+            authGuard,
+            guestAccessGuard
+        ]
     }
 
 ];
