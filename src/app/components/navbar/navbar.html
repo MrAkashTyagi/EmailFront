@@ -85,6 +85,18 @@
 
     </a>
 
+    <a routerLink="/received-gifts" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
+
+      <mat-icon>
+        redeem
+      </mat-icon>
+
+      <span>
+        Received
+      </span>
+
+    </a>
+
     <a routerLink="/stay-management" routerLinkActive="dashboard-nav-active" class="dashboard-nav-link">
 
       <mat-icon>
@@ -247,6 +259,22 @@
 
   </button>
   } -->
+
+  @if (isUser()) {
+
+  <button mat-menu-item routerLink="/received-gifts" routerLinkActive="active-menu-item">
+
+    <mat-icon>
+      redeem
+    </mat-icon>
+
+    <span>
+      Gifts Received
+    </span>
+
+  </button>
+
+  }
 
   @if (isUser()) {
 
