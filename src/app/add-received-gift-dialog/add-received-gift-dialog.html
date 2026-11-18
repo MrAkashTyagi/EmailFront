@@ -1,0 +1,481 @@
+<div class="dialog-container">
+
+  <!-- Header -->
+
+  <div class="dialog-header">
+
+    <div class="header-icon">
+      🎁
+    </div>
+
+    <div>
+
+      <h2 mat-dialog-title>
+
+        @if (isEditMode) {
+          Edit Received Gift
+        } @else {
+          Add Received Gift
+        }
+
+      </h2>
+
+      <p>
+        Record a gift received during your wedding celebration
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <mat-dialog-content>
+
+    <form
+      id="receivedGiftForm"
+      class="received-gift-form"
+      [formGroup]="receivedGiftForm"
+      (ngSubmit)="saveGift()">
+
+
+      <!-- Giver Name -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Received From
+        </mat-label>
+
+        <input
+          matInput
+          type="text"
+          formControlName="giverName"
+          placeholder="Enter giver name"
+        />
+
+        @if (
+          receivedGiftForm.get('giverName')?.touched
+          &&
+          receivedGiftForm.get('giverName')?.hasError('required')
+        ) {
+
+          <mat-error>
+            Giver name is required
+          </mat-error>
+
+        }
+
+        @if (
+          receivedGiftForm.get('giverName')?.touched
+          &&
+          receivedGiftForm.get('giverName')?.hasError('maxlength')
+        ) {
+
+          <mat-error>
+            Name cannot exceed 150 characters
+          </mat-error>
+
+        }
+
+      </mat-form-field>
+
+
+      <!-- Mobile -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Mobile Number
+        </mat-label>
+
+        <input
+          matInput
+          type="text"
+          formControlName="mobileNumber"
+          placeholder="Optional"
+        />
+
+        @if (
+          receivedGiftForm.get('mobileNumber')?.touched
+          &&
+          receivedGiftForm.get('mobileNumber')?.hasError('maxlength')
+        ) {
+
+          <mat-error>
+            Mobile number cannot exceed 20 characters
+          </mat-error>
+
+        }
+
+      </mat-form-field>
+
+
+      <!-- Gift Type -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Gift Type
+        </mat-label>
+
+        <mat-select
+          formControlName="giftType">
+
+          @for (
+            type of giftTypes;
+            track type.value
+          ) {
+
+            <mat-option
+              [value]="type.value">
+
+              {{ type.label }}
+
+            </mat-option>
+
+          }
+
+        </mat-select>
+
+        @if (
+          receivedGiftForm.get('giftType')?.touched
+          &&
+          receivedGiftForm.get('giftType')?.hasError('required')
+        ) {
+
+          <mat-error>
+            Gift type is required
+          </mat-error>
+
+        }
+
+      </mat-form-field>
+
+
+      <!-- CASH -->
+
+      @if (isCashGift) {
+
+        <mat-form-field appearance="outline">
+
+          <mat-label>
+            Cash Amount
+          </mat-label>
+
+          <span matTextPrefix>
+            ₹&nbsp;
+          </span>
+
+          <input
+            matInput
+            type="number"
+            min="0.01"
+            step="0.01"
+            formControlName="cashAmount"
+            placeholder="0.00"
+          />
+
+          @if (
+            receivedGiftForm.get('cashAmount')?.touched
+            &&
+            receivedGiftForm.get('cashAmount')?.hasError('required')
+          ) {
+
+            <mat-error>
+              Cash amount is required
+            </mat-error>
+
+          }
+
+          @if (
+            receivedGiftForm.get('cashAmount')?.touched
+            &&
+            receivedGiftForm.get('cashAmount')?.hasError('min')
+          ) {
+
+            <mat-error>
+              Cash amount must be greater than zero
+            </mat-error>
+
+          }
+
+        </mat-form-field>
+
+      }
+
+
+      <!-- PHYSICAL GIFT -->
+
+      @if (!isCashGift) {
+
+        <mat-form-field
+          appearance="outline"
+          class="full-width">
+
+          <mat-label>
+            Gift Description
+          </mat-label>
+
+          <input
+            matInput
+            type="text"
+            formControlName="giftDescription"
+            placeholder="Example: Samsung Microwave, Silk Saree, Gold Ring"
+          />
+
+          @if (
+            receivedGiftForm.get('giftDescription')?.touched
+            &&
+            receivedGiftForm.get('giftDescription')?.hasError('required')
+          ) {
+
+            <mat-error>
+              Gift description is required
+            </mat-error>
+
+          }
+
+          @if (
+            receivedGiftForm.get('giftDescription')?.touched
+            &&
+            receivedGiftForm.get('giftDescription')?.hasError('maxlength')
+          ) {
+
+            <mat-error>
+              Description cannot exceed 500 characters
+            </mat-error>
+
+          }
+
+        </mat-form-field>
+
+      }
+
+
+      <!-- Quantity -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Quantity
+        </mat-label>
+
+        <input
+          matInput
+          type="number"
+          min="1"
+          max="1000"
+          step="1"
+          formControlName="quantity"
+        />
+
+        @if (
+          receivedGiftForm.get('quantity')?.touched
+          &&
+          receivedGiftForm.get('quantity')?.hasError('required')
+        ) {
+
+          <mat-error>
+            Quantity is required
+          </mat-error>
+
+        }
+
+        @if (
+          receivedGiftForm.get('quantity')?.touched
+          &&
+          receivedGiftForm.get('quantity')?.hasError('min')
+        ) {
+
+          <mat-error>
+            Quantity must be at least 1
+          </mat-error>
+
+        }
+
+        @if (
+          receivedGiftForm.get('quantity')?.touched
+          &&
+          receivedGiftForm.get('quantity')?.hasError('max')
+        ) {
+
+          <mat-error>
+            Quantity cannot exceed 1000
+          </mat-error>
+
+        }
+
+      </mat-form-field>
+
+
+      <!-- Received Date -->
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Received Date
+        </mat-label>
+
+        <input
+          matInput
+          [matDatepicker]="receivedDatePicker"
+          formControlName="receivedAt"
+          readonly
+          (click)="receivedDatePicker.open()"
+        />
+
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="receivedDatePicker">
+        </mat-datepicker-toggle>
+
+        <mat-datepicker
+          #receivedDatePicker>
+        </mat-datepicker>
+
+      </mat-form-field>
+
+
+      <!-- Notes -->
+
+      <mat-form-field
+        appearance="outline"
+        class="full-width">
+
+        <mat-label>
+          Notes
+        </mat-label>
+
+        <textarea
+          matInput
+          rows="3"
+          maxlength="1000"
+          formControlName="notes"
+          placeholder="Any additional details...">
+        </textarea>
+
+        @if (
+          receivedGiftForm.get('notes')?.touched
+          &&
+          receivedGiftForm.get('notes')?.hasError('maxlength')
+        ) {
+
+          <mat-error>
+            Notes cannot exceed 1000 characters
+          </mat-error>
+
+        }
+
+      </mat-form-field>
+
+
+      <!-- Cash Preview -->
+
+      @if (
+        isCashGift
+        &&
+        receivedGiftForm.get('cashAmount')?.value
+      ) {
+
+        <div class="cash-preview full-width">
+
+          <div class="cash-preview-icon">
+            💰
+          </div>
+
+          <div>
+
+            <span>
+              Total Cash Received
+            </span>
+
+            <strong>
+              ₹
+              {{
+                (
+                  +(
+                    receivedGiftForm.get('cashAmount')?.value
+                    || 0
+                  )
+                )
+                *
+                (
+                  +(
+                    receivedGiftForm.get('quantity')?.value
+                    || 1
+                  )
+                )
+              }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      }
+
+
+      <!-- Error -->
+
+      @if (saveError) {
+
+        <div class="error-message">
+
+          {{ saveError }}
+
+        </div>
+
+      }
+
+    </form>
+
+  </mat-dialog-content>
+
+
+  <!-- Actions -->
+
+  <mat-dialog-actions align="end">
+
+    <button
+      mat-button
+      type="button"
+      [disabled]="isSaving"
+      (click)="close()">
+
+      Cancel
+
+    </button>
+
+    <button
+      mat-flat-button
+      type="submit"
+      form="receivedGiftForm"
+      class="save-button"
+      [disabled]="
+        receivedGiftForm.invalid
+        || isSaving
+      ">
+
+      @if (isSaving) {
+
+        Saving...
+
+      } @else {
+
+        @if (isEditMode) {
+
+          Update Gift
+
+        } @else {
+
+          Save Gift
+
+        }
+
+      }
+
+    </button>
+
+  </mat-dialog-actions>
+
+</div>
