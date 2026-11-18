@@ -1,0 +1,475 @@
+.received-gift-page {
+  padding: 16px;
+}
+
+
+/* ==========================================
+   TOOLBAR
+   ========================================== */
+
+.page-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 16px;
+
+  flex-wrap: wrap;
+}
+
+.page-toolbar-left {
+  flex: 1;
+}
+
+.page-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/* ==========================================
+   SEARCH
+   ========================================== */
+
+.search-wrapper {
+  position: relative;
+
+  width: 100%;
+  max-width: 420px;
+}
+
+.search-input {
+  width: 100%;
+  height: 44px;
+
+  box-sizing: border-box;
+
+  padding: 0 14px 0 42px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #111827;
+
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: #8b5cf6;
+
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 246, 0.12);
+}
+
+.search-icon {
+  position: absolute;
+
+  top: 10px;
+  left: 12px;
+
+  color: #6b7280;
+
+  pointer-events: none;
+}
+
+
+/* ==========================================
+   TOOLBAR BUTTONS
+   ========================================== */
+
+.toolbar-filter-btn {
+  height: 44px;
+
+  border-radius: 10px !important;
+}
+
+.toolbar-add-btn {
+  height: 44px;
+
+  border-radius: 10px !important;
+
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+
+  font-weight: 600;
+}
+
+.toolbar-add-btn mat-icon {
+  margin-right: 6px;
+}
+
+
+/* ==========================================
+   FILTERS
+   ========================================== */
+
+.filters-card {
+  padding: 18px 16px 4px;
+}
+
+.filter-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(210px, 1fr)
+    );
+
+  gap: 16px;
+
+  align-items: start;
+}
+
+.filter-field {
+  width: 100%;
+}
+
+.filter-actions {
+  min-height: 56px;
+
+  display: flex;
+  align-items: center;
+}
+
+.clear-btn {
+  border-radius: 10px !important;
+}
+
+
+/* ==========================================
+   SUMMARY
+   ========================================== */
+
+.summary-cards {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(180px, 1fr)
+    );
+
+  gap: 14px;
+
+  margin: 20px 0;
+}
+
+.summary-card {
+  position: relative;
+
+  min-height: 105px;
+
+  padding: 18px;
+
+  overflow: hidden;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 10px rgba(15, 23, 42, 0.07);
+}
+
+.summary-icon {
+  margin-bottom: 7px;
+
+  font-size: 22px;
+}
+
+.summary-card .value {
+  color: #111827;
+
+  font-size: 23px;
+  font-weight: 750;
+
+  line-height: 1.2;
+}
+
+.summary-card .label {
+  margin-top: 6px;
+
+  color: #6b7280;
+
+  font-size: 13px;
+  font-weight: 550;
+}
+
+
+/* Card accent colours */
+
+.purple-card {
+  border-top: 4px solid #8b5cf6;
+}
+
+.blue-card {
+  border-top: 4px solid #3b82f6;
+}
+
+.green-card {
+  border-top: 4px solid #22c55e;
+}
+
+.cash-card {
+  border-top: 4px solid #059669;
+}
+
+.cash-card .value {
+  color: #047857;
+}
+
+.orange-card {
+  border-top: 4px solid #f59e0b;
+}
+
+
+/* ==========================================
+   TABLE
+   ========================================== */
+
+.table-section {
+  overflow-x: auto;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  background: #ffffff;
+}
+
+table {
+  width: 100%;
+  min-width: 1050px;
+}
+
+.mat-mdc-header-row {
+  background: #f8fafc;
+}
+
+.mat-mdc-header-cell {
+  color: #374151;
+
+  font-weight: 700;
+}
+
+.mat-mdc-cell {
+  color: #374151;
+}
+
+.mat-mdc-row:hover {
+  background: #fafafa;
+}
+
+
+/* ==========================================
+   GIFT TYPE CHIP
+   ========================================== */
+
+.gift-type-chip {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  background: #ede9fe;
+  color: #6d28d9;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.gift-type-chip.cash-type {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+
+/* ==========================================
+   CASH / GIFT VALUE
+   ========================================== */
+
+.cash-value {
+  color: #047857;
+
+  font-weight: 750;
+}
+
+.gift-description {
+  color: #374151;
+
+  font-weight: 550;
+}
+
+
+/* ==========================================
+   QUANTITY CHIP
+   ========================================== */
+
+.quantity-chip {
+  display: inline-flex;
+
+  min-width: 30px;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 9px;
+
+  border-radius: 999px;
+
+  background: #f1f5f9;
+  color: #334155;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* ==========================================
+   ACTIONS
+   ========================================== */
+
+.mat-column-actions {
+  width: 120px;
+  min-width: 120px;
+}
+
+.mat-column-quantity {
+  width: 80px;
+}
+
+.mat-column-receivedAt {
+  min-width: 130px;
+}
+
+
+/* ==========================================
+   EMPTY STATE
+   ========================================== */
+
+.empty-state {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 48px 20px;
+
+  text-align: center;
+}
+
+.empty-icon {
+  margin-bottom: 10px;
+
+  font-size: 42px;
+}
+
+.empty-state h3 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 18px;
+}
+
+.empty-state p {
+  max-width: 460px;
+
+  margin: 8px 0 18px;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+.empty-add-btn {
+  border-radius: 10px !important;
+
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 768px) {
+
+  .received-gift-page {
+    padding: 10px;
+  }
+
+  .page-toolbar {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .page-toolbar-left {
+    width: 100%;
+  }
+
+  .search-wrapper {
+    max-width: none;
+  }
+
+  .page-toolbar-right {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+
+  .toolbar-filter-btn,
+  .toolbar-add-btn {
+    flex: 1;
+  }
+
+  .summary-cards {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+
+    gap: 10px;
+  }
+
+  .summary-card {
+    min-height: 92px;
+
+    padding: 14px;
+  }
+
+  .summary-card .value {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 430px) {
+
+  .summary-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .toolbar-add-btn {
+    font-size: 12px;
+  }
+}
